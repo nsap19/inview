@@ -47,19 +47,19 @@ public class JwtTokenUtil {
                 .build();
     }
     
-    public static String getToken(String email) {
+    public static String getToken(String userId) {
     		Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
         return JWT.create()
-                .withSubject(email)
+                .withSubject(userId)
                 .withExpiresAt(expires)
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
     }
 
-    public static String getToken(Instant expires, String email) {
+    public static String getToken(Instant expires, String userId) {
         return JWT.create()
-                .withSubject(email)
+                .withSubject(userId)
                 .withExpiresAt(Date.from(expires))
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))

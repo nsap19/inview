@@ -142,10 +142,6 @@ dependencies {
 
     implementation("com.querydsl:querydsl-jpa:${querydslVer}")
     implementation("com.querydsl:querydsl-apt:${querydslVer}")
-    
-    //SpringSecurity를 사용하기 위한 의존성 추가
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    
 
     //STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
     implementation("org.springframework.boot:spring-boot-starter-mustache")
