@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "미팅 API", tags = { "Meeting" })
 @RestController
@@ -37,13 +38,10 @@ public class MeetingController {
 			@ApiResponse(code = 400, message = "존재하지 않는 유저입니다. \n 존재하지 않는 직군입니다. \n 존재하지 않는 기업명입니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> register(
-			@RequestBody @ApiParam(value = "미팅생성 정보", required = true) MeetingRegisterPostReq registerInfo
-//			,
-//			@AuthenticationPrincipal SsafyUserDetails ssafyUserDetails
-	) {
+			@RequestBody @ApiParam(value = "미팅생성 정보", required = true) MeetingRegisterPostReq registerInfo,
+			@AuthenticationPrincipal SsafyUserDetails ssafyUserDetails) {
 
-//		int hostId = ssafyUserDetails.getUser().getUserId();
-		int hostId = 1;
+		int hostId = ssafyUserDetails.getUser().getUserId();
 
 		meetingService.createMeeting(registerInfo, hostId);
 
@@ -55,12 +53,10 @@ public class MeetingController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 삭제 성공"),
 			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 호스트가 아닙니다. \n 이미 시작된 미팅입니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<? extends BaseResponseBody> delete(@PathVariable("meetingId") int meetingId
-//			,
-//			@ApiIgnore @AuthenticationPrincipal SsafyUserDetails ssafyUserDetails
-	) {
-		int hostId = 1;
-//		int hostId = ssafyUserDetails.getUser().getUserId();
+	public ResponseEntity<? extends BaseResponseBody> delete(@PathVariable("meetingId") int meetingId,
+			@ApiIgnore @AuthenticationPrincipal SsafyUserDetails ssafyUserDetails) {
+
+		int hostId = ssafyUserDetails.getUser().getUserId();
 
 		meetingService.deleteMeeting(meetingId, hostId);
 
