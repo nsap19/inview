@@ -13,7 +13,7 @@ import com.ssafy.db.entity.ChatMessage;
 public class ChatMessageController {
 	@Autowired
 	ChatMessageService chatMessageService;
-	
+
 	private final SimpMessagingTemplate template;
 
 	@Autowired
@@ -23,21 +23,24 @@ public class ChatMessageController {
 
 	@MessageMapping("/chat/join")
 	public void join(@Payload ChatMessage message) {
-		message.setMessage(message.getUserName() + "님이 입장하셨습니다.");
+		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
+		message.setMessage(message.getSender() + "님이 입장하셨습니다.");
 		chatMessageService.subscribeChatMessage(message);
-		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId(), message);
+		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
 	}
 
 	@MessageMapping("/chat/message")
 	public void message(@Payload ChatMessage message) {
+		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		chatMessageService.saveChatMessage(message);
-		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId(), message);
+		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
 	}
-	
+
 	@MessageMapping("/chat/leave")
 	public void leave(@Payload ChatMessage message) {
-		message.setMessage(message.getUserName() + "님이 퇴장하셨습니다.");
+		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
+		message.setMessage(message.getSender() + "님이 퇴장하셨습니다.");
 		chatMessageService.unsubscribeChatMessage(message);
-		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId(), message);
+		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
 	}
 }

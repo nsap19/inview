@@ -20,10 +20,15 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	public void subscribeChatMessage(ChatMessage message) {
 		String id = message.getMeetingId();
 		String msg = message.getMessage();
+		String sender = message.getSender();
+		String receiver = message.getReceiver() == "" ? "모두" : message.getReceiver();
+		String date = message.getDate();
+		String time = message.getTime();
+		String newPath = path + id + "\\";
 		List<String> participantList = chatMap.getOrDefault(id, new LinkedList<>());
-		participantList.add(message.getUserName());
+		participantList.add(sender);
 		for (String userName : participantList) {
-			saveFile(path + id + "_" + userName + ".txt", msg + "\n");
+			saveFile(newPath + userName + "_" + receiver + ".txt", date + "\t" + time + "\t" + msg + "\n");
 		}
 		chatMap.put(id, participantList);
 	}
@@ -32,11 +37,16 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	public void unsubscribeChatMessage(ChatMessage message) {
 		String id = message.getMeetingId();
 		String msg = message.getMessage();
+		String sender = message.getSender();
+		String receiver = message.getReceiver() == "" ? "모두" : message.getReceiver();
+		String date = message.getDate();
+		String time = message.getTime();
+		String newPath = path + id + "\\";
 		List<String> participantList = chatMap.getOrDefault(id, new LinkedList<>());
 		for (String userName : participantList) {
-			saveFile(path + id + "_" + userName + ".txt", msg + "\n");
+			saveFile(newPath + userName + "_" + receiver + ".txt", date + "\t" + time + "\t" + msg + "\n");
 		}
-		participantList.remove(message.getUserName());
+		participantList.remove(sender);
 		chatMap.put(id, participantList);
 	}
 
@@ -44,10 +54,15 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	public void saveChatMessage(ChatMessage message) {
 		String id = message.getMeetingId();
 		String msg = message.getMessage();
-		String sender = message.getUserName();
+		String sender = message.getSender();
+		String receiver = message.getReceiver() == "" ? "모두" : message.getReceiver();
+		String date = message.getDate();
+		String time = message.getTime();
+		String newPath = path + id + "\\";
 		List<String> participantList = chatMap.getOrDefault(id, new LinkedList<>());
 		for (String userName : participantList) {
-			saveFile(path + id + "_" + userName + ".txt", sender + " ] " + msg + "\n");
+			saveFile(newPath + userName + "_" + receiver + ".txt",
+					date + "\t" + time + "\t" + sender + "가 " + receiver + "에게 : " + msg + "\n");
 		}
 	}
 
