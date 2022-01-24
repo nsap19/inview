@@ -17,52 +17,32 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	static String path = "C:\\WorkSpace\\web-project\\File\\Chat\\";
 
 	@Override
-	public void subscribeChatMessage(ChatMessage message) {
+	public void saveChatMessage(ChatMessage message, String ope) {
 		String id = message.getMeetingId();
-		String msg = message.getMessage();
 		String sender = message.getSender();
 		String receiver = message.getReceiver() == "" ? "모두" : message.getReceiver();
+		String msg = message.getMessage();
 		String date = message.getDate();
 		String time = message.getTime();
 		String newPath = path + id + "\\";
 		List<String> participantList = chatMap.getOrDefault(id, new LinkedList<>());
-		participantList.add(sender);
-		for (String userName : participantList) {
-			saveFile(newPath + userName + "_" + receiver + ".txt", date + "\t" + time + "\t" + msg + "\n");
-		}
-		chatMap.put(id, participantList);
-	}
-
-	@Override
-	public void unsubscribeChatMessage(ChatMessage message) {
-		String id = message.getMeetingId();
-		String msg = message.getMessage();
-		String sender = message.getSender();
-		String receiver = message.getReceiver() == "" ? "모두" : message.getReceiver();
-		String date = message.getDate();
-		String time = message.getTime();
-		String newPath = path + id + "\\";
-		List<String> participantList = chatMap.getOrDefault(id, new LinkedList<>());
-		for (String userName : participantList) {
-			saveFile(newPath + userName + "_" + receiver + ".txt", date + "\t" + time + "\t" + msg + "\n");
-		}
-		participantList.remove(sender);
-		chatMap.put(id, participantList);
-	}
-
-	@Override
-	public void saveChatMessage(ChatMessage message) {
-		String id = message.getMeetingId();
-		String msg = message.getMessage();
-		String sender = message.getSender();
-		String receiver = message.getReceiver() == "" ? "모두" : message.getReceiver();
-		String date = message.getDate();
-		String time = message.getTime();
-		String newPath = path + id + "\\";
-		List<String> participantList = chatMap.getOrDefault(id, new LinkedList<>());
-		for (String userName : participantList) {
-			saveFile(newPath + userName + "_" + receiver + ".txt",
-					date + "\t" + time + "\t" + sender + "가 " + receiver + "에게 : " + msg + "\n");
+		if (ope.equals("send")) {
+			for (String userName : participantList) {
+				saveFile(newPath + userName + "_" + receiver + ".txt",
+						date + "\t" + time + "\t" + sender + "가 " + receiver + "에게 : " + msg + "\n");
+			}
+		} else {
+			if (ope.equals("subscribe")) {
+				// 구독자 추가
+				participantList.add(sender);
+			} else {
+				// 구독자 삭제
+				participantList.remove(sender);
+			}
+			for (String userName : participantList) {
+				saveFile(newPath + userName + "_" + receiver + ".txt", date + "\t" + time + "\t" + msg + "\n");
+			}
+			chatMap.put(id, participantList);
 		}
 	}
 
@@ -95,4 +75,5 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			e.printStackTrace();
 		}
 	}
+
 }

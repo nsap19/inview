@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import com.ssafy.api.service.ChatMessageService;
 import com.ssafy.db.entity.ChatMessage;
 
+/**
+ * 채팅 관련 stomp API 요청 처리를 위한 컨트롤러 정의.
+ */
 @Controller
 public class ChatMessageController {
 	@Autowired
@@ -25,14 +28,14 @@ public class ChatMessageController {
 	public void join(@Payload ChatMessage message) {
 		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		message.setMessage(message.getSender() + "님이 입장하셨습니다.");
-		chatMessageService.subscribeChatMessage(message);
+		chatMessageService.saveChatMessage(message, "subscribe");
 		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
 	}
 
 	@MessageMapping("/chat/message")
 	public void message(@Payload ChatMessage message) {
 		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
-		chatMessageService.saveChatMessage(message);
+		chatMessageService.saveChatMessage(message, "send");
 		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
 	}
 
@@ -40,7 +43,7 @@ public class ChatMessageController {
 	public void leave(@Payload ChatMessage message) {
 		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		message.setMessage(message.getSender() + "님이 퇴장하셨습니다.");
-		chatMessageService.unsubscribeChatMessage(message);
+		chatMessageService.saveChatMessage(message, "unsubscribe");
 		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
 	}
 }
