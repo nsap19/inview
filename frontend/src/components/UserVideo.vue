@@ -6,6 +6,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import OvVideo from './OvVideo';
 
 export default {

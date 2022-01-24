@@ -1,5 +1,79 @@
 <template>
-	<div id="main-container" class="container">
+	<div class="meeting-container">
+		<!-- 면접 질문 선택 모달 -->
+		<el-dialog
+			v-model="dialogVisible"
+			title="면접 질문 선택"
+			width="80%"
+			:close-on-click-modal="false"
+			:close-on-press-escape="false"
+			:show-close="false"
+		>
+			<div style="max-height: 500px; overflow-y: auto">
+				<el-scrollbar height="480px">
+					<ChooseQuestion />
+				</el-scrollbar>
+			</div>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button type="primary" @click="handleClose"
+						>선택</el-button
+					>
+				</span>
+			</template>
+		</el-dialog>
+
+		<!-- 미팅 네비바 -->
+		<div class="d-flex flex-row justify-content-end p-3 border meeting-nav">
+			<el-button type="warning">준비</el-button>
+			<el-button type="danger">나가기</el-button>
+		</div>
+
+		<div class="d-flex flex-row border meeting-content">
+			<div class="border meeting-content-main">
+				<div class="meeting-content-video"> <div class="video">영상</div> </div>
+				<div class="meeting-content-video"> <div class="video">영상</div> </div>
+				<div class="meeting-content-video"> <div class="video">영상</div> </div>
+				<div class="meeting-content-video"> <div class="video">영상</div> </div>
+				<div class="meeting-content-video"> <div class="video">영상</div> </div>
+				<div class="meeting-content-video"> <div class="video">영상</div> </div>
+			</div>
+
+			<!-- 우측 aside -->
+			<div v-show="openAside" class="border meeting-content-aside">
+				<div class="border d-flex flex-row justify-content-between p-2">
+					{{ asideCategory }}
+					<el-button :icon="CloseBold" circle @click="[openAside=!openAside, asideCategory='']" type="text" ></el-button>
+				</div>
+				<Participant v-show="asideCategory === 'participant'" />
+				<Evaluation v-show="asideCategory === 'evaluation'" />
+				<Chat v-show="asideCategory === 'chat'" />
+	
+				<!-- open Aside: {{ openAside }}
+				<br>
+				aside Category: {{ asideCategory }} -->
+			</div>
+		</div>
+
+		<!-- meeting footer -->
+		<div class="d-flex flex-row justify-content-end p-3 border meeting-footer">
+			<el-button :icon="List" size="large" circle @click="[openAside=!(openAside && asideCategory==='evaluation'), asideCategory=(openAside) ? 'evaluation':'']"></el-button>
+			<el-button :icon="ChatDotSquare" size="large" circle @click="[openAside=!(openAside && asideCategory==='chat'), asideCategory=(openAside) ? 'chat':'']"></el-button>
+			<el-dropdown trigger="click" placement='top' size='large' class="mx-3">
+				<el-button type="primary" size="large" circle :icon="MoreFilled"></el-button>
+				<template #dropdown>
+					<el-dropdown-menu>
+						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='memo'), asideCategory=(openAside) ? 'memo':'']">메모</el-dropdown-item>
+						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='timer'), asideCategory=(openAside) ? 'timer':'']">타이머</el-dropdown-item>
+						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='file'), asideCategory=(openAside) ? 'file':'']">파일전송</el-dropdown-item>
+						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='participant'), asideCategory=(openAside) ? 'participant':'']">참가자</el-dropdown-item>
+					</el-dropdown-menu>
+				</template>
+			</el-dropdown>
+		</div>
+
+	</div>
+	<!-- <div id="main-container" class="container">
 		<div id="join" v-if="!session">
 			<div id="img-div"><img src="resources/images/openvidu_grey_bg_transp_cropped.png" /></div>
 			<div id="join-dialog" class="jumbotron vertical-center">
@@ -33,13 +107,22 @@
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click="updateMainVideoStreamManager(sub)"/>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </template>
 
 <script>
+/* eslint-disable */
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '@/components/UserVideo';
+import ChooseQuestion from '@/components/ChooseQuestion';
+import Participant from '@/components/Participant';
+import Evaluation from '@/components/Evaluation';
+import Chat from '@/components/Chat';
+
+import { ChatDotSquare, CloseBold, MoreFilled, List } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import { ElMessageBox } from 'element-plus'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -51,6 +134,43 @@ export default {
 
 	components: {
 		UserVideo,
+		ChooseQuestion,
+		Participant,
+		Evaluation,
+		Chat
+	},
+
+	setup() {
+		const openAside = ref(false)
+		const asideCategory = ref('')
+		const dialogVisible = ref(false)
+		const handleClose = () => {
+			ElMessageBox.confirm(
+				'선택하신 면접 질문으로 모의 면접을 구성합니다.',
+				'면접 질문 확정',
+				{
+					confirmButtonText: '확정',
+					cancelButtonText: '다시 고르기',
+				}
+				)
+				.then(() => {
+					console.log('면접 질문 선택 완료')
+					console.log('what')
+					dialogVisible.value = false
+					console.log(dialogVisible)
+				})
+				// .catch(() => {
+				// 	// catch error
+				// 	console.log('다시 면접 질문 고르기')
+				// 	console.log(dialogVisible)
+				// })
+		}
+
+		return { 
+			ChatDotSquare, CloseBold, MoreFilled, List, 
+			openAside, asideCategory, dialogVisible, 
+			handleClose 
+		}
 	},
 
 	data () {
@@ -213,10 +333,74 @@ export default {
 </script>
 
 <style scoped>
+.meeting-container {
+	display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+.meeting-nav {
+  flex: 0 1 auto;
+	flex: 0 1 66px;
+  /* The above is shorthand for:
+  flex-grow: 0,
+  flex-shrink: 1,
+  flex-basis: auto
+  */
+}
+
+.meeting-content {
+	flex: 1 1 auto;
+	width: 100vw;
+	height: 500px;
+}
+
+.meeting-footer {
+	flex: 0 1 66px;
+}
+
+.meeting-content-main {
+	flex-grow: 1;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.meeting-content-aside {
+	width: 420px;
+	display: flex;
+	flex-direction: column;
+}
+
+.meeting-content-video {
+	/* background-color: lightslategray; */
+	background-clip: content-box;
+  width: 33%;
+	padding: 1px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .meeting-content-video {
+    width: 50%;
+		height: 33%;
+  }
+}
+
+.video {
+	background: lightsteelblue;
+	aspect-ratio: 16/9;
+	width: 100%;
+	margin: auto 0;
+}
+
+/* 
 html {
 	position: relative;
 	min-height: 100%;
-}
+} */
 
 nav {
 	height: 50px;

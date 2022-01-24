@@ -1,0 +1,10 @@
+/* use for overriding element plus css */
+
+.el-divider__text {
+  position: absolute;
+  background-color: #fff;
+  padding: 0 20px;
+  font-weight: 500;
+  color: gray;
+  font-size: 12px; 
+}

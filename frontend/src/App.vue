@@ -1,6 +1,7 @@
 <template>
-  <div id="nav" class="container p-5">
+  <div id="nav" class="container p-5" v-if="this.$route.path !== '/' && !this.$route.path.startsWith('/meeting')">
     <div class="row justify-content-between align-items-center">
+      <!-- 메인 페이지에서 네비바가 어떻게 보일지 미정이라 :style 삭제 안함 -->
       <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col-3 p-3">
         <router-link to="/">
           <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100">
@@ -40,7 +41,7 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
   color: #2c3e50;
-  --el-color-primary: #CEE5D0;
+  --el-color-primary: #667267;
   /* --el-bg-color: #F3F0D7; */
 }
 
