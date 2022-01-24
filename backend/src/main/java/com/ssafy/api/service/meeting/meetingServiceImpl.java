@@ -133,4 +133,9 @@ public class meetingServiceImpl implements MeetingService {
 
 	}
 
+	@Override
+	public void closeMeeting(int meetingId) {
+		
+	}
+
 }
