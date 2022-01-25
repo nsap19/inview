@@ -1,5 +1,8 @@
 package com.ssafy.api.service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +36,14 @@ public class UserServiceImpl implements UserService {
 		else if(getUserByNickname(userRegisterInfo.getNickname()) == null) // 닉네임 중복 검사
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
 		
+		String regx = "^[A-Za-z0-9+_.-]+@(.+)$";
+		Pattern pattern = Pattern.compile(regx);
+		Matcher matcher = pattern.matcher(userRegisterInfo.getEmail());
+		if(!matcher.matches()) // 이메일 형식 유효성 검사
+			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이메일 형식이 올바르지 않습니다."));
+		if(userRegisterInfo.getPassword() == null || userRegisterInfo.getPassword().length() < 8) // 비밀번호 유효성 검사
+			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "비밀번호는 8글자 이상이어야 합니다."));
+		
 		User user = new User();
 		user.setEmail(userRegisterInfo.getEmail());
 		user.setNickname(userRegisterInfo.getNickname());
@@ -49,8 +60,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User getUserByUserId(int user_id) {
-		User user = userRepositorySupport.findUserByUserId(user_id).get();
+	public User getUserByUserId(int userId) {
+		User user = userRepositorySupport.findUserByUserId(userId).get();
 		return user;
 	}
 	@Override
@@ -65,17 +76,17 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public ResponseEntity<? extends BaseResponseBody> modifyUser(int user_id, UserUpdatePutReq userUpdateInfo) { // 회원정보 수정
-		User user = getUserByUserId(user_id);
+	public ResponseEntity<? extends BaseResponseBody> modifyUser(int userId, UserUpdatePutReq userUpdateInfo) { // 회원정보 수정
+		User user = getUserByUserId(userId);
 		
-		if(getUserByUserId(user_id).getNickname() != userUpdateInfo.getNickname()) { // 닉네임을 변경하는 경우
+		if(getUserByUserId(userId).getNickname() != userUpdateInfo.getNickname()) { // 닉네임을 변경하는 경우
 			if(getUserByNickname(userUpdateInfo.getNickname()) == null) // 닉네임 중복 검사
 				return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
 			else
 				user.setNickname(userUpdateInfo.getNickname()); // 닉네임 변경
 		}
 		
-		if(getUserByUserId(user_id).getPassword() != userUpdateInfo.getPassword()) // 패스워드를 변경하는 경우
+		if(getUserByUserId(userId).getPassword() != userUpdateInfo.getPassword()) // 패스워드를 변경하는 경우
 			user.setPassword(passwordEncoder.encode(userUpdateInfo.getPassword())); // 패스워드 암호화하여 db에 저장
 		
 		userRepository.save(user);
@@ -83,8 +94,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<? extends BaseResponseBody> deleteUser(int user_id) {
-		User user = getUserByUserId(user_id);
+	public ResponseEntity<? extends BaseResponseBody> deleteUser(int userId) {
+		User user = getUserByUserId(userId);
 		userRepository.delete(user);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "유저 탈퇴 성공"));
 	}

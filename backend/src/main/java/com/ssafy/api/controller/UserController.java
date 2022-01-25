@@ -1,8 +1,14 @@
 package com.ssafy.api.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.UserLoginPostReq;
+import com.ssafy.api.request.UserLogoutGetReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.UserUpdatePutReq;
 import com.ssafy.api.request.VerifyCodePostReq;
@@ -59,7 +66,7 @@ public class UserController {
 	public Response register(@RequestBody UserRegisterPostReq registerInfo) {
 		ResponseEntity<? extends BaseResponseBody> result = userService.createUser(registerInfo);
 		return new Response(result.getStatusCode());
-	}
+	} 
 	
 	@PostMapping("/signup/email-certi") 
 	@ApiOperation(value = "이메일 인증")
@@ -104,19 +111,25 @@ public class UserController {
 		return response;
 	}
 	
-//	@GetMapping("/logout")
-//	@ApiOperation(value = "로그아웃")
-//	@ApiResponses({
-//		@ApiResponse(code = 200, message = "로그아웃 성공"),
-//		@ApiResponse(code = 400, message = "로그아웃 실패"),
-//        @ApiResponse(code = 401, message = "로그인이 필요한 페이지입니다."),
-//        @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
-//	})
-//	public ResponseEntity<UserLoginPostRes> logout(@RequestBody Map<String, String> m) {
-//	}
+	@GetMapping("/logout")
+	@ApiOperation(value = "로그아웃")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "로그아웃 성공"),
+		@ApiResponse(code = 400, message = "로그아웃 실패"),
+        @ApiResponse(code = 401, message = "로그인이 필요한 페이지입니다."),
+        @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
+	})
+	public Response logout(@RequestBody UserLogoutGetReq logoutInfo) {
+		HttpServletRequest request = logoutInfo.getRequset();
+		HttpServletResponse response = logoutInfo.getResponse();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		new SecurityContextLogoutHandler().logout(request, response, auth);
+		
+		return new Response();
+	}
 	
 	@PutMapping("/{userId}")
-	@ApiImplicitParam(name = "user_id", value ="유저 아이디")
+	@ApiImplicitParam(name = "userId", value ="유저 아이디")
 	@ApiOperation(value = "회원 정보 수정", notes = "수정한 회원 정보로 db 업데이트")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "회원 정보 수정 성공"),
@@ -124,13 +137,13 @@ public class UserController {
         @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
         @ApiResponse(code = 404, message = "존재하지 않는 유저입니다.")
 	})
-	public Response modifyUser(@PathVariable("userId") int user_id, @RequestBody UserUpdatePutReq updateInfo) {
-		ResponseEntity<? extends BaseResponseBody> result = userService.modifyUser(user_id, updateInfo);
+	public Response modifyUser(@PathVariable("userId") int userId, @RequestBody UserUpdatePutReq updateInfo) {
+		ResponseEntity<? extends BaseResponseBody> result = userService.modifyUser(userId, updateInfo);
 		return new Response(result.getStatusCode());
 	}
 	
 	@DeleteMapping("/{userId}")
-	@ApiImplicitParam(name = "user_id", value ="유저 아이디")
+	@ApiImplicitParam(name = "userId", value ="유저 아이디")
 	@ApiOperation(value = "회원 탈퇴", notes = "로그인한 회원의 정보가 db에서 삭제")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "유저 탈퇴 성공"),
@@ -138,8 +151,8 @@ public class UserController {
         @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
         @ApiResponse(code = 404, message = "존재하지 않는 유저입니다.")
 	})
-	public Response deleteUser(@PathVariable("userId") int user_id) {
-		ResponseEntity<? extends BaseResponseBody> result = userService.deleteUser(user_id);
+	public Response deleteUser(@PathVariable("userId") int userId) {
+		ResponseEntity<? extends BaseResponseBody> result = userService.deleteUser(userId);
 		return new Response(result.getStatusCode());
 	}
 }

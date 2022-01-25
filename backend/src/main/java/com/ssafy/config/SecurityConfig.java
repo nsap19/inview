@@ -63,7 +63,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/**").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
     	        	    .anyRequest().permitAll()
                 .and().cors()
-                .and().logout().logoutSuccessUrl("/users/login") // 로그아웃 성공 시 리다이렉트할 주소
+                .and()
+                .logout()
+                .logoutSuccessUrl("/users/login") // 로그아웃 성공 시 리다이렉트할 주소
+                .deleteCookies("JSESSIONID") // 로그아웃 후 쿠키 삭제
                 .invalidateHttpSession(true); // 로그아웃 이후 세션 전체 삭제 여부
     }
 }

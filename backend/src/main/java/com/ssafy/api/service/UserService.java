@@ -12,9 +12,9 @@ import com.ssafy.db.entity.User;
  */
 public interface UserService {
 	ResponseEntity<? extends BaseResponseBody> createUser(UserRegisterPostReq userRegisterInfo);
-	User getUserByUserId(int user_id);
+	User getUserByUserId(int userId);
 	User getUserByEmail(String email);
 	User getUserByNickname(String nickname);
-	ResponseEntity<? extends BaseResponseBody> deleteUser(int user_id);
-	ResponseEntity<? extends BaseResponseBody> modifyUser(int user_id, UserUpdatePutReq userUpdateInfo);
+	ResponseEntity<? extends BaseResponseBody> deleteUser(int userId);
+	ResponseEntity<? extends BaseResponseBody> modifyUser(int userId, UserUpdatePutReq userUpdateInfo);
 }

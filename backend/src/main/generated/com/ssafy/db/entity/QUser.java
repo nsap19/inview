@@ -24,7 +24,7 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     //public final NumberPath<Long> id = _super.id;
     
-    public final NumberPath<Integer> user_id = createNumber("user_id", Integer.class);
+    public final NumberPath<Integer> userId = createNumber("userId", Integer.class);
     public final StringPath email = createString("email");
     public final StringPath nickname = createString("nickname");
     public final StringPath password = createString("password");
