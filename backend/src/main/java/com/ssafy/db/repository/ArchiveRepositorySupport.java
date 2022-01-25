@@ -33,6 +33,14 @@ public class ArchiveRepositorySupport {
 		return archiveList;
 	}
 	
+	public Archive findByPathAndUser(String path, User user) {
+		Archive archive = jpaQueryFactory.selectFrom(qArchive)
+				.where(qArchive.user.userId.eq(user.getUserId()), qArchive.path.eq(path))
+				.fetchOne();
+		
+		return archive;
+	}
+	
 	public void deleteByArchiveId(int archiveId) {
 		jpaQueryFactory.delete(qArchive)
 			.where(qArchive.archiveId.eq(archiveId))

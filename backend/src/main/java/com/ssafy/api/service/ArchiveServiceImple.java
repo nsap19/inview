@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.ArchiveRegisterPostReq;
+import com.ssafy.common.util.CurParticipant;
 import com.ssafy.db.entity.Archive;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
@@ -22,15 +23,37 @@ public class ArchiveServiceImple implements ArchiveService {
 
 	@Override
 	public String createArchive(ArchiveRegisterPostReq archiveRegisterPostReq) {
-		Archive archive = new Archive();
-		archive.setArchiveName(archiveRegisterPostReq.getArchiveName());
-		archive.setArchiveType(archiveRegisterPostReq.getArchiveType());
-		archive.setPath(archiveRegisterPostReq.getPath());
-		archive.setMeeting(archiveRegisterPostReq.getMeeting());
-		archive.setUser(archiveRegisterPostReq.getUser());
+		String path = archiveRegisterPostReq.getPath();
+		User user = archiveRegisterPostReq.getUser();
+		if (this.findByPathAndUser(path, user) == null) {
+			Archive archive = new Archive();
+			archive.setArchiveName(archiveRegisterPostReq.getArchiveName());
+			archive.setArchiveType(archiveRegisterPostReq.getArchiveType());
+			archive.setMeeting(archiveRegisterPostReq.getMeeting());
+			archive.setUser(user);
+			archive.setPath(path);
+			archiveRepository.save(archive);
+		}
 
-		archiveRepository.save(archive);
+		return "파일 생성 성공";
+	}
 
+	@Override
+	public String createAllArchive(ArchiveRegisterPostReq archiveRegisterPostReq) {
+		String path = archiveRegisterPostReq.getPath();
+		String meetingId = String.valueOf(archiveRegisterPostReq.getMeeting().getMeetingId());
+		List<User> participantList = new CurParticipant().getParticipantList(meetingId);
+		for (User user : participantList) {
+			if (this.findByPathAndUser(path, user) == null) {
+				Archive archive = new Archive();
+				archive.setArchiveName(archiveRegisterPostReq.getArchiveName());
+				archive.setArchiveType(archiveRegisterPostReq.getArchiveType());
+				archive.setMeeting(archiveRegisterPostReq.getMeeting());
+				archive.setUser(user);
+				archive.setPath(path);
+				archiveRepository.save(archive);
+			}
+		}
 		return "파일 생성 성공";
 	}
 
@@ -54,6 +77,11 @@ public class ArchiveServiceImple implements ArchiveService {
 	@Override
 	public Archive getArchivesById(int archiveId) {
 		return archiveRepository.findByArchiveId(archiveId);
+	}
+
+	@Override
+	public Archive findByPathAndUser(String path, User user) {
+		return archiveRepository.findByPathAndUser(path, user);
 	}
 
 }

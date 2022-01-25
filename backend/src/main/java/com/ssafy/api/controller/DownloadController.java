@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.service.ArchiveService;
 import com.ssafy.db.entity.Archive;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.meeting.Meeting;
 
 import io.swagger.annotations.Api;
 
@@ -35,13 +34,35 @@ public class DownloadController {
 
 	@GetMapping("/meeting/{meetingId}")
 	public ResponseEntity<Resource> fileDownload(@PathVariable("archiveId") int archiveId) throws IOException {
-		Meeting meeting = new Meeting();
-		User user = new User();
-		Archive archives = archiveService.getArchivesById(archiveId);
-		Path path = Paths.get(archives.getPath());
+		Archive archive = archiveService.getArchivesById(archiveId);
+		Path path = Paths.get(archive.getPath());
+		String originalName = archive.getArchiveName();
+		switch (archive.getArchiveType()) {
+		case 0:
+			// video
+			break;
+		case 1:
+			// memo
+			break;
+
+		case 2:
+			// evaluation
+			break;
+
+		case 3:
+			// file
+			StringTokenizer st = new StringTokenizer(archive.getArchiveName(), "_");
+			st.nextToken();
+			originalName = st.nextToken();
+			break;
+		case 4:
+			// chat
+			break;
+		}
+
 		Resource resource = new InputStreamResource(Files.newInputStream(path));
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archives.getArchiveType() + "\"")
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalName + "\"")
 				.body(resource);
 	}
 }
