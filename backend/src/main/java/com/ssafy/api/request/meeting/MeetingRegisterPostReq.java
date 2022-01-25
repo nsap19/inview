@@ -6,13 +6,13 @@ import java.util.UUID;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.db.entity.Industry;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.entity.meeting.Status;
+import com.sun.istack.NotNull;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

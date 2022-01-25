@@ -132,5 +132,4 @@ public class meetingServiceImpl implements MeetingService {
 			participantRepository.save(Participant.builder().meeting(meeting).user(user).build());
 
 	}
-
 }
