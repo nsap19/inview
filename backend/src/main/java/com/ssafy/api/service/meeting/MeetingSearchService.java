@@ -2,14 +2,17 @@ package com.ssafy.api.service.meeting;
 
 import java.util.List;
 
-import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
+import org.springframework.data.domain.Page;
+
 import com.ssafy.api.response.CompanyRes;
 import com.ssafy.api.response.IndustryRes;
+import com.ssafy.api.response.MeetingDetailRes;
+import com.ssafy.api.response.MeetingRes;
 
 public interface MeetingSearchService {
-	void selectMeeting(MeetingRegisterPostReq registerInfo, int hostId);
+	Page<MeetingRes> selectMeeting(String title, List<String> industry, List<String> company, int page);
 
-	void detailMeeting(int meetingId);
+	MeetingDetailRes detailMeeting(int meetingId);
 
 	List<IndustryRes> selectIndustry();
 

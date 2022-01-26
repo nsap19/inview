@@ -34,11 +34,11 @@ public class MeetingRegisterPostReq {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(name = "시작 시간", example = "2022-01-18 11:15:06")
-	Date start_time;
+	Date startTime;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(name = "예상 종료 시간", example = "2022-01-18 13:15:06")
-	Date end_time;
+	Date endTime;
 
 	@ApiModelProperty(name = "비밀번호", example = "1111")
 	String password;
@@ -46,17 +46,17 @@ public class MeetingRegisterPostReq {
 	@ApiModelProperty(name = "최대 참여 인원", example = "5")
 	@Max(10)
 	@Min(2)
-	int user_limit = 6;
+	int userLimit = 6;
 
 	@ApiModelProperty(name = "산업군명", example = "IT")
-	String industry_name;
+	String industryName;
 
 	@ApiModelProperty(name = "회사명", example = "[\"카카오\", \"네이버\"]")
-	List<String> company_name_list;
+	List<String> companyNameList;
 
 	public Meeting toMeeting(User host, Industry industry) {
-		return Meeting.builder().title(this.title).startTime(this.start_time).endTime(this.end_time)
-				.password(this.password).userLimit(this.user_limit).user(host).industry(industry)
+		return Meeting.builder().title(this.title).startTime(this.startTime).endTime(this.endTime)
+				.password(this.password).userLimit(this.userLimit).user(host).industry(industry)
 				.url(UUID.randomUUID().toString()).status(Status.WAITING).build();
 	}
 
