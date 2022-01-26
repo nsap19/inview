@@ -14,6 +14,10 @@ import com.ssafy.db.entity.User;
  * 현재 액세스 토큰으로 부터 인증된 유저의 부가 상세정보(활성화 여부, 만료, 롤 등) 정의.
  */
 public class SsafyUserDetails implements UserDetails {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6445894020847231678L;
 	@Autowired
 	User user;
 	boolean accountNonExpired;

@@ -28,10 +28,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 미팅 모델 정의.
  */
+@ToString
 @Getter
 @Setter
 @Builder
@@ -59,11 +61,11 @@ public class Meeting {
 	int userLimit;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "host_id", nullable = false)
+	@JoinColumn(name = "hostId", nullable = false)
 	User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "industry_id", nullable = false)
+	@JoinColumn(name = "industryId", nullable = false)
 	Industry industry;
 
 	String url;
