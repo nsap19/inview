@@ -10,5 +10,6 @@ public interface UserService {
 	String createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByEmail(String email);
 	User getUserByNickname(String nickname);
+	User getUserById(int userId);
 	void deleteUser(int user_id);
 }

@@ -132,4 +132,9 @@ public class meetingServiceImpl implements MeetingService {
 			participantRepository.save(Participant.builder().meeting(meeting).user(user).build());
 
 	}
+
+	@Override
+	public Meeting getMeetingById(int meetingId) {
+		return meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
+	}
 }

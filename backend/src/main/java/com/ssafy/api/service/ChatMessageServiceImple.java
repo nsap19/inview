@@ -64,7 +64,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 
 	// 채팅 내용을 파일로 부터 읽어온다.
 	private String readFile(String meetingId, String sender, String receiver) {
-		String savePath = System.getProperty("user.dir") + "\\" + meetingId + "\\chat";
+		String savePath = System.getProperty("user.dir") + "\\files\\" + meetingId + "\\chat";
 		String filePath = savePath + "\\" + sender + "_" + receiver + ".txt";
 
 		// d드라이브의 chat 폴더의 chat 파일

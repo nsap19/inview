@@ -12,7 +12,6 @@ import javax.persistence.Table;
 
 import com.ssafy.db.entity.meeting.Meeting;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.common.exception.handler.NotExistsMeetingException;
+import com.ssafy.common.exception.handler.NotExistsUserException;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
@@ -58,5 +60,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUser(int user_id) {
 		userRepositorySupport.deleteByUserId(user_id);
+	}
+
+	@Override
+	public User getUserById(int userId) {
+		return userRepository.findById(userId).orElseThrow(() -> new NotExistsUserException());
 	}
 }
