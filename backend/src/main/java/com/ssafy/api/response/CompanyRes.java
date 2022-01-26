@@ -4,10 +4,8 @@ import com.ssafy.db.entity.Company;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -16,16 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ApiModel("CompanyResponse")
 public class CompanyRes {
-	@ApiModelProperty(name = "1")
+	@ApiModelProperty(name = "아이디", example = "1")
 	private int id;
-	@ApiModelProperty(name = "네이버")
-	private String company_name;
+	@ApiModelProperty(name = "회사 이름", example = "네이버")
+	private String companyName;
 
 	public static CompanyRes of(Company company) {
-		return CompanyRes.builder().id(company.getCompanyId()).company_name(company.getCompanyName()).build();
+		return CompanyRes.builder().id(company.getCompanyId()).companyName(company.getCompanyName()).build();
 	}
 }

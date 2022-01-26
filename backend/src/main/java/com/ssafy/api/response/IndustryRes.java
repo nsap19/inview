@@ -20,12 +20,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @ApiModel("IndustryResponse")
 public class IndustryRes {
-	@ApiModelProperty(name = "1")
+	@ApiModelProperty(name = "아이디", example = "1")
 	private int id;
-	@ApiModelProperty(name = "IT")
-	private String industry_name;
+	@ApiModelProperty(name = "직군 이름", example = "IT")
+	private String industryName;
 
 	public static IndustryRes of(Industry industry) {
-		return IndustryRes.builder().id(industry.getIndustryId()).industry_name(industry.getIndustryName()).build();
+		return IndustryRes.builder().id(industry.getIndustryId()).industryName(industry.getIndustryName()).build();
 	}
 }
