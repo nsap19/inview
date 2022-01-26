@@ -27,7 +27,7 @@ public class Industry {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int industryId;
 
-	@Column(nullable = false, length = 100)
+	@Column(name = "industry_name",nullable = false, length = 100)
 	String industryName;
 
 	@ColumnDefault("0")

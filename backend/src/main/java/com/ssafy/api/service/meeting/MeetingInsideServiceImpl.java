@@ -15,7 +15,7 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 
 	@Override
 	public void closeMeeting(int meetingId) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

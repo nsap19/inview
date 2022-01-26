@@ -64,7 +64,7 @@ public class ArchiveServiceImple implements ArchiveService {
 	}
 
 	@Override
-	public List<Archive> getArchivesById(User user, Meeting meeting) {
+	public List<Archive> getArchivesByUserAndMeeting(User user, Meeting meeting) {
 		List<Archive> archives = archiveRepositorySupport.findAllByUserAndMeeting(user, meeting);
 		return archives;
 	}
