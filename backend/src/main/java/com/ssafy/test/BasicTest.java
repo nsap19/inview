@@ -12,7 +12,6 @@ import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.repository.ArchiveRepository;
 import com.ssafy.db.repository.ArchiveRepositorySupport;
 
-
 public class BasicTest {
 
 	@Autowired
