@@ -1,12 +1,7 @@
 package com.ssafy.config;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -20,46 +15,56 @@ import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+
 /**
- * API 문서 관련 swagger2 설정 정의. http://localhost:8080/swagger-ui/
+ * API 문서 관련 swagger2 설정 정의.
  */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).ignoredParameterTypes(AuthenticationPrincipal.class)
-				.useDefaultResponseMessages(false).select().apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.ant("/**")).build().securityContexts(newArrayList(securityContext()))
-				.securitySchemes(newArrayList(apiKey()));
-	}
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+//                .paths(PathSelectors.ant("/api/**"))
+                .paths(PathSelectors.ant("/users/**"))
+                .build()
+                .securityContexts(newArrayList(securityContext()))
+                .securitySchemes(newArrayList(apiKey()))
+                ;
+    }
 
-	private ApiKey apiKey() {
-		return new ApiKey(SECURITY_SCHEMA_NAME, "Authorization", "header");
-	}
+    private ApiKey apiKey() {
+        return new ApiKey(SECURITY_SCHEMA_NAME, "Authorization", "header");
+    }
 
-	private SecurityContext securityContext() {
-		return SecurityContext.builder().securityReferences(defaultAuth()).build();
-	}
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .build();
+    }
 
-	public static final String SECURITY_SCHEMA_NAME = "JWT";
-	public static final String AUTHORIZATION_SCOPE_GLOBAL = "global";
-	public static final String AUTHORIZATION_SCOPE_GLOBAL_DESC = "accessEverything";
+    public static final String SECURITY_SCHEMA_NAME = "JWT";
+    public static final String AUTHORIZATION_SCOPE_GLOBAL = "global";
+    public static final String AUTHORIZATION_SCOPE_GLOBAL_DESC = "accessEverything";
 
-	private List<SecurityReference> defaultAuth() {
-		AuthorizationScope authorizationScope = new AuthorizationScope(AUTHORIZATION_SCOPE_GLOBAL,
-				AUTHORIZATION_SCOPE_GLOBAL_DESC);
-		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-		authorizationScopes[0] = authorizationScope;
-		return newArrayList(new SecurityReference(SECURITY_SCHEMA_NAME, authorizationScopes));
-	}
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope(AUTHORIZATION_SCOPE_GLOBAL, AUTHORIZATION_SCOPE_GLOBAL_DESC);
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return newArrayList(new SecurityReference(SECURITY_SCHEMA_NAME, authorizationScopes));
+    }
 
-	@Bean
-	UiConfiguration uiConfig() {
-		return UiConfigurationBuilder.builder()
+    @Bean
+    UiConfiguration uiConfig() {
+        return UiConfigurationBuilder.builder()
 //                .supportedSubmitMethods(newArrayList("get").toArray(new String[0])) // try it 기능 활성화 범위
 //                .operationsSorter(METHOD)
-				.build();
-	}
+                .build();
+    }
 }
