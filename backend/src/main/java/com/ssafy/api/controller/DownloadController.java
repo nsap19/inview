@@ -38,24 +38,24 @@ public class DownloadController {
 		Path path = Paths.get(archive.getPath());
 		String originalName = archive.getArchiveName();
 		switch (archive.getArchiveType()) {
-		case 0:
+		case VIDEO:
 			// video
 			break;
-		case 1:
+		case MEMO:
 			// memo
 			break;
 
-		case 2:
+		case EVALUATION:
 			// evaluation
 			break;
 
-		case 3:
+		case FILE:
 			// file
 			StringTokenizer st = new StringTokenizer(archive.getArchiveName(), "_");
 			st.nextToken();
 			originalName = st.nextToken();
 			break;
-		case 4:
+		case CHAT:
 			// chat
 			break;
 		}

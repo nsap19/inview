@@ -15,9 +15,9 @@ public interface ArchiveRepository extends JpaRepository<Archive, Integer> {
 
 	List<Archive> findAllByUserAndMeeting(User user, Meeting meeting);
 
-	Archive findByPathAndUser(String path, User user);
-
 	Archive findByArchiveId(int archiveId);
+
+	Archive findByPathAndUser(String path, User user);
 
 	void deleteByArchiveId(int archiveId);
 }

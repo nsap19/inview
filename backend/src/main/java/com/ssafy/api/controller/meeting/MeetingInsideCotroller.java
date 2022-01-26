@@ -16,6 +16,7 @@ import com.ssafy.api.service.ArchiveService;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.MD5Generator;
+import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.meeting.Meeting;
 
 import io.swagger.annotations.Api;
@@ -68,7 +69,7 @@ public class MeetingInsideCotroller {
 			ArchiveRegisterPostReq archiveRegisterPostReq = new ArchiveRegisterPostReq();
 			archiveRegisterPostReq.setArchiveName(filename);
 			archiveRegisterPostReq.setPath(filePath);
-			archiveRegisterPostReq.setArchiveType(3); // file
+			archiveRegisterPostReq.setArchiveType(ArchiveType.FILE); // file
 
 			// meeting 가져와서 설정하기
 			Meeting meeting = meetingInsideService.getMeeting(meetingId);
