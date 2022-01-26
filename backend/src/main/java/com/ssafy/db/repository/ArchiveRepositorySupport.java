@@ -41,6 +41,7 @@ public class ArchiveRepositorySupport {
 		return archive;
 	}
 	
+	
 	public void deleteByArchiveId(int archiveId) {
 		jpaQueryFactory.delete(qArchive)
 			.where(qArchive.archiveId.eq(archiveId))

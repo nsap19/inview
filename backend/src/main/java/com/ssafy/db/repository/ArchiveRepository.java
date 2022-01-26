@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.db.entity.Archive;
 import com.ssafy.db.entity.User;
@@ -19,5 +20,6 @@ public interface ArchiveRepository extends JpaRepository<Archive, Integer> {
 
 	Archive findByPathAndUser(String path, User user);
 
+	@Transactional
 	void deleteByArchiveId(int archiveId);
 }
