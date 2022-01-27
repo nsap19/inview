@@ -17,6 +17,7 @@ import com.ssafy.api.response.MeetingDetailRes;
 import com.ssafy.api.response.MeetingRes;
 import com.ssafy.api.service.meeting.MeetingSearchService;
 import com.ssafy.common.model.response.AdvancedResponseBody;
+import com.ssafy.common.model.response.BaseResponseBody;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
@@ -36,7 +37,7 @@ public class MeetingSearchController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 전체 조회 성공", response = MeetingResClass.class),
 			@ApiResponse(code = 400, message = "존재하지 않는 직군입니다. \n 존재하지 않는 기업명입니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<? extends AdvancedResponseBody> search(@RequestParam(required = false) String title,
+	public ResponseEntity<? extends BaseResponseBody> search(@RequestParam(required = false) String title,
 			@RequestParam(required = false) List<String> industryList,
 			@RequestParam(required = false) List<String> companyList,
 			@RequestParam(value = "page", defaultValue = "1") int page) {
@@ -51,7 +52,7 @@ public class MeetingSearchController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "{meetingId} 미팅실 상세 내역 조회 성공", response = MeetingDetailResClass.class),
 			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다."), @ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<? extends AdvancedResponseBody> detail(@PathVariable("meetingId") int meetingId) {
+	public ResponseEntity<? extends BaseResponseBody> detail(@PathVariable("meetingId") int meetingId) {
 
 		return ResponseEntity.status(200).body(AdvancedResponseBody.of(200, meetingId + " 미팅실 상세 내역 조회 성공",
 				meetingSearchService.detailMeeting(meetingId)));
@@ -61,7 +62,7 @@ public class MeetingSearchController {
 	@ApiOperation(value = "전체 직군 조회")
 	@ApiResponses({ @ApiResponse(code = 200, message = "전체 직군 조회 완료", response = IndustryResClass.class),
 			@ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<? extends AdvancedResponseBody> industry() {
+	public ResponseEntity<? extends BaseResponseBody> industry() {
 
 		return ResponseEntity.status(200)
 				.body(AdvancedResponseBody.of(200, "전체 직군 조회 완료", meetingSearchService.selectIndustry()));
@@ -71,7 +72,7 @@ public class MeetingSearchController {
 	@ApiOperation(value = "전체 회사명 조회")
 	@ApiResponses({ @ApiResponse(code = 200, message = "전체 기업명 조회 완료", response = CompanyResClass.class),
 			@ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<? extends AdvancedResponseBody> company() {
+	public ResponseEntity<? extends BaseResponseBody> company() {
 
 		return ResponseEntity.status(200)
 				.body(AdvancedResponseBody.of(200, "전체 기업명 조회 완료", meetingSearchService.selectCompany()));
