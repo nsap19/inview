@@ -55,7 +55,7 @@ public class CallHandler extends TextWebSocketHandler {
     final UserSession user = registry.getBySession(session);
 
     if (user != null) {
-      log.debug("Incoming message from user '{}': {}", user.getName(), jsonMessage);
+      log.debug("Incoming message from user '{}': {}", user.getUserId(), jsonMessage);
     } else {
       log.debug("Incoming message from new user: {}", jsonMessage);
     }
@@ -65,8 +65,8 @@ public class CallHandler extends TextWebSocketHandler {
         joinRoom(jsonMessage, session);
         break;
       case "receiveVideoFrom":
-        final String senderName = jsonMessage.get("sender").getAsString();
-        final UserSession sender = registry.getByName(senderName);
+        final int senderId = jsonMessage.get("sender").getAsInt();
+        final UserSession sender = registry.getByUserId(senderId);
         final String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
         user.receiveVideoFrom(sender, sdpOffer);
         break;
@@ -79,7 +79,7 @@ public class CallHandler extends TextWebSocketHandler {
         if (user != null) {
           IceCandidate cand = new IceCandidate(candidate.get("candidate").getAsString(),
               candidate.get("sdpMid").getAsString(), candidate.get("sdpMLineIndex").getAsInt());
-          user.addCandidate(cand, jsonMessage.get("name").getAsString());
+          user.addCandidate(cand, jsonMessage.get("userId").getAsInt());
         }
         break;
       default:
@@ -90,21 +90,21 @@ public class CallHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     UserSession user = registry.removeBySession(session);
-    roomManager.getRoom(user.getRoomName()).leave(user);
+    roomManager.getRoom(user.getMeetingId()).leave(user);
   }
 
   private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
-    final String roomName = params.get("room").getAsString();
-    final String name = params.get("name").getAsString();
-    log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
+    final int meetingId = params.get("meetingId").getAsInt();
+    final int userId = params.get("userId").getAsInt();
+    log.info("PARTICIPANT {}: trying to join room {}", userId, meetingId);
 
-    Room room = roomManager.getRoom(roomName);
-    final UserSession user = room.join(name, session);
+    Room room = roomManager.getRoom(meetingId);
+    final UserSession user = room.join(userId, session);
     registry.register(user);
   }
 
   private void leaveRoom(UserSession user) throws IOException {
-    final Room room = roomManager.getRoom(user.getRoomName());
+    final Room room = roomManager.getRoom(user.getMeetingId());
     room.leave(user);
     if (room.getParticipants().isEmpty()) {
       roomManager.removeRoom(room);

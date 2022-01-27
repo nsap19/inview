@@ -15,7 +15,7 @@ public class RoomManager {
   @Autowired
   private KurentoClient kurento;
 
-  private final ConcurrentMap<String, Room> rooms = new ConcurrentHashMap<>();
+  private final ConcurrentMap<Integer, Room> rooms = new ConcurrentHashMap<>(); //key : meetingId
 
   /**
    * Looks for a room in the active room list.
@@ -25,16 +25,16 @@ public class RoomManager {
    * @return the room if it was already created, or a new one if it is the first time this room is
    *         accessed
    */
-  public Room getRoom(String roomName) {
-    log.debug("Searching for room {}", roomName);
-    Room room = rooms.get(roomName);
+  public Room getRoom(int meetingId) {
+    log.debug("Searching for room {}", meetingId);
+    Room room = rooms.get(meetingId);
 
     if (room == null) {
-      log.debug("Room {} not existent. Will create now!", roomName);
-      room = new Room(roomName, kurento.createMediaPipeline());
-      rooms.put(roomName, room);
+      log.debug("Room {} not existent. Will create now!", meetingId);
+      room = new Room(meetingId, kurento.createMediaPipeline());
+      rooms.put(meetingId, room);
     }
-    log.debug("Room {} found!", roomName);
+    log.debug("Room {} found!", meetingId);
     return room;
   }
 
@@ -45,9 +45,9 @@ public class RoomManager {
    *          the room to be removed
    */
   public void removeRoom(Room room) {
-    this.rooms.remove(room.getName());
+    this.rooms.remove(room.getMeetingId());
     room.close();
-    log.info("Room {} removed and closed", room.getName());
+    log.info("Room {} removed and closed", room.getMeetingId());
   }
 
 }

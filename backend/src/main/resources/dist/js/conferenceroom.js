@@ -17,7 +17,7 @@
 
 // var ws = new WebSocket('ws://' + location.host + '/groupcall');
 var participants = {};
-var name;
+var userId;
 
 
 const serverURL = "http://localhost:8080/groupcall";
@@ -71,7 +71,7 @@ ws.onmessage = function(message) {
 		receiveVideoResponse(parsedMessage);
 		break;
 	case 'iceCandidate':
-		participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+		participants[parsedMessage.userId].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
 	        if (error) {
 		      console.error("Error adding candidate: " + error);
 		      return;
@@ -84,17 +84,17 @@ ws.onmessage = function(message) {
 }
 
 function register() {
-	name = document.getElementById('name').value;
-	var room = document.getElementById('roomName').value;
+	userId = document.getElementById('userId').value;
+	var meetingId = document.getElementById('meetingId').value;
 
-	document.getElementById('room-header').innerText = 'ROOM ' + room;
+	document.getElementById('room-header').innerText = 'ROOM ' + meetingId;
 	document.getElementById('join').style.display = 'none';
 	document.getElementById('room').style.display = 'block';
 
 	var message = {
 		id : 'joinRoom',
-		name : name,
-		room : room,
+		userId : userId,
+		meetingId : meetingId,
 	}
 
 	// stompClient.send("/publish/video-chat/join",
@@ -106,11 +106,11 @@ function register() {
 }
 
 function onNewParticipant(request) {
-	receiveVideo(request.name);
+	receiveVideo(request.userId);
 }
 
 function receiveVideoResponse(result) {
-	participants[result.name].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
+	participants[result.userId].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
 		if (error) return console.error (error);
 	});
 }
@@ -137,9 +137,10 @@ function onExistingParticipants(msg) {
 			}
 		}
 	};
-	console.log(name + " registered in room " + room);
-	var participant = new Participant(name);
-	participants[name] = participant;
+
+	console.log(userId + " registered in room " + meetingId);
+	var participant = new Participant(userId);
+	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
 	var options = {
@@ -173,9 +174,9 @@ function leaveRoom() {
 	ws.close();
 }
 
-function receiveVideo(sender) {
-	var participant = new Participant(sender);
-	participants[sender] = participant;
+function receiveVideo(userId) {
+	var participant = new Participant(userId);
+	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
 	var options = {
@@ -193,10 +194,10 @@ function receiveVideo(sender) {
 }
 
 function onParticipantLeft(request) {
-	console.log('Participant ' + request.name + ' left');
-	var participant = participants[request.name];
+	console.log('Participant ' + request.userId + ' left');
+	var participant = participants[request.userId];
 	participant.dispose();
-	delete participants[request.name];
+	delete participants[request.userId];
 }
 
 function sendMessage(message) {
