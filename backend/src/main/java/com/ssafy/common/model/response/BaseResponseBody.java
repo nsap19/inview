@@ -1,7 +1,6 @@
 package com.ssafy.common.model.response;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @ApiModel("BaseResponseBody")
 public class BaseResponseBody {
-	@ApiModelProperty(name = "응답 메시지", example = "정상")
 	String message = null;
-	@ApiModelProperty(name = "응답 코드", example = "200")
 	Integer statusCode = null;
 
 	public BaseResponseBody(Integer statusCode) {
