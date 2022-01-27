@@ -12,12 +12,16 @@ import com.ssafy.db.entity.meeting.Meeting;
 
 @Repository
 public interface ArchiveRepository extends JpaRepository<Archive, Integer> {
+	@Transactional
 	List<Archive> findAll();
 
+	@Transactional
 	List<Archive> findAllByUserAndMeeting(User user, Meeting meeting);
 
+	@Transactional
 	Archive findByArchiveId(int archiveId);
 
+	@Transactional
 	Archive findByPathAndUser(String path, User user);
 
 	@Transactional
