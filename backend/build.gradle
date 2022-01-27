@@ -142,6 +142,18 @@ dependencies {
 
     implementation("com.querydsl:querydsl-jpa:${querydslVer}")
     implementation("com.querydsl:querydsl-apt:${querydslVer}")
+    
+    //mail을 주고받기 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    
+    //SpringSecurity를 사용하기 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    
+    //Validation을 사용하기 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    
+    //Test를 하기 위한 의존성 추가
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5")
 
     //STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
     implementation("org.springframework.boot:spring-boot-starter-mustache")
@@ -184,7 +196,8 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    //testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {

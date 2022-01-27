@@ -2,6 +2,7 @@ package com.ssafy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -11,6 +12,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import com.ssafy.groupcall.CallHandler;
+import com.ssafy.common.util.StompInterceptor;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -39,4 +41,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer,WebSock
 		registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://localhost:3000").withSockJS();
 	}
 
+	public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new StompInterceptor());
+    }
 }
