@@ -13,11 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.api.request.ArchiveRegisterPostReq;
 import com.ssafy.api.service.ArchiveService;
+import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.MD5Generator;
 import com.ssafy.db.entity.ArchiveType;
+import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
+import com.ssafy.test.BasicTest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +36,9 @@ public class MeetingInsideCotroller {
 
 	@Autowired
 	ArchiveService arhciveService;
+	
+	@Autowired
+	UserService userService;
 
 	@PostMapping("/{meetingId}/close")
 	@ApiOperation(value = "미팅 종료")
@@ -78,7 +84,13 @@ public class MeetingInsideCotroller {
 			Meeting meeting = meetingInsideService.getMeeting(meetingId);
 			archiveRegisterPostReq.setMeeting(meeting);
 
-			arhciveService.createAllArchive(archiveRegisterPostReq);
+			// original code
+//			arhciveService.createAllArchive(archiveRegisterPostReq);
+			
+			//for front test 
+			User user = userService.getUserById(1);
+			archiveRegisterPostReq.setUser(user);
+			arhciveService.createArchive(archiveRegisterPostReq);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "파일 업로드 실패"));

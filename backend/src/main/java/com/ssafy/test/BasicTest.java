@@ -3,8 +3,9 @@ package com.ssafy.test;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,9 @@ import com.ssafy.db.repository.UserRepositorySupport;
 
 import lombok.extern.slf4j.Slf4j;
 
+// 테스트를 사전순으로 실행시켜주는 어노테이션
 @RunWith(SpringRunner.class)
 @SpringBootTest
-// 테스트를 사전순으로 실행시켜주는 어노테이션
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ActiveProfiles
 @Slf4j
@@ -62,7 +63,7 @@ public class BasicTest {
 		
 	}
 	
-//	@Before
+	@Before
 	public void given() {
 		// given
 		user1 = new User();
@@ -77,7 +78,7 @@ public class BasicTest {
 		user2.setPassword("ssafy");
 		int user2Id = userRepository.save(user2).getUserId();
 
-		Industry industry = new Industry();
+		industry = new Industry();
 		industry.setIndustryName("naver");
 		int industryId = industryRepository.save(industry).getIndustryId();
 
@@ -88,37 +89,37 @@ public class BasicTest {
 		meeting.setStatus(Status.RUNNING);
 		int meetingId = meetingRepository.save(meeting).getMeetingId();
 
-		ArchiveType archiveType1 = ArchiveType.CHAT;
-		ArchiveType archiveType2 = ArchiveType.FILE;
-		String archiveName = "test";
-		String path = "C:\\WorkSpace\\web-project\\";
-		int id1 = archiveRepository.save(Archive.builder().archiveType(archiveType1).archiveName(archiveName)
-				.path(path + archiveType1).user(user1).meeting(meeting).build()).getArchiveId();
-		int id2 = archiveRepository.save(Archive.builder().archiveType(archiveType1).archiveName(archiveName)
-				.path(path + archiveType1).user(user2).meeting(meeting).build()).getArchiveId();
-
-		int id3 = archiveRepository.save(Archive.builder().archiveType(archiveType2).archiveName(archiveName)
-				.path(path + archiveType2).user(user1).meeting(meeting).build()).getArchiveId();
+//		ArchiveType archiveType1 = ArchiveType.CHAT;
+//		ArchiveType archiveType2 = ArchiveType.FILE;
+//		String archiveName = "test";
+//		String path = "C:\\WorkSpace\\web-project\\";
+//		int id1 = archiveRepository.save(Archive.builder().archiveType(archiveType1).archiveName(archiveName)
+//				.path(path + archiveType1).user(user1).meeting(meeting).build()).getArchiveId();
+//		int id2 = archiveRepository.save(Archive.builder().archiveType(archiveType1).archiveName(archiveName)
+//				.path(path + archiveType1).user(user2).meeting(meeting).build()).getArchiveId();
+//
+//		int id3 = archiveRepository.save(Archive.builder().archiveType(archiveType2).archiveName(archiveName)
+//				.path(path + archiveType2).user(user1).meeting(meeting).build()).getArchiveId();
 	}
 
-//	@Test
+	@Test
 	public void querydsl2_find() {
 		// when
-		List<Archive> result = archiveRepository.findAllByUserAndMeeting(user1, meeting);
-		int archiveId = result.get(0).getArchiveId();
-		String resultPath = result.get(0).getPath();
-		Archive archive1 = archiveRepository.findByArchiveId(archiveId);
-		Archive archive2 = archiveRepository.findByPathAndUser(resultPath, user1);
-
-		// then
-		System.out.println("result size : " + result.size());
-		System.out.println("path : " + result.get(0).getPath());
-		System.out.println(archive1);
-		System.out.println(archive2);
+//		List<Archive> result = archiveRepository.findAllByUserAndMeeting(user1, meeting);
+//		int archiveId = result.get(0).getArchiveId();
+//		String resultPath = result.get(0).getPath();
+//		Archive archive1 = archiveRepository.findByArchiveId(archiveId);
+//		Archive archive2 = archiveRepository.findByPathAndUser(resultPath, user1);
+//
+//		// then
+//		System.out.println("result size : " + result.size());
+//		System.out.println("path : " + result.get(0).getPath());
+//		System.out.println(archive1);
+//		System.out.println(archive2);
 		
 	}
 	
-	@Test
+//	@Test
 	public void querydsl3_delete() {
 		// given
 		user1 = userRepository.findById(1).get();
