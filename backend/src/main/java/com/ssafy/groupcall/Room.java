@@ -62,7 +62,7 @@ public class Room implements Closeable {
   private Collection<Integer> joinRoom(UserSession newParticipant) throws IOException {
     final JsonObject newParticipantMsg = new JsonObject();
     newParticipantMsg.addProperty("id", "newParticipantArrived");
-    newParticipantMsg.addProperty("name", newParticipant.getUserId());
+    newParticipantMsg.addProperty("userId", newParticipant.getUserId());
 
     final List<Integer> participantsList = new ArrayList<>(participants.values().size());
     log.debug("ROOM {}: notifying other participants of new participant {}", meetingId,

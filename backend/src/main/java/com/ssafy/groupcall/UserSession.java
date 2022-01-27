@@ -119,7 +119,7 @@ private WebRtcEndpoint getEndpointForUser(final UserSession sender) {
         public void onEvent(IceCandidateFoundEvent event) {
           JsonObject response = new JsonObject();
           response.addProperty("id", "iceCandidate");
-          response.addProperty("name", sender.getUserId());
+          response.addProperty("userId", sender.getUserId());
           response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
           try {
             synchronized (session) {

@@ -21,16 +21,16 @@ const PARTICIPANT_CLASS = 'participant';
 /**
  * Creates a video element for a new participant
  *
- * @param {String} name - the name of the new participant, to be used as tag
+ * @param {int} userId - the name of the new participant, to be used as tag
  *                        name of the video element.
  *                        The tag of the new element will be 'video<name>'
  * @return
  */
-function Participant(name) {
-	this.name = name;
+function Participant(userId) {
+	this.userId = userId;
 	var container = document.createElement('div');
 	container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
-	container.id = name;
+	container.id = userId;
 	var span = document.createElement('span');
 	var video = document.createElement('video');
 	var rtcPeer;
@@ -40,9 +40,9 @@ function Participant(name) {
 	container.onclick = switchContainerClass;
 	document.getElementById('participants').appendChild(container);
 
-	span.appendChild(document.createTextNode(name));
+	span.appendChild(document.createTextNode(userId));
 
-	video.id = 'video-' + name;
+	video.id = 'video-' + userId;
 	video.autoplay = true;
 	video.controls = false;
 
@@ -76,7 +76,7 @@ function Participant(name) {
 		if (error) return console.error ("sdp offer error")
 		console.log('Invoking SDP offer callback function');
 		var msg =  { id : "receiveVideoFrom",
-				sender : name,
+				sender : userId,
 				sdpOffer : offerSdp
 			};
 		sendMessage(msg);
@@ -89,7 +89,7 @@ function Participant(name) {
 		  var message = {
 		    id: 'onIceCandidate',
 		    candidate: candidate,
-		    name: name
+		    userId: userId
 		  };
 		  sendMessage(message);
 	}
@@ -97,7 +97,7 @@ function Participant(name) {
 	Object.defineProperty(this, 'rtcPeer', { writable: true});
 
 	this.dispose = function() {
-		console.log('Disposing participant ' + this.name);
+		console.log('Disposing participant ' + this.userId);
 		this.rtcPeer.dispose();
 		container.parentNode.removeChild(container);
 	};
