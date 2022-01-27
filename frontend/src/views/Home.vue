@@ -1,18 +1,28 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="home container text-center">
+    <img alt="INVIEW logo" src="../assets/logo.png" class="w-50 m-4">
+    <div class="py-4 search-bar">
+      <SearchBar/>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import SearchBar from '@/components/SearchBar.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
-    HelloWorld,
+    SearchBar,
   },
 });
 </script>
+
+<style scoped>
+.search-bar {
+  width: 400px;
+  margin: 0 auto;
+  transform: scale(1.3);
+}
+</style>
