@@ -41,7 +41,7 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
   color: #2c3e50;
-  --el-color-primary: #667267;
+  --el-color-primary: #76B57A;
   /* --el-bg-color: #F3F0D7; */
 }
 
@@ -59,7 +59,23 @@ export default defineComponent({
   color: #42b983;
 }
 
-:root {
-  --el-color-primary: green;
+*::-webkit-scrollbar {
+    width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+    border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+    height: 56px;
+    border-radius: 8px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+    background-color: #888;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
 }
 </style>

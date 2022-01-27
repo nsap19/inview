@@ -1,44 +1,52 @@
 <template>
-  <div>
+  <div class="h-100">
     <!-- pagination -->
     <div class="p-2 d-flex justify-content-center">
       <el-pagination 
         background 
         layout="prev, pager, next" 
         :page-count="evaluations.length"
-        :pager-count="5"
+        :pager-count="9"
         :current-page="currentPage"
         @current-change="paginate"
+        :small="true"
       >
       </el-pagination>
     </div>
 
     <!-- 문항과 답변 input -->
     <div v-for="(evaluation, index) in evaluations" :key="evaluation.pk">
-      <div v-if="index + 1 === currentPage" class="p-2">
+      <div v-show="index + 1 === currentPage" class="p-2">
         <div>
           <p class="fw-bold">{{ index + 1 }}번 면접 문항</p>
           <p> {{evaluation.question}} </p>
           
         </div>
-        <el-input
-          v-model="evaluation.content.value"
-          :autosize="{ minRows: 2, maxRows: 10 }"
-          type="textarea"
-          placeholder="평가 내용을 적어주세요"
-        >
-        </el-input>
+        <div class="textarea">
+          <el-input
+            v-model="evaluation.content.value"
+            :autosize="{ minRows: 5, maxRows: 10 }"
+            resize="none"
+            type="textarea"
+            placeholder="평가 내용을 적어주세요"
+            class="textarea"
+          ></el-input>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, Ref, watch } from 'vue'
 
 export default defineComponent({
   name: 'Evaluation',
-  setup() {
+  props: {
+    endSignal: Boolean,
+    userId: Number
+  },
+  setup(props) {
     const currentPage = ref(1)
     const paginate = function (page: number) {
       currentPage.value = page
@@ -113,12 +121,15 @@ export default defineComponent({
         }
       )
     })
-    console.log(evaluations)
+    watch(()=>props.endSignal, () => {
+      // console.log(props.userId)
+      // console.log(evaluations)
+    })
     return { questions, evaluations, currentPage, paginate }
   }
 })
 </script>
 
-<style>
+<style scoped>
 
 </style>

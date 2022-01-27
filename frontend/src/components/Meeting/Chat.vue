@@ -1,87 +1,59 @@
 <template>
+  <div style="overflow-y: auto;" id="container" ref="container">
+    <div class="px-2" id="chat1" >
+      <div class="">
+        <div v-for="(item, idx) in recvList" :key="idx">
 
-  <div class="" style="overflow-y: auto;" id="container" ref="container">
+          <!-- 날짜 경계선 -->
+          <div 
+            class="text-center py-3 date" 
+            v-if="(0 < idx) && (item.date !== recvList[idx - 1].date)"
+          >
+            <el-divider>{{ item.date }}</el-divider>
+          </div>
 
-      <!-- <h1>{{meetingId}}번방</h1> -->
-      <!-- <h5>{{subscribeId}}</h5> -->
-      <!-- <button @click="disconnect">구독 해지</button><hr/> -->
-
-
-      <div class="px-3" id="chat1" >
-        <div class="">
-          <div v-for="(item, idx) in recvList" :key="idx">
-
-            <!-- 날짜 경계선 -->
-            <div 
-              class="text-center py-3 date" 
-              v-if="(0 < idx) && (item.date !== recvList[idx - 1].date)"
-            >
-              <el-divider>{{ item.date }}</el-divider>
-            </div>
-
-            <!-- 내가 보낸 메세지 -->
-            <div class="d-flex flex-row justify-content-end mb-1" v-if="item.sender === '익명'">
-              <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
-                {{ item.time }}
-              </div>
-              <div class="">
-                <!-- {{item[idx-1].sender}}  {{item.sender}} -->
-                <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1 text-end" style="font-size: 14px;">{{ item.sender }}</p>
-                <div class="p-3 border" style="border-radius: 15px; background-color: #cee5d0;">
+          <!-- 내가 보낸 메세지 -->
+          <div class="d-flex flex-row justify-content-end mb-1" v-if="item.sender === '익명'">
+            <div class="">
+              <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1 text-end" style="font-size: 14px;">{{ item.sender }}</p>
+              <div class="d-flex flex-row justify-content-end">
+                <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
+                  {{ item.time }}
+                </div>
+                <div class="p-3 border d-inline-block" style="border-radius: 15px; background-color: #cee5d0;">
                   <p class="small mb-0 text-break">{{ item.message }}</p>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- 다른 사용자가 보낸 메세지 -->
-            <div class="d-flex flex-row justify-content-start mb-1" v-else>
-              <div>
-                <!-- {{item[idx-1].sender}}  {{item.sender}} -->
-                <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1" style="font-size: 14px;">{{ item.sender }}</p>
-                <div class="p-3" style="border-radius: 15px; background-color: #f3f0d7;">
+          <!-- 다른 사용자가 보낸 메세지 -->
+          <div class="d-flex flex-row justify-content-start mb-1" v-else>
+            <div>
+              <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1" style="font-size: 14px;">{{ item.sender }}</p>
+              <div class="d-flex flex-row justify-content-start">
+                <div class="p-3 d-inline-block" style="border-radius: 15px; background-color: #f3f0d7;">
                   <p class="small mb-0 text-break">{{ item.message }}</p>
                 </div>
-              </div>
-              <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
-                {{ item.time }}
+                <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
+                  {{ item.time }}
+                </div>
               </div>
             </div>
           </div>
-
-
         </div>
-      </div>
-      <div class="form-outline message-input" style="position: sticky; bottom: 0">
-        <!-- <input class="form-control" id="textAreaExample" rows="4"
-          v-model="message"
-          type="text"
-          @keyup="sendMessage"
-        > -->
-        <el-input
-          v-model="message"
-          :autosize="{ minRows: 2, maxRows: 4 }"
-          type="textarea"
-          placeholder=""
-          @keyup="sendMessage"
-        ></el-input>
-        <el-button @click="disconnect">퇴장</el-button>
-      </div>
 
-
-      <!-- <div v-for="(item, idx) in recvList" :key="idx">
-        <div>
-          <div>{{ item.userName }}</div>
-          <div class="bubble">
-            <span class="fs-5">{{ item.message }}</span>
-          </div>
-        </div>
       </div>
-      <input
+    </div>
+    <div class="form-outline message-input" style="position: sticky; bottom: 0">
+      <el-input
         v-model="message"
-        type="text"
+        :autosize="{ minRows: 2, maxRows: 4 }"
+        type="textarea"
+        placeholder=""
         @keyup="sendMessage"
-      > -->
-
+      ></el-input>
+    </div>
   </div>
   
 </template>
@@ -95,6 +67,9 @@ import SockJS from 'sockjs-client'
 
 export default {
   name: 'Chat',
+  props: [ 
+    'endSignal'
+  ],
   data() {
     return {
       meetingId: "1",
@@ -114,6 +89,11 @@ export default {
         {"meetingId":"1","sender":"헐","time": "05:11","date":"2021년01월24일 월요일","message":"sss","type":null, "receiver":""},
       ],
       subscribeId: "",
+    }
+  },
+  watch: {
+    endSignal: () => {
+      this.disconnect()
     }
   },
   created() {

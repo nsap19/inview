@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "create" */ '@/views/Meeting.vue')
   },
   {
-    path: '/result',
+    path: '/result/:userName/:meetingId',
     name: 'Result',
     component: () => import(/* webpackChunkName: "create" */ '@/views/Result.vue')
   },
