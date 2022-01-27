@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-dialog
-    style="width:50%; margin:0 auto" title="로그인"
-    :v-model:visible="modal?.login"
+    title="로그인"
+    v-model="modal.login"
     >
     <el-form :model="form">
 

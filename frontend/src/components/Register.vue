@@ -3,7 +3,7 @@
     <!-- <h1>This is an about page</h1>
     <el-button type="text" @click="dialogFormVisible = true">open a Form nested Dialog</el-button> -->
 
-    <el-dialog style="width:50%; margin:0 auto;" title="Inview 회원가입" :v-model:visible="modal?.register">
+    <el-dialog title="Inview 회원가입" v-model="modal.register">
       <el-form :model="form">
         <el-form-item label="이름" :label-width="formLabelWidth">
           <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -26,7 +26,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable */ 
 import { mapState, mapMutations } from "vuex";
 import { userAPI } from '../utils/axios';
 export default {

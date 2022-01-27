@@ -1,6 +1,6 @@
 <template>
-  <Nav-menu/>
   <div id="nav" class="container p-5" v-if="this.$route.path !== '/' && !this.$route.path.startsWith('/meeting')">
+    <Nav-menu/>
     <div class="row justify-content-between align-items-center">
       <!-- 메인 페이지에서 네비바가 어떻게 보일지 미정이라 :style 삭제 안함 -->
       <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col-3 p-3">
