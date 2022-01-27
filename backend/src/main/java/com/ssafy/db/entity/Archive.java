@@ -33,7 +33,7 @@ public class Archive {
 	@Column(name = "archiveType", nullable = false)
 	private ArchiveType archiveType;
 
-	@Column(name = "archiveName", length = 45, nullable = false)
+	@Column(name = "archiveName", length = 80, nullable = false)
 	private String archiveName;
 
 	@Column(name = "path", length = 200, nullable = false)
