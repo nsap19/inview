@@ -35,6 +35,7 @@
 </template>
 
 <script>
+/* eslint-disable */ 
 import {mapState, mapMutations} from 'vuex'
 import Login from './Login.vue'
 import Register from "./Register.vue";

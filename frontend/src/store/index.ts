@@ -28,7 +28,7 @@ export default createStore({
     SET_USER(state, data) {
       state.user = data;
     },
-    SET_LOGOUT(state, data) {
+    SET_LOGOUT(state) {
       state.user = {};
       localStorage.removeItem("token");
     },

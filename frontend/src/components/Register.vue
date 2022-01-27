@@ -26,6 +26,7 @@
   </div>
 </template>
 <script>
+/* eslint-disable */ 
 import { mapState, mapMutations } from "vuex";
 import { userAPI } from '../utils/axios';
 export default {
