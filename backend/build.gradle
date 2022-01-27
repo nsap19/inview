@@ -155,6 +155,7 @@ dependencies {
     //Kurento (미디어서버) 관련 의존성 추가
     implementation('org.kurento:kurento-client:6.16.0')
     implementation('org.kurento:kurento-utils-js:6.15.0')
+    
 
 
     //IntelliJ용
