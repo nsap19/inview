@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.request.ArchiveRegisterPostReq;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.util.CurParticipant;
-import com.ssafy.common.util.MD5Generator;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.ChatMessage;
 import com.ssafy.db.entity.User;
@@ -45,7 +44,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 						date + "\t" + time + "\t" + sender + "가 " + receiver + "에게 : " + msg + "\n");
 			}
 		} else {
-			User u = userRepositorySupport.findUserByNickname(sender).get();
+			User u = userRepositorySupport.findUserByNickname(sender);
 			subscribe = false;
 			if (ope.equals("subscribe")) {
 				// 구독자 추가
