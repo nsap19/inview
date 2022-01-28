@@ -54,6 +54,7 @@
 					<span v-else>{{ categoryKorName[asideCategory] }}</span>
 					<el-button :icon="CloseBold" circle @click="[openAside=!openAside, asideCategory='']" type="text" ></el-button>
 				</div>
+				
 				<Participant v-show="asideCategory === 'participant'" />
 				<div v-for="participant in participants" :key="participant">
 					<Evaluation 

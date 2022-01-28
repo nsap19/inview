@@ -7,12 +7,12 @@
       :rules="rules"
       label-width="120px"
       class="demo-ruleForm"
-      :size="formSize"
+      size="large"
     >
-      <el-form-item label="제목" required prop="title">
+      <el-form-item label="제목" prop="title">
         <el-input v-model="ruleForm.title" placeholder="제목을 입력해주세요"></el-input>
       </el-form-item>
-      <el-form-item label="직군" required prop="industry">
+      <el-form-item label="직군" prop="industry">
         <el-select v-model="ruleForm.industry" placeholder="직군을 선택해주세요" class="w-100">
           <el-option label="Zone one" value="shanghai"></el-option>
           <el-option label="Zone two" value="beijing"></el-option>
@@ -56,7 +56,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">생성</el-button>
+        <el-button type="primary" @click="submitForm(ruleFormRef)">생성</el-button>
         <el-button>취소</el-button>
       </el-form-item>
     </el-form>
@@ -74,9 +74,18 @@ export default defineComponent({
     CompanySearchBar,
   },
   setup() {
-    const formSize = ref('')
     const ruleFormRef = ref<InstanceType<typeof ElForm>>()
-
+    const submitForm = (formEl: InstanceType<typeof ElForm> | undefined) => {
+      if (!formEl) return
+      formEl.validate((valid) => {
+        if (valid) {
+          console.log('submit!')
+        } else {
+          console.log('error submit!')
+          return false
+        }
+      })
+    }
     const ruleForm = reactive({
       title: '',
       industry: '',
@@ -90,7 +99,7 @@ export default defineComponent({
     const onSubmit = () => {
       console.log('submit!')
     }
-    const rules = {
+    const rules = reactive({
       title: [
         {
           required: true,
@@ -127,9 +136,9 @@ export default defineComponent({
           trigger: 'change',
         },
       ],
-    }
+    })
 
-    return { formSize, ruleFormRef, ruleForm, rules, onSubmit }
+    return { ruleFormRef, ruleForm, rules, onSubmit, submitForm }
   }
 })
 </script>

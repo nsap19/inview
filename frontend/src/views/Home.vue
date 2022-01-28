@@ -5,6 +5,10 @@
       <SearchBar/>
     </div>
   </div>
+  
+  <div>
+    <h1>최근 개설 방</h1>
+  </div>
 </template>
 
 <script lang="ts">

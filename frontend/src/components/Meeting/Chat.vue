@@ -214,10 +214,6 @@ export default {
 </script>
 
 <style scoped>
-.bubble {
-  background-color: darkgoldenrod;
-}
-
 .message-input {
   background-color: white;
   padding: 10px 5px;

@@ -49,7 +49,21 @@ export default defineComponent({
 
 #body {
   font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background: linear-gradient(-45deg, #cee5d0, #f3f0d7, #e0c097, #ff7878);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
 
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 #nav a.router-link-exact-active {
