@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,6 @@ import com.ssafy.common.util.MD5Generator;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
-import com.ssafy.test.BasicTest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ public class MeetingInsideCotroller {
 
 	@Autowired
 	ArchiveService arhciveService;
-	
+
 	@Autowired
 	UserService userService;
 
@@ -54,8 +54,7 @@ public class MeetingInsideCotroller {
 
 	@PostMapping("/{meetingId}/upload")
 	@ApiOperation(value = "미팅 중 파일 업로드")
-	@ApiResponses({ @ApiResponse(code = 200, message = "파일 업로드 성공"),
-			@ApiResponse(code = 400, message = "파일 업로드 실패") })
+	@ApiResponses({ @ApiResponse(code = 200, message = "파일 업로드 성공"), @ApiResponse(code = 400, message = "파일 업로드 실패") })
 	public ResponseEntity<? extends BaseResponseBody> upload(@RequestParam("file") MultipartFile files,
 			@PathVariable("meetingId") int meetingId) {
 		try {
@@ -86,8 +85,8 @@ public class MeetingInsideCotroller {
 
 			// original code
 //			arhciveService.createAllArchive(archiveRegisterPostReq);
-			
-			//for front test 
+
+			// for front test
 			User user = userService.getUserById(1);
 			archiveRegisterPostReq.setUser(user);
 			arhciveService.createArchive(archiveRegisterPostReq);
@@ -96,5 +95,18 @@ public class MeetingInsideCotroller {
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "파일 업로드 실패"));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "파일 업로드 성공"));
+	}
+
+	@DeleteMapping("/{meetingId}/users/{userId}")
+	@ApiOperation(value = "참가자 강제 퇴장")
+	@ApiResponses({ @ApiResponse(code = 200, message = "참가자 강제 퇴장 성공"),
+			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 존재하지 않는 유저입니다."),
+			@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<? extends BaseResponseBody> kick(@PathVariable("meetingId") int meetingId,
+			@PathVariable("userId") int userId) {
+
+		meetingInsideService.kickParticipant(meetingId, userId);
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "참가자 강제 퇴장 성공"));
 	}
 }

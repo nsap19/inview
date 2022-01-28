@@ -1,7 +1,5 @@
 package com.ssafy.api.service.meeting;
 
-import java.util.Optional;
-
 import com.ssafy.db.entity.meeting.Meeting;
 
 /**
@@ -9,5 +7,8 @@ import com.ssafy.db.entity.meeting.Meeting;
  */
 public interface MeetingInsideService {
 	void closeMeeting(int meetingId);
+
 	Meeting getMeeting(int meetingId);
+
+	void kickParticipant(int meetingId, int userId);
 }

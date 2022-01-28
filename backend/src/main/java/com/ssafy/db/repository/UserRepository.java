@@ -14,5 +14,5 @@ import com.ssafy.db.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	// 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
 //	Optional<User> findByUserId(long userId);
-	Optional<User> findByEmail(String eamil);
+	Optional<User> findByEmail(String email);
 }
