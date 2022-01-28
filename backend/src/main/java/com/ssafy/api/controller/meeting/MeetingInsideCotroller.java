@@ -1,6 +1,7 @@
 package com.ssafy.api.controller.meeting;
 
 import java.io.File;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.MD5Generator;
+import com.ssafy.common.util.SaltGenerator;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
@@ -58,8 +60,10 @@ public class MeetingInsideCotroller {
 	public ResponseEntity<? extends BaseResponseBody> upload(@RequestParam("file") MultipartFile files,
 			@PathVariable("meetingId") int meetingId) {
 		try {
+			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
+			String salt = new SaltGenerator(LocalTime.now().toString()).toString();
 			String origFilename = files.getOriginalFilename();
-			String filename = new MD5Generator(origFilename).toString() + "_" + origFilename;
+			String filename = new MD5Generator(salt + origFilename).toString() + "_" + salt + "_" + origFilename;
 			/* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
 			String savePath = System.getProperty("user.dir") + "\\files\\" + meetingId + "\\file";
 			/* 파일이 저장되는 폴더가 없으면 폴더를 생성합니다. */
@@ -84,12 +88,7 @@ public class MeetingInsideCotroller {
 			archiveRegisterPostReq.setMeeting(meeting);
 
 			// original code
-//			arhciveService.createAllArchive(archiveRegisterPostReq);
-
-			// for front test
-			User user = userService.getUserById(1);
-			archiveRegisterPostReq.setUser(user);
-			arhciveService.createArchive(archiveRegisterPostReq);
+			arhciveService.createAllArchive(archiveRegisterPostReq);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "파일 업로드 실패"));
