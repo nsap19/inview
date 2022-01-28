@@ -63,36 +63,18 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User getUserByUserId(int userId) {
-		User user = userRepositorySupport.findUserByUserId(userId).get();
+		User user = userRepositorySupport.findUserByUserId(userId);
 		return user;
 	}
 	@Override
 	public User getUserByEmail(String email) {
-		User user = userRepositorySupport.findUserByEmail(email).get();
+		User user = userRepositorySupport.findUserByEmail(email);
 		return user;
 	}
 	@Override
 	public User getUserByNickname(String nickname) {
-		User user = userRepositorySupport.findUserByNickname(nickname).get();
+		User user = userRepositorySupport.findUserByNickname(nickname);
 		return user;
-	}
-	
-	@Override
-	public ResponseEntity<? extends BaseResponseBody> modifyUser(int userId, UserUpdatePutReq userUpdateInfo) { // 회원정보 수정
-		User user = getUserByUserId(userId);
-		
-		if(getUserByUserId(userId).getNickname() != userUpdateInfo.getNickname()) { // 닉네임을 변경하는 경우
-			if(getUserByNickname(userUpdateInfo.getNickname()) == null) // 닉네임 중복 검사
-				return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
-			else
-				user.setNickname(userUpdateInfo.getNickname()); // 닉네임 변경
-		}
-		
-		if(getUserByUserId(userId).getPassword() != userUpdateInfo.getPassword()) // 패스워드를 변경하는 경우
-			user.setPassword(passwordEncoder.encode(userUpdateInfo.getPassword())); // 패스워드 암호화하여 db에 저장
-		
-		userRepository.save(user);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원 정보 수정 성공"));
 	}
 
 	@Override

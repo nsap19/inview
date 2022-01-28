@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.UserLoginPostReq;
@@ -27,6 +30,7 @@ import com.ssafy.api.response.Response;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.service.EmailService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.common.model.response.AdvancedResponseBody;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.User;
@@ -34,6 +38,7 @@ import com.ssafy.db.repository.UserRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -59,9 +64,8 @@ public class UserController {
 	@ApiOperation(value = "회원 가입", notes = "<strong>email과 password</strong>를 통해 회원가입 한다.") 
     @ApiResponses({
         @ApiResponse(code = 200, message = "회원가입 성공"),
-        @ApiResponse(code = 401, message = "로그인이 필요한 페이지입니다."),
-        @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
-        @ApiResponse(code = 404, message = "회원가입 실패")
+        @ApiResponse(code = 400, message = "회원가입 실패"),
+        @ApiResponse(code = 500, message = "서버 오류")
     })
 	public Response register(@RequestBody UserRegisterPostReq registerInfo) {
 		ResponseEntity<? extends BaseResponseBody> result = userService.createUser(registerInfo);
@@ -71,9 +75,8 @@ public class UserController {
 	@PostMapping("/signup/email-certi") 
 	@ApiOperation(value = "이메일 인증")
 	@ApiResponses({
-    	@ApiResponse(code = 200, message = "이메일 인증 코드 검증 성공"),
-    	@ApiResponse(code = 401, message = "이메일 인증 코드 검증 실패"),
-        @ApiResponse(code = 404, message = "사용자 없음"),
+    	@ApiResponse(code = 200, message = "이메일 인증 성공"),
+    	@ApiResponse(code = 400, message = "존재하지 않는 이메일 인증 정보입니다."),
         @ApiResponse(code = 500, message = "서버 오류")
     })
     public Response verifyCode(@RequestBody VerifyCodePostReq verifyCodeInfo) {
@@ -89,9 +92,8 @@ public class UserController {
 	@ApiOperation(value = "로그인", notes="<strong>email과 password</strong>로 로그인 한다.")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "로그인 성공"),
-        @ApiResponse(code = 401, message = "로그인이 필요한 페이지입니다."),
-        @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
-        @ApiResponse(code = 409, message = "잘못된 이메일 혹은 비밀번호")
+        @ApiResponse(code = 400, message = "잘못된 이메일 혹은 비밀번호"),
+        @ApiResponse(code = 500, message = "서버 오류")
 	})
 	public Response login(@RequestBody UserLoginPostReq loginInfo) throws Exception {
 		String email = loginInfo.getEmail();
@@ -116,8 +118,7 @@ public class UserController {
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "로그아웃 성공"),
 		@ApiResponse(code = 400, message = "로그아웃 실패"),
-        @ApiResponse(code = 401, message = "로그인이 필요한 페이지입니다."),
-        @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
+        @ApiResponse(code = 500, message = "서버 오류")
 	})
 	public Response logout(@RequestBody UserLogoutGetReq logoutInfo) {
 		HttpServletRequest request = logoutInfo.getRequset();
@@ -128,28 +129,13 @@ public class UserController {
 		return new Response();
 	}
 	
-	@PutMapping("/{userId}")
-	@ApiImplicitParam(name = "userId", value ="유저 아이디")
-	@ApiOperation(value = "회원 정보 수정", notes = "수정한 회원 정보로 db 업데이트")
-	@ApiResponses({
-		@ApiResponse(code = 200, message = "회원 정보 수정 성공"),
-        @ApiResponse(code = 401, message = "로그인이 필요한 페이지입니다."),
-        @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
-        @ApiResponse(code = 404, message = "존재하지 않는 유저입니다.")
-	})
-	public Response modifyUser(@PathVariable("userId") int userId, @RequestBody UserUpdatePutReq updateInfo) {
-		ResponseEntity<? extends BaseResponseBody> result = userService.modifyUser(userId, updateInfo);
-		return new Response(result.getStatusCode());
-	}
-	
 	@DeleteMapping("/{userId}")
 	@ApiImplicitParam(name = "userId", value ="유저 아이디")
 	@ApiOperation(value = "회원 탈퇴", notes = "로그인한 회원의 정보가 db에서 삭제")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "유저 탈퇴 성공"),
-        @ApiResponse(code = 401, message = "로그인이 필요한 페이지입니다."),
-        @ApiResponse(code = 403, message = "접근 권한이 없습니다."),
-        @ApiResponse(code = 404, message = "존재하지 않는 유저입니다.")
+        @ApiResponse(code = 400, message = "존재하지 않는 유저입니다."),
+        @ApiResponse(code = 500, message = "서버 오류")
 	})
 	public Response deleteUser(@PathVariable("userId") int userId) {
 		ResponseEntity<? extends BaseResponseBody> result = userService.deleteUser(userId);
