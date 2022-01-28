@@ -2,6 +2,7 @@ package com.ssafy.api.response;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import com.ssafy.db.entity.Archive;
 import com.ssafy.db.entity.ArchiveType;
@@ -39,14 +40,38 @@ public class ArchiveRes {
 
 	public static List<ArchiveRes> of(List<Archive> archives) {
 		List<ArchiveRes> result = new LinkedList<ArchiveRes>();
+		String originalName = "";
 		for (Archive archive : archives) {
+			switch (archive.getArchiveType()) {
+			case VIDEO:
+				break;
+			case MEMO:
+				break;
+			case EVALUATION:
+				break;
+			case FILE:
+				StringTokenizer st = new StringTokenizer(archive.getArchiveName(), "_");
+				st.nextToken();
+				StringBuilder sb = new StringBuilder();
+				while (st.hasMoreTokens()) {
+					sb.append(st.nextToken()).append("_");
+				}
+				sb.setLength(sb.length() - 1);
+				originalName = String.valueOf(sb);
+				break;
+			case CHAT:
+				break;
+			}
+
 			result.add(ArchiveRes.builder()
 					.id(archive.getArchiveId())
 					.archiveType(archive.getArchiveType())
-					.archiveName(archive.getArchiveName())
-					.path(archive.getPath()).build());
+					.archiveName(originalName)
+					.path(archive.getPath())
+					.build());
 		}
+
 		return result;
 	}
-	
+
 }
