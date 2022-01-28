@@ -66,11 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**",
 						/* Probably not needed */ "/swagger.json")
 				.permitAll()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-
 				.antMatchers(HttpMethod.GET, "/meeting/**").permitAll()
-
 				.anyRequest().authenticated()
-
 				.and().cors().and().logout().logoutSuccessUrl("/users/login") // 로그아웃 성공 시
 				// 리다이렉트할 주소
 				.deleteCookies("JSESSIONID") // 로그아웃 후 쿠키 삭제
