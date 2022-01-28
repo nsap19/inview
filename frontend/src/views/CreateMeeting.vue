@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
-import CompanySearchBar from '@/components/CompanySearchBar.vue';
+import CompanySearchBar from '@/components/SearchFilterBar/CompanySearchBar.vue';
 import type { ElForm } from 'element-plus'
 
 export default defineComponent({

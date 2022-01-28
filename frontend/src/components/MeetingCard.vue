@@ -27,9 +27,9 @@ export default defineComponent({
   props: ['meeting'],
   setup (props) {
     const infos = [
-      ['직군', props.meeting.industry],
-      ['회사', props.meeting.company],
-      ['참가 인원', props.meeting.userLimit],
+      ['직군', props.meeting.industryName],
+      ['회사', props.meeting.companyNameList],
+      ['최대 인원', props.meeting.userLimit],
       ['날짜', props.meeting.startTime],
     ]
     return { props, infos }

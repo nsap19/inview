@@ -24,6 +24,7 @@
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search } from '@element-plus/icons-vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Search',
@@ -31,6 +32,7 @@ export default defineComponent({
     const searchQuery = ref('')
     const selectedCategory = ref('제목')
     const router = useRouter()
+    const store = useStore()
 
     const goToSearchResult = () => {
       // 검색어에 글자가 있는 경우 검색 결과 페이지로 이동
@@ -41,6 +43,7 @@ export default defineComponent({
           company: selectedCategory.value === '회사' ? searchQuery.value : ''
         }
         router.push({ name: 'Search', query: wholeQuery})
+        store.dispatch('search', wholeQuery)
       }
     }
 

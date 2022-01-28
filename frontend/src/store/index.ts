@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import createPersistedState from "vuex-persistedstate";
+import axios from 'axios'
 
 export default createStore({
   plugins: [createPersistedState({
@@ -15,6 +16,7 @@ export default createStore({
     options:[],
     location:{},
     fileList: [],
+    searchResult: []
   },
   mutations: {
     SET_LOGIN_MODAL(state, data) {
@@ -41,8 +43,25 @@ export default createStore({
     SET_LOCATION(state, data){
       state.location = data;
     },
-
+    saveSearchResult(state, data) {
+      state.searchResult = data
+    }
   },
-  actions: {},
+  actions: {
+    search( { commit }, payload ) {
+      axios({
+        url: "http://localhost:8080/meeting/",
+        method: 'GET',
+        params: {
+          title: payload.title,
+          industry: payload.industry,
+          company: payload.company
+        }
+      })
+      .then(res => {
+        commit('saveSearchResult', res.data.data.content)
+      })
+    }
+  },
   modules: {},
 })

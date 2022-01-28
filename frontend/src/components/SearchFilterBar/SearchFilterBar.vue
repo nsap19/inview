@@ -12,10 +12,7 @@
           <el-input v-model="title" placeholder="제목을 입력해주세요"></el-input>
         </el-form-item>
         <el-form-item label="직군">
-          <el-select v-model="industry" placeholder="직군을 선택해주세요" class="w-100">
-            <el-option label="Zone one" value="shanghai"></el-option>
-            <el-option label="Zone two" value="beijing"></el-option>
-          </el-select>
+          <IndustrySearchBar v-model="industry" />
         </el-form-item>
         <el-form-item label="회사">
           <CompanySearchBar v-model="company" />
@@ -24,25 +21,6 @@
           <el-button @click="getSearchResult">검색하기</el-button>
         </el-form-item>
       </el-form>
-      <!-- <div>
-        <div class="d-flex flex-row justify-content-center">
-          <span>제목</span>
-          <el-input v-model="title" class="w-50" placeholder="제목을 입력해주세요" />
-        </div>
-      </div>
-      <div>
-        <div class="d-flex flex-row justify-content-center">
-          <span>직군</span>
-          <el-input v-model="industry" class="w-50" placeholder="직군을 입력해주세요" />
-        </div>
-      </div>
-      <div>
-        <div class="d-flex flex-row justify-content-center">
-          <span>회사</span>
-          <el-input v-model="company" class="w-50" placeholder="회사를 입력해주세요" />
-        </div>
-      </div> -->
-      
     </el-collapse-item>
   </el-collapse>
 </template>
@@ -50,16 +28,20 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import CompanySearchBar from '@/components/CompanySearchBar.vue';
+import CompanySearchBar from '@/components/SearchFilterBar/CompanySearchBar.vue';
+import IndustrySearchBar from '@/components/SearchFilterBar/IndustrySearchBar.vue';
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'SearchFilterBar',
   components: {
     CompanySearchBar,
+    IndustrySearchBar
   },
   setup () {
     const route = useRoute()
     const router = useRouter()
+    const store = useStore()
 
     const title = ref(route.query.title)
     const industry = ref(route.query.industry)
@@ -77,6 +59,11 @@ export default defineComponent({
           company: company.value
         }
         router.push({ name: 'Search', query: wholeQuery})
+        store.dispatch('search', {
+          title: route.query.title,
+          industry: route.query.industry,
+          company: route.query.company
+        })
       } 
     }
 

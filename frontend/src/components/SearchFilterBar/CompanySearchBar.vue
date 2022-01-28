@@ -1,26 +1,34 @@
 <template>
   <el-autocomplete
-    v-model="state"
+    v-model="company"
     :fetch-suggestions="querySearch"
     :trigger-on-focus="false"
     class="inline-input w-100"
     placeholder="회사명을 입력해주세요"
     @select="handleSelect"
-    @keyup="handleInput"
+    @keydown="handleInput"
   />
 
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'CompanySearchBar',
-  props: ['modelValue'],
-  setup (props, { emit }) {
+  props: {
+    modelValue: String,
+  },
+  setup(props, { emit }) {
+    const company = computed({
+      get: () => props.modelValue || '',
+      set: (value) => emit("update:modelValue", value),
+    });
+
     interface CompanyItem {
       value: string
-      link: string
+      id: number
     }
     const state = ref('')
 
@@ -43,36 +51,38 @@ export default defineComponent({
       }
     }
 
+    // DB에 저장된전체 회사 목록 조회
     const loadAll = () => {
-      return [
-        { value: 'vue1', link: 'https://github.com/vuejs/vue' },
-        { value: 'element', link: 'https://github.com/ElemeFE/element' },
-        { value: 'cooking', link: 'https://github.com/ElemeFE/cooking' },
-        { value: 'mint-ui', link: 'https://github.com/ElemeFE/mint-ui' },
-        { value: 'vuex', link: 'https://github.com/vuejs/vuex' },
-        { value: 'vue-router', link: 'https://github.com/vuejs/vue-router' },
-        { value: '네이버', link: 'https://github.com/babel/babel' },
-        { value: '삼성', link: 'https://github.com/babel/babel' },
-        { value: 'SK', link: 'https://github.com/babel/babel' },
-      ]
+      axios({
+        url: "http://localhost:8080/meeting/company/",
+        method: 'GET',
+      })
+      .then(res => {
+        res.data.data.forEach((element: {companyName: string, id: number}) => {
+          companies.value.push({
+            value: element.companyName,
+            id: element.id
+          })
+        });
+      })
     }
 
     const handleSelect = (item: CompanyItem) => {
-      state.value = item.value
+      company.value = item.value
       handleInput()
     }
 
     const handleInput = () => {
-      if (state.value.trim()) {
-        emit('update:modelValue', state.value)
+      if (company.value.trim()) {
+        emit('update:modelValue', company.value)
       }
     }
 
     onMounted(() => {
-      companies.value = loadAll()
+      loadAll()
     })
 
-    return { state, querySearch, handleSelect, handleInput }
+    return { company, state, querySearch, handleSelect, handleInput }
   },
   
 })

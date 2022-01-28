@@ -3,11 +3,10 @@
     <div class="mb-4">
       <SearchFilterBar/>
     </div>
-
     <div v-infinite-scroll="load" class="row row-cols-1 row-cols-md-3 g-4">
       <div 
-        v-for="meeting in meetings.slice(0, count)" 
-        :key="meeting.meeting_id" 
+        v-for="meeting in meetings" 
+        :key="meeting.id" 
         class="col"
       > 
         <MeetingCard :meeting="meeting" />
@@ -17,10 +16,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref } from 'vue'
+import { defineComponent, watch, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import SearchFilterBar from '@/components/SearchFilterBar.vue'
+import SearchFilterBar from '@/components/SearchFilterBar/SearchFilterBar.vue'
 import MeetingCard from '@/components/MeetingCard.vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'SearchResult',
@@ -30,6 +30,7 @@ export default defineComponent({
   },
   setup () {
     const route = useRoute()
+    const store = useStore()
 
     const getMeetingQuery = {
       title: route.query.title,
@@ -47,130 +48,133 @@ export default defineComponent({
       fetchQuery()
     })
 
-    const meetings = [
-      { 
-        meeting_id: 1,
-        title: '제목은 제목제목',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 2,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 3,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 4,
-        title: '제목은 제목제목',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 5,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 6,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 7,
-        title: '제목은 제목제목',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 8,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 9,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 10,
-        title: '제목은 제목제목',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 11,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-      { 
-        meeting_id: 12,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: ''
-      },
-    ]
+    // const meetings = [
+    //   { 
+    //     meeting_id: 1,
+    //     title: '제목은 제목제목',
+    //     industry: 'IT',
+    //     company: '',
+    //     userLimit: 6,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 2,
+    //     title: '두번째제목은 제목제목',
+    //     industry: '반도체',
+    //     company: '삼성전자',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 3,
+    //     title: '세번째제목은 제목제목',
+    //     industry: '공기업',
+    //     company: '한전',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 4,
+    //     title: '제목은 제목제목',
+    //     industry: 'IT',
+    //     company: '',
+    //     userLimit: 6,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 5,
+    //     title: '두번째제목은 제목제목',
+    //     industry: '반도체',
+    //     company: '삼성전자',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 6,
+    //     title: '세번째제목은 제목제목',
+    //     industry: '공기업',
+    //     company: '한전',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 7,
+    //     title: '제목은 제목제목',
+    //     industry: 'IT',
+    //     company: '',
+    //     userLimit: 6,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 8,
+    //     title: '두번째제목은 제목제목',
+    //     industry: '반도체',
+    //     company: '삼성전자',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 9,
+    //     title: '세번째제목은 제목제목',
+    //     industry: '공기업',
+    //     company: '한전',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 10,
+    //     title: '제목은 제목제목',
+    //     industry: 'IT',
+    //     company: '',
+    //     userLimit: 6,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 11,
+    //     title: '두번째제목은 제목제목',
+    //     industry: '반도체',
+    //     company: '삼성전자',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    //   { 
+    //     meeting_id: 12,
+    //     title: '세번째제목은 제목제목',
+    //     industry: '공기업',
+    //     company: '한전',
+    //     userLimit: 3,
+    //     startTime: '202201141500',
+    //     endTime: '',
+    //     url: ''
+    //   },
+    // ]
 
-    const count = ref(6)
+    const meetings = computed(() => store.state.searchResult)
+    // const meetingsLength = computed(() => store.state.searchResult.length)
+    // console.log(meetingsLength)
+    const count = ref(1)
     const load = () => {
       count.value += 3
     }
