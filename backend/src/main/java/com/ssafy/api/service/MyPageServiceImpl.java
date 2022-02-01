@@ -1,16 +1,25 @@
 package com.ssafy.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import com.querydsl.core.Tuple;
 import com.ssafy.api.request.UserUpdatePutReq;
+import com.ssafy.api.response.LastMeetingDetailRes;
+import com.ssafy.api.response.MeetingDetailRes;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.meeting.Meeting;
+import com.ssafy.db.repository.LastMeetingRepositorySupport;
 
 public class MyPageServiceImpl implements MyPageService {
 	
 	@Autowired
 	UserServiceImpl userServiceImpl;
+	@Autowired
+	LastMeetingRepositorySupport lastMeetingRepositorySupport;
 	
 	@Override
 	public ResponseEntity<? extends BaseResponseBody> modifyUser(int userId, UserUpdatePutReq userUpdateInfo) { // 회원정보 수정
@@ -29,4 +38,16 @@ public class MyPageServiceImpl implements MyPageService {
 		userServiceImpl.userRepository.save(user);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원 정보 수정 성공"));
 	}
+
+	@Override
+	public List<Meeting> searchMeeting(int userId) {
+		return lastMeetingRepositorySupport.findMeetingById(userId);
+	}
+
+	@Override
+	public LastMeetingDetailRes searchMeetingDetail(int userId, int meetingId) {
+		return lastMeetingRepositorySupport.findMeetingDetailById(userId, meetingId);
+	}
+
+	
 }
