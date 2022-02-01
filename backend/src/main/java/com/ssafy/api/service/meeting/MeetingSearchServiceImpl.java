@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
 import com.ssafy.api.response.CompanyRes;
 import com.ssafy.api.response.IndustryRes;
-import com.ssafy.common.exception.handler.NotExistsMeetingException;
+import com.ssafy.api.response.MeetingDetailRes;
+import com.ssafy.api.response.MeetingRes;
+import com.ssafy.common.exception.handler.NotExistsCompanyException;
+import com.ssafy.common.exception.handler.NotExistsIndustryException;
 import com.ssafy.db.repository.CompanyRepository;
 import com.ssafy.db.repository.IndustryRepository;
 import com.ssafy.db.repository.MeetingRepository;
@@ -35,18 +39,25 @@ public class MeetingSearchServiceImpl implements MeetingSearchService {
 	MeetingRepositorySupport meetingRepositorySupport;
 
 	@Override
-	@Transactional(readOnly = true)
-	public void selectMeeting(MeetingRegisterPostReq registerInfo, int hostId) {
-		// TODO Auto-generated method stub
+	@Transactional
+	public Page<MeetingRes> selectMeeting(String title, List<String> industries, List<String> companies, int page) {
+		PageRequest pageable = PageRequest.of(page - 1, 9);
 
+		if (industries != null)
+			industries.stream().forEach(i -> industryRepository.findByIndustryName(i)
+					.orElseThrow(() -> new NotExistsIndustryException()).addCount());
+
+		if (companies != null)
+			companies.stream().forEach(c -> companyRepository.findByCompanyName(c)
+					.orElseThrow(() -> new NotExistsCompanyException()).addCount());
+
+		return meetingRepositorySupport.findByTitleOrIndustryOrCompany(title, industries, companies, pageable);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public void detailMeeting(int meetingId) {
-		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
-
-		meetingRepositorySupport.findById(meetingId);
+	public MeetingDetailRes detailMeeting(int meetingId) {
+		return meetingRepositorySupport.findById(meetingId);
 
 	}
 

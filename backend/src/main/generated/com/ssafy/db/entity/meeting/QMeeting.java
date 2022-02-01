@@ -22,9 +22,9 @@ public class QMeeting extends EntityPathBase<Meeting> {
 
     public static final QMeeting meeting = new QMeeting("meeting");
 
-    public final DateTimePath<java.util.Date> closeTime = createDateTime("closeTime", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> closeTime = createDateTime("closeTime", java.time.LocalDateTime.class);
 
-    public final DateTimePath<java.util.Date> endTime = createDateTime("endTime", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> endTime = createDateTime("endTime", java.time.LocalDateTime.class);
 
     public final com.ssafy.db.entity.QIndustry industry;
 
@@ -36,7 +36,7 @@ public class QMeeting extends EntityPathBase<Meeting> {
 
     public final StringPath password = createString("password");
 
-    public final DateTimePath<java.util.Date> startTime = createDateTime("startTime", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> startTime = createDateTime("startTime", java.time.LocalDateTime.class);
 
     public final EnumPath<Status> status = createEnum("status", Status.class);
 

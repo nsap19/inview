@@ -15,6 +15,7 @@ public interface UserService {
 	User getUserByUserId(int userId);
 	User getUserByEmail(String email);
 	User getUserByNickname(String nickname);
+	User getUserById(int userId);
 	ResponseEntity<? extends BaseResponseBody> deleteUser(int userId);
 	
 }

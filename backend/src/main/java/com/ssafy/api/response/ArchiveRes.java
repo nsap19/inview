@@ -1,5 +1,12 @@
 package com.ssafy.api.response;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import com.ssafy.db.entity.Archive;
+import com.ssafy.db.entity.ArchiveType;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -19,16 +26,52 @@ import lombok.Setter;
 @AllArgsConstructor
 @ApiModel("ArchiveResponse")
 public class ArchiveRes {
-	@ApiModelProperty(name = "archive_id", example = "1")
+	@ApiModelProperty(name = "archiveId", example = "1")
 	private int id;
 
-	@ApiModelProperty(name = "archive_type", example = "1")
-	private int archive_type;
+	@ApiModelProperty(name = "archiveType", example = "1")
+	private ArchiveType archiveType;
 
-	@ApiModelProperty(name = "archive_name", example = "이미지 파일")
-	private String archive_name;
+	@ApiModelProperty(name = "archiveName", example = "이미지 파일.png")
+	private String archiveName;
 
-	@ApiModelProperty(name = "path", example = "1")
+	@ApiModelProperty(name = "path", example = "C:\\WorkSpace\\web-project\\S06P12A201\\backend\\files\\1\\file\\")
 	private String path;
+
+	public static List<ArchiveRes> of(List<Archive> archives) {
+		List<ArchiveRes> result = new LinkedList<ArchiveRes>();
+		String originalName = "";
+		for (Archive archive : archives) {
+			switch (archive.getArchiveType()) {
+			case VIDEO:
+				break;
+			case MEMO:
+				break;
+			case EVALUATION:
+				break;
+			case FILE:
+				StringTokenizer st = new StringTokenizer(archive.getArchiveName(), "_");
+				st.nextToken();
+				StringBuilder sb = new StringBuilder();
+				while (st.hasMoreTokens()) {
+					sb.append(st.nextToken()).append("_");
+				}
+				sb.setLength(sb.length() - 1);
+				originalName = String.valueOf(sb);
+				break;
+			case CHAT:
+				break;
+			}
+
+			result.add(ArchiveRes.builder()
+					.id(archive.getArchiveId())
+					.archiveType(archive.getArchiveType())
+					.archiveName(originalName)
+					.path(archive.getPath())
+					.build());
+		}
+
+		return result;
+	}
 
 }

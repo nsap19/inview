@@ -12,37 +12,47 @@ import javax.persistence.Table;
 
 import com.ssafy.db.entity.meeting.Meeting;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
+@Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "Arcive")
+@ToString
+@Table(name = "Archive")
 public class Archive {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "archive_id")
+	@Column(name = "archiveId", columnDefinition = "INT UNSIGNED")
 	private int archiveId;
 
 	@Column(name = "archiveType", nullable = false)
-	private int archiveType;
+	private ArchiveType archiveType;
 
-	@Column(name = "archiveName", length = 45, nullable = false)
+	@Column(name = "archiveName", length = 80, nullable = false)
 	private String archiveName;
 
 	@Column(name = "path", length = 200, nullable = false)
 	private String path;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "userId", nullable = false)
 	private User user;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "meeting_id", nullable = false)
+	@JoinColumn(name = "meetingId", nullable = false)
 	private Meeting meeting;
+
+	@Builder
+	public Archive(ArchiveType archiveType, String archiveName, String path, User user, Meeting meeting) {
+		this.archiveType = archiveType;
+		this.archiveName = archiveName;
+		this.path = path;
+		this.user = user;
+		this.meeting = meeting;
+	}
 }

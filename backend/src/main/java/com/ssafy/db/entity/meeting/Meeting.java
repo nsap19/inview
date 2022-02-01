@@ -1,7 +1,7 @@
 package com.ssafy.db.entity.meeting;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -28,10 +28,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 미팅 모델 정의.
  */
+@ToString
 @Getter
 @Setter
 @Builder
@@ -46,9 +48,9 @@ public class Meeting {
 	@Column(length = 100, nullable = false)
 	String title;
 
-	Date startTime;
+	LocalDateTime startTime;
 
-	Date endTime;
+	LocalDateTime endTime;
 
 	@Column(length = 100)
 	String password;
@@ -59,16 +61,16 @@ public class Meeting {
 	int userLimit;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "host_id", nullable = false)
+	@JoinColumn(name = "hostId", nullable = false)
 	User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "industry_id", nullable = false)
+	@JoinColumn(name = "industryId", nullable = false)
 	Industry industry;
 
 	String url;
 
-	Date closeTime;
+	LocalDateTime closeTime;
 
 	@Column(nullable = false)
 	@ColumnDefault("0")

@@ -62,11 +62,11 @@ public class meetingServiceImpl implements MeetingService {
 		User host = userRepository.findById(hostId).orElseThrow(() -> new NotExistsUserException());
 
 		// industry 찾기
-		Industry industry = industryRepository.findByIndustryName(registerInfo.getIndustry_name())
+		Industry industry = industryRepository.findByIndustryName(registerInfo.getIndustryName())
 				.orElseThrow(() -> new NotExistsIndustryException());
 
 		// 회사 찾기
-		List<Company> companyList = registerInfo.getCompany_name_list().stream()
+		List<Company> companyList = registerInfo.getCompanyNameList().stream()
 				.map(c -> companyRepository.findByCompanyName(c).orElseThrow(() -> new NotExistsCompanyException()))
 				.collect(Collectors.toList());
 
@@ -131,5 +131,10 @@ public class meetingServiceImpl implements MeetingService {
 		else
 			participantRepository.save(Participant.builder().meeting(meeting).user(user).build());
 
+	}
+
+	@Override
+	public Meeting getMeetingById(int meetingId) {
+		return meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 	}
 }

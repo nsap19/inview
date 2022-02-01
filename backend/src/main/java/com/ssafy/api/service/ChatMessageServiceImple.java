@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.request.ArchiveRegisterPostReq;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.util.CurParticipant;
-import com.ssafy.common.util.MD5Generator;
+import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.ChatMessage;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
@@ -44,7 +44,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 						date + "\t" + time + "\t" + sender + "가 " + receiver + "에게 : " + msg + "\n");
 			}
 		} else {
-			User u = userRepositorySupport.findUserByNickname(sender).get();
+			User u = userRepositorySupport.findUserByNickname(sender);
 			subscribe = false;
 			if (ope.equals("subscribe")) {
 				// 구독자 추가
@@ -63,7 +63,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 
 	// 채팅 내용을 파일로 부터 읽어온다.
 	private String readFile(String meetingId, String sender, String receiver) {
-		String savePath = System.getProperty("user.dir") + "\\" + meetingId + "\\chat";
+		String savePath = System.getProperty("user.dir") + "\\files\\" + meetingId + "\\chat";
 		String filePath = savePath + "\\" + sender + "_" + receiver + ".txt";
 
 		// d드라이브의 chat 폴더의 chat 파일
@@ -116,7 +116,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 
 		archiveRegisterPostReq.setPath(filepath);
 		archiveRegisterPostReq.setArchiveName(filename);
-		archiveRegisterPostReq.setArchiveType(4); // chat
+		archiveRegisterPostReq.setArchiveType(ArchiveType.CHAT); // chat
 		archiveRegisterPostReq.setUser(user);
 		Meeting meeting = meetingInsideService.getMeeting(Integer.parseInt(meetingId));
 		archiveRegisterPostReq.setMeeting(meeting);

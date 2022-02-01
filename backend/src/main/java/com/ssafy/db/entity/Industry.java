@@ -13,9 +13,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +32,8 @@ public class Industry {
 
 	@ColumnDefault("0")
 	int count;
+
+	public void addCount() {
+		this.count += 1;
+	}
 }

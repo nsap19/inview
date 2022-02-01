@@ -16,7 +16,7 @@ public interface ArchiveService {
 
 	List<Archive> getArchives();
 
-	List<Archive> getArchivesById(User user, Meeting meeting);
+	List<Archive> getArchivesByUserAndMeeting(User user, Meeting meeting);
 
 	Archive getArchivesById(int archiveId);
 
