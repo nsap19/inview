@@ -1,28 +1,36 @@
 <template>
-  <el-collapse>
-    <el-collapse-item>
-      <template #title class="text-center">
-        상세검색
-      </template>
-      <el-form 
-        label-width="120px"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="제목">
-          <el-input v-model="title" placeholder="제목을 입력해주세요"></el-input>
-        </el-form-item>
-        <el-form-item label="직군">
-          <IndustrySearchBar v-model="industry" />
-        </el-form-item>
-        <el-form-item label="회사">
-          <CompanySearchBar v-model="company" />
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="getSearchResult">검색하기</el-button>
-        </el-form-item>
-      </el-form>
-    </el-collapse-item>
-  </el-collapse>
+  <el-card>
+    <el-form 
+      class="demo-ruleForm"
+      size="large"
+      label-position="top"
+      label-width="auto"
+    >
+      <div class="container">
+        <div class="row justify-content-center pt-3">
+          <div class="col-12 col-lg-10">
+            <div class="row row-cols-1 row-cols-md-3">
+              <el-form-item label="제목" class="col">
+                <el-input v-model="title" placeholder="제목을 입력해주세요"></el-input>
+              </el-form-item>
+              <el-form-item label="직군" class="col">
+                <IndustrySearchBar v-model="industry" />
+              </el-form-item>
+              <el-form-item label="회사" class="col">
+                <CompanySearchBar v-model="company" />
+              </el-form-item>
+            </div>
+          </div>
+          <div class="col-12 col-lg-2">
+            <div class="text-center">
+              <div class="d-none d-lg-block" style="height: 22px; margin-bottom: 12px;"></div>
+              <el-button round @click="getSearchResult">상세 검색</el-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-form>
+  </el-card>
 </template>
 
 <script lang="ts">
