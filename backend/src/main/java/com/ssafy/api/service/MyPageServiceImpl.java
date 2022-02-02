@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.querydsl.core.Tuple;
 import com.ssafy.api.request.UserUpdatePutReq;
 import com.ssafy.api.response.LastMeetingDetailRes;
-import com.ssafy.api.response.MeetingDetailRes;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;

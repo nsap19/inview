@@ -61,7 +61,7 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 	
 	@PostMapping("/signup")
-	@ApiOperation(value = "회원 가입", notes = "<strong>email과 password</strong>를 통해 회원가입 한다.") 
+	@ApiOperation(value = "회원 가입", notes = "<strong>email과 password, nickname</strong>을 통해 회원가입 한다.") 
     @ApiResponses({
         @ApiResponse(code = 200, message = "회원가입 성공"),
         @ApiResponse(code = 400, message = "회원가입 실패"),
@@ -130,7 +130,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{userId}")
-	@ApiImplicitParam(name = "userId", value ="유저 아이디")
+	@ApiImplicitParam(name = "userId", value ="userId")
 	@ApiOperation(value = "회원 탈퇴", notes = "로그인한 회원의 정보가 db에서 삭제")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "유저 탈퇴 성공"),
