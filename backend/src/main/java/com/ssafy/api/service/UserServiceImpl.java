@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 	    }
 			
 		userRepository.save(user);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(409, "회원가입 성공"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원가입 성공"));
 	}
 	
 	@Override
