@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.response.LastMeetingDetailRes;
 import com.ssafy.db.entity.Archive;
@@ -32,22 +33,20 @@ public class LastMeetingRepositorySupport {
 	}
 	
 	public LastMeetingDetailRes findMeetingDetailById(int userId, int meetingId) {
-//		 Meeting meeting = jpaQueryFactory
-//				.select(qParticipant.meeting)
-//				.from(qParticipant)
-//				.where(qParticipant.user.userId.eq(userId), qParticipant.meeting.meetingId.eq(meetingId));
-//		 
-//		 List<Tuple> archives = jpaQueryFactory
-//				 .select(qArchive.archiveId)
-//				 .from(qArchive)
-//				 .where(qArchive.meeting.meetingId.eq(meetingId));
-		
-//		 LastMeetingDetailRes meetingDetail = new LastMeetingDetailRes(
-//				 meeting.getMeetingId(), meeting.getTitle(), meeting.getStartTime(), meeting.getEndTime(),
-//				 meeting.getPassword(), meeting.getUserLimit(), meeting.getUser().getUserId(), meeting.getIndustry(),
-//				 meeting.getUrl(), meeting.getCloseTime(), meeting.getStatus(), archives);
+		 Meeting meeting = jpaQueryFactory
+				.select(qParticipant.meeting)
+				.from(qParticipant)
+				.where(qParticipant.user.userId.eq(userId), qParticipant.meeting.meetingId.eq(meetingId))
+				.fetchOne();
 		 
-//		 return meetingDetail;
-		return null;
+		 List<Archive> archives = jpaQueryFactory
+				 .select(qArchive)
+				 .from(qArchive)
+				 .where(qArchive.meeting.meetingId.eq(meetingId), qArchive.user.userId.eq(userId))
+				 .fetch();
+		
+		 LastMeetingDetailRes meetingDetail = new LastMeetingDetailRes(meeting, archives);
+		 
+		 return meetingDetail;
 	}
 }
