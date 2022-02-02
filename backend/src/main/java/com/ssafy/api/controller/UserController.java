@@ -84,7 +84,7 @@ public class UserController {
         	return new Response(ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 코드 검증 성공")).getStatusCode());
         }
         else{
-        	return new Response(ResponseEntity.status(200).body(BaseResponseBody.of(401, "이메일 인증 코드 검증 실패")).getStatusCode());
+        	return new Response(ResponseEntity.status(400).body(BaseResponseBody.of(400, "이메일 인증 코드 검증 실패")).getStatusCode());
         }
     }
 	
@@ -100,12 +100,12 @@ public class UserController {
 		String password = loginInfo.getPassword();
 		
 		if(userService.getUserByEmail(email) == null)
-			return new Response(ResponseEntity.status(401).body(UserLoginPostRes.of(401, "잘못된 이메일")).getStatusCode());
+			return new Response(ResponseEntity.status(400).body(UserLoginPostRes.of(400, "잘못된 이메일")).getStatusCode());
 
 		User user = userService.getUserByEmail(email);
 		
 		if(!passwordEncoder.matches(password, user.getPassword())) // 패스워드 일치 확인
-			return new Response(ResponseEntity.status(401).body(UserLoginPostRes.of(401, "잘못된 비밀번호")).getStatusCode());
+			return new Response(ResponseEntity.status(400).body(UserLoginPostRes.of(400, "잘못된 비밀번호")).getStatusCode());
 		
 		Response response = new Response(ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공")).getStatusCode());
 		response.add("token", JwtTokenUtil.getToken(email));
