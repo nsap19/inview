@@ -3,8 +3,8 @@ package com.ssafy.db.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.response.LastMeetingDetailRes;
 import com.ssafy.db.entity.Archive;
@@ -12,9 +12,8 @@ import com.ssafy.db.entity.QArchive;
 import com.ssafy.db.entity.QParticipant;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.meeting.Meeting;
-import com.ssafy.db.entity.meeting.QMeeting;
 
-
+@Repository
 public class LastMeetingRepositorySupport {
 	
 	@Autowired
