@@ -130,7 +130,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{userId}")
-	@ApiImplicitParam(name = "userId", value ="유저 아이디")
+	@ApiImplicitParam(name = "userId", value ="userId")
 	@ApiOperation(value = "회원 탈퇴", notes = "로그인한 회원의 정보가 db에서 삭제")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "유저 탈퇴 성공"),

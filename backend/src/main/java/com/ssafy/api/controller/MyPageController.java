@@ -33,7 +33,7 @@ public class MyPageController {
 	private MyPageService myPageService;
 	
 	@PutMapping("/{userId}")
-	@ApiImplicitParam(name = "userId", value ="유저 아이디")
+	@ApiImplicitParam(name = "userId", value ="userId")
 	@ApiOperation(value = "회원 정보 수정", notes = "수정한 회원 정보로 db 업데이트")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "회원 정보 수정 성공"),
@@ -46,7 +46,7 @@ public class MyPageController {
 	}
 	
 	@GetMapping("/{userId}/meeting")
-	@ApiImplicitParam(name = "userId", value = "유저 아이디")
+	@ApiImplicitParam(name = "userId", value = "userId")
 	@ApiOperation(value = "지난 미팅 내역 전체 조회")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "지난 미팅 내역 전체 조회 성공"),
@@ -60,8 +60,8 @@ public class MyPageController {
 
 	@GetMapping("/{userId}/meeting/{meetingId}")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "userId", value = "유저 아이디"),
-		@ApiImplicitParam(name = "meetingId", value = "미팅 아이디")
+		@ApiImplicitParam(name = "userId", value = "userId"),
+		@ApiImplicitParam(name = "meetingId", value = "meetingId")
 	})
 	@ApiOperation(value = "지난 미팅 내역 상세 조회")
 	@ApiResponses({
