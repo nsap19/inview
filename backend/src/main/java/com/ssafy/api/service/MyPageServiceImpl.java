@@ -27,7 +27,7 @@ public class MyPageServiceImpl implements MyPageService {
 		User user = userServiceImpl.getUserByUserId(userId);
 
 		if (userServiceImpl.getUserByUserId(userId).getNickname() != userUpdateInfo.getNickname()) { // 닉네임을 변경하는 경우
-			if (userServiceImpl.getUserByNickname(userUpdateInfo.getNickname()) == null) // 닉네임 중복 검사
+			if (userServiceImpl.getUserByNickname(userUpdateInfo.getNickname()) != null) // 닉네임 중복 검사
 				return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
 			else
 				user.setNickname(userUpdateInfo.getNickname()); // 닉네임 변경
@@ -49,6 +49,4 @@ public class MyPageServiceImpl implements MyPageService {
 	public LastMeetingDetailRes searchMeetingDetail(int userId, int meetingId) {
 		return lastMeetingRepositorySupport.findMeetingDetailById(userId, meetingId);
 	}
-
-	
 }
