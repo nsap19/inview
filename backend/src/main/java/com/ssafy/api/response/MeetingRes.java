@@ -49,4 +49,7 @@ public class MeetingRes {
 
 	@ApiModelProperty(name = "미팅 상태", example = "WAITING")
 	String status;
+
+	@ApiModelProperty(name = "비밀번호 유/무", example = "false")
+	Boolean isLock;
 }

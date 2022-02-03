@@ -85,7 +85,7 @@ public class MeetingRepositorySupport {
 						m.getParticipants().stream().map(p -> p.getUser().getNickname()).collect(Collectors.toList()))
 				.companyNameList(m.getMeetingCompanies().stream().map(mc -> mc.getCompany().getCompanyName())
 						.collect(Collectors.toList()))
-				.build()).collect(Collectors.toList());
+				.isLock(m.getPassword() == null ? false : true).build()).collect(Collectors.toList());
 
 		// 페이징
 		return new PageImpl<>(ret, pageable, ret.size());
