@@ -1,6 +1,7 @@
 <template>
   <div id="nav" class="container p-5" v-if="this.$route.path !== '/' && !this.$route.path.startsWith('/meeting')">
     <Nav-menu/>
+    <NavBar/>
     <div class="row justify-content-between align-items-center">
       <!-- 메인 페이지에서 네비바가 어떻게 보일지 미정이라 :style 삭제 안함 -->
       <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col-3 p-3">
@@ -24,11 +25,12 @@
 import { defineComponent } from 'vue'
 import Search from '@/components/SearchBar.vue';
 import NavMenu from "./components/NavMenu.vue"
+import NavBar from "./components/NavBar.vue"
 
 export default defineComponent({
   name: 'App',
   components: {
-    Search, NavMenu
+    Search, NavMenu , NavBar
   },
 })
 </script>
