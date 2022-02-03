@@ -25,7 +25,7 @@ public class EmailServiceImpl implements EmailService {
     public static final String ePw = createKey();
 
     public MimeMessage createMessage(String to) throws Exception{
-        logger.info("보내는 대상 : "+ to);
+        logger.info("대상 : "+ to);
         logger.info("인증 번호 : " + ePw);
         MimeMessage  message = emailSender.createMimeMessage();
 
@@ -39,10 +39,9 @@ public class EmailServiceImpl implements EmailService {
         msg += "<div style=\"padding-right: 30px; padding-left: 30px; margin: 32px 0 40px;\"><table style=\"border-collapse: collapse; border: 0; background-color: #F4F4F4; height: 70px; table-layout: fixed; word-wrap: break-word; border-radius: 6px;\"><tbody><tr><td style=\"text-align: center; vertical-align: middle; font-size: 30px;\">";
         msg += code;
         msg += "</td></tr></tbody></table></div>";
-        msg += "<a href=\"https://slack.com\" style=\"text-decoration: none; color: #434245;\" rel=\"noreferrer noopener\" target=\"_blank\">Slack Clone Technologies, Inc</a>";
 
         message.setText(msg, "utf-8", "html"); //내용
-        message.setFrom(new InternetAddress("보내는 계정","slack-clone")); //보내는 사람
+        message.setFrom(new InternetAddress("ssafy6a201@gmail.com","inview")); //보내는 사람
 
         return message;
     }

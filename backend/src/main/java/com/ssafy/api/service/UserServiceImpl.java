@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<? extends BaseResponseBody> createUser(UserRegisterPostReq userRegisterInfo) {
 		if(getUserByEmail(userRegisterInfo.getEmail()) != null) // 이메일 중복 검사
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 이메일입니다."));
-		else if(getUserByNickname(userRegisterInfo.getNickname()) == null) // 닉네임 중복 검사
+		else if(getUserByNickname(userRegisterInfo.getNickname()) != null) // 닉네임 중복 검사
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
 		
 		String regx = "^[A-Za-z0-9+_.-]+@(.+)$";
