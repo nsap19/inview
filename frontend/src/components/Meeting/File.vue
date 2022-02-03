@@ -11,7 +11,6 @@
 
     <!-- 업로드 -->
     <div style="position: sticky; bottom: 0; background-color: lightgrey">
-      {{typeof(upload.value)}}
       <el-upload
         ref="upload"
         class="upload-demo"

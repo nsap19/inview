@@ -52,6 +52,7 @@
         type="textarea"
         placeholder=""
         @keyup="sendMessage"
+        resize="none"
       ></el-input>
     </div>
   </div>
@@ -215,7 +216,7 @@ export default {
 
 <style scoped>
 .message-input {
-  background-color: white;
+  background-color: #F4F4F5;
   padding: 10px 5px;
 }
 

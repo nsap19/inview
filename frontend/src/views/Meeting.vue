@@ -24,14 +24,14 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<div class="d-flex flex-row justify-content-end p-3 border meeting-nav">
+		<div class="d-flex flex-row justify-content-end p-3 meeting-nav">
 			<el-button type="warning">준비</el-button>
 			<el-button type="danger" @click="endMeeting">나가기</el-button>
 		</div>
 
 		<!-- 미팅 메인 -->
-		<div class="d-flex flex-row border meeting-content">
-			<div class="border meeting-content-main" ref="wholeVideosWrapper" >
+		<div class="d-flex flex-row meeting-content">
+			<div class="meeting-content-main" ref="wholeVideosWrapper" >
 				<div 
 					class="video-wrapper"
 					v-for="participant in participants" 
@@ -48,8 +48,8 @@
 			</div>
 
 			<!-- 우측 aside -->
-			<div v-show="openAside" class="border meeting-content-aside">
-				<div class="border d-flex flex-row justify-content-between p-2 align-items-center">
+			<div v-show="openAside" class="meeting-content-aside">
+				<div class="d-flex flex-row justify-content-between p-2 align-items-center">
 					<span v-if="asideCategory.slice(0, 10) === 'evaluation'">{{ asideCategory.slice(10) }}님의 면접 평가</span>
 					<span v-else>{{ categoryKorName[asideCategory] }}</span>
 					<el-button :icon="CloseBold" circle @click="[openAside=!openAside, asideCategory='']" type="text" ></el-button>
@@ -69,7 +69,7 @@
 		</div>
 
 		<!-- meeting footer -->
-		<div class="d-flex flex-row justify-content-end p-3 border meeting-footer">
+		<div class="d-flex flex-row justify-content-end p-3 meeting-footer">
 			<el-dropdown size='large' class="mx-3">
 				<el-button type="primary" size="large" circle :icon="List"></el-button>
 				<template #dropdown>
@@ -246,6 +246,8 @@ export default defineComponent({
 	display: flex;
   flex-flow: column;
   height: 100vh;
+	/* background-color: #EAE9E0; */
+	background-color: #F4F4F5;
 }
 
 .meeting-nav {
@@ -256,16 +258,22 @@ export default defineComponent({
   flex-shrink: 1,
   flex-basis: auto
   */
+	border-radius: 10px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	margin: 5px;
 }
 
 .meeting-content {
 	flex: 1 1 auto;
-	width: 100vw;
+	/* width: 100vw; */
 	height: 500px;
 }
 
 .meeting-footer {
 	flex: 0 1 66px;
+	border-radius: 10px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	margin: 5px;
 }
 
 .meeting-content-main {
@@ -283,13 +291,19 @@ export default defineComponent({
 	vertical-align: middle;
 	flex: 1;
 	border-radius: 10px;
-	background: rgba(0, 0, 0, 0.3);
+	/* background: rgba(0, 0, 0, 0.3); */
+
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	margin: 5px;
 }
 
 .meeting-content-aside {
 	width: 420px;
 	display: flex;
 	flex-direction: column;
+	border-radius: 10px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	margin: 5px;
 }
 
 .video-wrapper {

@@ -98,7 +98,7 @@ export default defineComponent({
       const current_datetime = datetime_object.getFullYear() + "-"
                               + ("0" + (1 + datetime_object.getMonth())).slice(-2) + "-" 
                               + ("0" + datetime_object.getDate()).slice(-2) + " " 
-                              + datetime_object.getHours() + ":" + datetime_object.getUTCMinutes()
+                              + datetime_object.getHours() + ":" + datetime_object.getMinutes()
       if (ruleForm.startTime === '') {
         callback()
       } else if (ruleForm.startTime < current_datetime) {
@@ -135,8 +135,8 @@ export default defineComponent({
         },
         {
           min: 1,
-          max: 100,
-          message: '제목은 1자 이상 100자 이하 입력해주세요',
+          max: 20,
+          message: '제목은 1자 이상 20자 이하 입력해주세요',
           trigger: 'blur',
         },
       ],

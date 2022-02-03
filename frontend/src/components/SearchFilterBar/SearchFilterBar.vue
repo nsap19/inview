@@ -1,7 +1,6 @@
 <template>
-  <el-card>
+  <el-card class="search-filter-bar">
     <el-form 
-      class="demo-ruleForm"
       size="large"
       label-position="top"
       label-width="auto"
@@ -81,5 +80,8 @@ export default defineComponent({
 </script>
 
 <style>
-
+.search-filter-bar {
+  border-radius: 10px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+}
 </style>
