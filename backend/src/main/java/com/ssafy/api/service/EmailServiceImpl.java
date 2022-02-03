@@ -66,8 +66,8 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
     }
-
+    
     public String createCode(String ePw){
-        return ePw.substring(0, 3) + "-" + ePw.substring(3, 6);
+        return ePw.substring(0, 3) + ePw.substring(3, 6);
     }
 }
