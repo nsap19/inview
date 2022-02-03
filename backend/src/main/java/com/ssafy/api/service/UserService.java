@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import org.springframework.http.ResponseEntity;
 
+import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.UserUpdatePutReq;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -17,5 +18,5 @@ public interface UserService {
 	User getUserByNickname(String nickname);
 	User getUserById(int userId);
 	ResponseEntity<? extends BaseResponseBody> deleteUser(int userId);
-	
+	ResponseEntity<? extends BaseResponseBody> findUser(UserFindPwPostReq userFindInfo);
 }

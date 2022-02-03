@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserLogoutGetReq;
 import com.ssafy.api.request.UserRegisterPostReq;
@@ -127,6 +128,18 @@ public class UserController {
 		new SecurityContextLogoutHandler().logout(request, response, auth);
 		
 		return new Response();
+	}
+	
+	@PostMapping("/findpw")
+	@ApiOperation(value="비밀번호 찾기")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "이메일 인증 성공"),
+		@ApiResponse(code = 400, message = "존재하지 않는 이메일 인증 정보입니다."),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public Response findPw(@RequestBody UserFindPwPostReq findInfo) {
+		ResponseEntity<? extends BaseResponseBody> result = userService.findUser(findInfo);
+		return new Response(result.getStatusCode());
 	}
 	
 	@DeleteMapping("/{userId}")
