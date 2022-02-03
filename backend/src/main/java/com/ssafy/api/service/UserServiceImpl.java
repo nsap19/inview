@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.common.exception.handler.NotExistsMeetingException;
 import com.ssafy.common.exception.handler.NotExistsUserException;
@@ -59,6 +60,29 @@ public class UserServiceImpl implements UserService {
 			
 		userRepository.save(user);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원가입 성공"));
+	}
+	
+	public ResponseEntity<? extends BaseResponseBody> findUser(UserFindPwPostReq userFindInfo) {
+		if(getUserByEmail(userFindInfo.getEmail()) == null) // 이메일 중복 검사
+			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "존재하지 않는 이메일 입니다."));
+		
+		String password = "";
+		for (int i = 0; i < 12; i++) {
+			password += (char) ((Math.random() * 26) + 97);
+		}
+		
+		try {
+	    	emailService.sendSimpleMessage(userFindInfo.getEmail()); // 이메일 인증 코드 보내기
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+		
+		// 코드 확인 후 맞으면 임시 비밀번호 보내기 !!!!!!!!!!!!!!!!!!!!
+		
+		User user = getUserByEmail(userFindInfo.getEmail());
+		user.setPassword(password);
+		userRepository.save(user);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "임시 비밀번호 발급 성공"));
 	}
 	
 	@Override
