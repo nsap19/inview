@@ -79,6 +79,7 @@ public class UserController {
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "비밀번호는 8글자 이상이어야 합니다."));
 		
 		userService.createUser(registerInfo);
+		
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일, 닉네임, 비밀번호 유효성 검사 성공. 인증번호 전송 완료"));
 	} 
 	
@@ -90,6 +91,9 @@ public class UserController {
         @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> verifyCode(@RequestBody VerifyCodePostReq verifyCodeInfo) {
+		System.out.println(EmailService.ePw);
+		System.out.println(verifyCodeInfo.getCode());
+		
         if(EmailService.ePw.equals(verifyCodeInfo.getCode())) {
         	userService.verifyCode(verifyCodeInfo);
         	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 코드 검증 성공"));
@@ -159,7 +163,7 @@ public class UserController {
 		@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> issuePw(@RequestBody UserIssuePwPostReq issuePwInfo) {
-		if(EmailService.ePw.equals(issuePwInfo.getCode().get("code"))) {
+		if(EmailService.ePw.equals(issuePwInfo.getCode())) {
         	userService.issuePassword(issuePwInfo);
         	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "임시 비밀번호 발급 성공"));
         }

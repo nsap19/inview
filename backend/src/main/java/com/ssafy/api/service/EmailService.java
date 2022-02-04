@@ -6,9 +6,7 @@ import javax.mail.internet.MimeMessage;
 
 public interface EmailService {
     public static final String ePw = createKey();
-	
-    MimeMessage createMessage(String to) throws Exception;
-    static String createKey() {
+    public static String createKey() {
     	StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
@@ -17,6 +15,6 @@ public interface EmailService {
         }
         return key.toString();
 	}
+    MimeMessage createMessage(String to) throws Exception;
     void sendSimpleMessage(String to, String content) throws Exception;
-    String createCode(String ePw);
 }

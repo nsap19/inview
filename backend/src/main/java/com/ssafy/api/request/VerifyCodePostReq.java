@@ -1,7 +1,5 @@
 package com.ssafy.api.request;
 
-import java.util.Map;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -13,7 +11,6 @@ import lombok.Setter;
 public class VerifyCodePostReq {
 	@ApiModelProperty(name="email 인증 코드", example="000000")
 	String code;
-//	Map<String, String> code;
 	@ApiModelProperty(name="회원가입 시 email", example="ssafy@ssafy.com")
 	String email;
 	@ApiModelProperty(name="회원가입 시 nickname", example="ssafy")

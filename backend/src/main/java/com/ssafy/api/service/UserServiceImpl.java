@@ -29,11 +29,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void createUser(UserRegisterPostReq userRegisterInfo) {
-		User user = new User();
-		user.setEmail(userRegisterInfo.getEmail());
-		user.setNickname(userRegisterInfo.getNickname());
-		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword())); // 패스워드 암호화
-			
 		try {
 	    	emailService.sendSimpleMessage(userRegisterInfo.getEmail(), ""); // 이메일 인증 코드 보내기
 	    } catch (Exception e) {
@@ -45,7 +40,7 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setEmail(userVerifyInfo.getEmail());
 		user.setNickname(userVerifyInfo.getNickname());
-		user.setPassword(userVerifyInfo.getPassword());
+		user.setPassword(passwordEncoder.encode(userVerifyInfo.getPassword()));
 		
 		userRepository.save(user); // db에 유저 저장
 	}
@@ -65,7 +60,7 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		try {
-	    	emailService.sendSimpleMessage(issuePwInfo.getEmail(), password); // 이메일 인증 코드 보내기
+	    	emailService.sendSimpleMessage(issuePwInfo.getEmail(), password); // 임시 비밀번호 보내기
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
