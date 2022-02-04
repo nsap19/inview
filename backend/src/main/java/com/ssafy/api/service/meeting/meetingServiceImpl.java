@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
+import com.ssafy.api.response.MeetingRegisterRes;
 import com.ssafy.common.exception.handler.AlreadyFullParticipantException;
 import com.ssafy.common.exception.handler.AlreadyJoinMeetingException;
 import com.ssafy.common.exception.handler.AlreadyRunningMeetingException;
@@ -57,7 +58,7 @@ public class meetingServiceImpl implements MeetingService {
 
 	@Override
 	@Transactional
-	public void createMeeting(MeetingRegisterPostReq registerInfo, int hostId) {
+	public MeetingRegisterRes createMeeting(MeetingRegisterPostReq registerInfo, int hostId) {
 		// host 찾기
 		User host = userRepository.findById(hostId).orElseThrow(() -> new NotExistsUserException());
 
@@ -79,6 +80,8 @@ public class meetingServiceImpl implements MeetingService {
 		// meetingCompany 저장
 		companyList.stream().forEach(
 				c -> meetingCompanyRepository.save(MeetingCompany.builder().company(c).meeting(meeting).build()));
+
+		return MeetingRegisterRes.builder().id(meeting.getMeetingId()).build();
 
 	}
 

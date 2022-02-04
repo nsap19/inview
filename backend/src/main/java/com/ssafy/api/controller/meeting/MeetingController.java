@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
+import com.ssafy.api.response.MeetingRegisterRes;
 import com.ssafy.api.service.meeting.MeetingService;
+import com.ssafy.common.model.response.AdvancedResponseBody;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.CurrentUser;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -30,15 +33,14 @@ public class MeetingController {
 
 	@PostMapping
 	@ApiOperation(value = "미팅 생성")
-	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 생성 성공"),
+	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 생성 성공", response = MeetingRegisterClass.class),
 			@ApiResponse(code = 400, message = "존재하지 않는 유저입니다. \n 존재하지 않는 직군입니다. \n 존재하지 않는 기업명입니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> register(
 			@RequestBody @ApiParam(value = "미팅생성 정보", required = true) MeetingRegisterPostReq registerInfo) {
 
-		meetingService.createMeeting(registerInfo, CurrentUser.getUserId());
-
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "미팅 생성 성공"));
+		return ResponseEntity.status(200).body(AdvancedResponseBody.of(200, "미팅 생성 성공",
+				meetingService.createMeeting(registerInfo, CurrentUser.getUserId())));
 	}
 
 	@DeleteMapping("/{meetingId}")
@@ -75,5 +77,9 @@ public class MeetingController {
 		meetingService.joinMeeting(meetingId, password, CurrentUser.getUserId());
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "미팅 참가 신청 성공"));
+	}
+
+	@ApiModel
+	private class MeetingRegisterClass extends AdvancedResponseBody<MeetingRegisterRes> {
 	}
 }
