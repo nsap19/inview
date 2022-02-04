@@ -3,14 +3,15 @@
 import axios from "axios";
 
 const request = axios.create({
-  baseURL: "http://localhost:8888/api",
+  baseURL: "http://localhost:8080",
 });
 
 export const userAPI = {
   // 회원가입
-  register: (name, email, password) => {
-    return request.post("/user", {
-      name,
+  register: (nickname, email, password) => {
+    console.log(nickname, email, password)
+    return request.post("/users/signup/", {
+      nickname,
       email,
       password,
     });
@@ -18,10 +19,14 @@ export const userAPI = {
 
   // 로그인
   login: (email, password) => {
-    return request.post("/user/login", {
-      email,
-      password,
-    });
+    request.post("/user/login", {
+      "email": "ssafy@ssafy.com",
+      "password": "your_password"
+    }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
   },
 };
 

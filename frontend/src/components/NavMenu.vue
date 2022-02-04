@@ -37,7 +37,7 @@
 <script>
 import {mapState, mapMutations} from 'vuex'
 import Login from './Login.vue'
-import Register from "./Register.vue";
+import Register from "./NavBar/Register.vue";
 
 export default {
   components:{

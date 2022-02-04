@@ -28,7 +28,9 @@ export default createStore({
       state.modal.register = data;
     },
     SET_USER(state, data) {
+      console.log('뮤테이션 실행')
       state.user = data;
+      console.log(state.user)
     },
     SET_LOGOUT(state) {
       state.user = {};
@@ -48,6 +50,13 @@ export default createStore({
     }
   },
   actions: {
+    setUser({ commit }, payload) {
+      console.log('액션 실행')
+      commit('SET_USER', payload)
+    },
+    logout({ commit }) {
+      commit('SET_LOGOUT')
+    },
     search( { commit }, payload ) {
       axios({
         url: "http://localhost:8080/meeting/",

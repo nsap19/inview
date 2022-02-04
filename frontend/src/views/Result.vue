@@ -96,7 +96,7 @@ export default defineComponent({
   border-radius: 10px;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	padding: 20px;
-  margin: 10px;
+  margin: 10px auto;
 }
 
 @media screen and (min-width: 1200px) {

@@ -1,6 +1,8 @@
 <template>
-  <div class="container w-50">
-    <h1>미팅 생성</h1>
+  <el-dialog
+    v-model="openDialog"
+    title="방 만들기"
+  >
     <el-form 
       ref="ruleFormRef"
       :model="ruleForm"
@@ -61,14 +63,14 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm(ruleFormRef)">생성</el-button>
-        <el-button>취소</el-button>
+        <el-button @click="openDialog=false">취소</el-button>
       </el-form-item>
     </el-form>
-  </div>
+  </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, reactive, ref, computed } from 'vue'
 import CompanySearchBar from '@/components/SearchFilterBar/CompanySearchBar.vue'
 import IndustrySearchBar from '@/components/SearchFilterBar/IndustrySearchBar.vue'
 import type { ElForm } from 'element-plus'
@@ -76,10 +78,17 @@ import axios from 'axios'
 
 export default defineComponent({
   name: 'CreateMeeting',
+  props: {
+    modelValue: Boolean,
+  },
   components: {
     CompanySearchBar, IndustrySearchBar
   },
-  setup() {
+  setup(props, { emit }) {
+    const openDialog = computed({
+      get: () => props.modelValue,
+      set: (value) => emit("update:modelValue", value),
+    });
     const ruleFormRef = ref<InstanceType<typeof ElForm>>()
 
     const ruleForm = reactive({
@@ -93,7 +102,7 @@ export default defineComponent({
     })
 
     // eslint-disable-next-line
-    const validStartTime = (rule: any, value: any, callback: any) => {
+    const validateStartTime = (rule: any, value: any, callback: any) => {
       const datetime_object = new Date()
       const current_datetime = datetime_object.getFullYear() + "-"
                               + ("0" + (1 + datetime_object.getMonth())).slice(-2) + "-" 
@@ -109,7 +118,7 @@ export default defineComponent({
     }
 
     // eslint-disable-next-line
-    const validEndTime = (rule: any, value: any, callback: any) => {
+    const validateEndTime = (rule: any, value: any, callback: any) => {
       const datetime_object = new Date()
       const current_datetime = datetime_object.getFullYear() + "-"
                               + ("0" + (1 + datetime_object.getMonth())).slice(-2) + "-" 
@@ -149,13 +158,13 @@ export default defineComponent({
       ],
       startTime: [
         { 
-          validator: validStartTime,
+          validator: validateStartTime,
           trigger: "blur",
         }
       ],
       endTime: [
         { 
-          validator: validEndTime,
+          validator: validateEndTime,
           trigger: "blur",
         }
       ],
@@ -178,7 +187,7 @@ export default defineComponent({
       })
     }
 
-    return { ruleFormRef, ruleForm, rules, submitForm, validStartTime }
+    return { ruleFormRef, ruleForm, rules, submitForm, validateStartTime, openDialog }
   }
 })
 </script>
