@@ -21,6 +21,6 @@ public interface EmailService {
         }
         return key.toString();
 	}
-    void sendSimpleMessage(String to) throws Exception;
+    void sendSimpleMessage(String to, String content) throws Exception;
     String createCode(String ePw);
 }

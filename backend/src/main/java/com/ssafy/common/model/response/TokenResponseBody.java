@@ -13,18 +13,21 @@ import lombok.Setter;
 @ApiModel("TokenResponseBody")
 public class TokenResponseBody extends BaseResponseBody {
 	String token = null;
+	String nickname = null;
 	
-	public TokenResponseBody(Integer statusCode, String message, String token) {
+	public TokenResponseBody(Integer statusCode, String message, String token, String nickname) {
 		this.statusCode = statusCode;
 		this.message = message;
 		this.token = token;
+		this.nickname = nickname;
 	}
 	
-	public static TokenResponseBody of(Integer statusCode, String message, String token) {
+	public static TokenResponseBody of(Integer statusCode, String message, String token, String nickname) {
 		TokenResponseBody body = new TokenResponseBody();
 		body.message = message;
 		body.statusCode = statusCode;
 		body.token = token;
+		body.nickname = nickname;
 		return body;
 	}
 }
