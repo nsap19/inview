@@ -61,8 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 																									// 인증 필터를 거치도록 필터를
 																									// 추가
 				.authorizeRequests()
-
 				.antMatchers("/users/**").permitAll()
+				.antMatchers("/oauth/**").permitAll()
 				.antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**",
 						/* Probably not needed */ "/swagger.json")
 				.permitAll()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
