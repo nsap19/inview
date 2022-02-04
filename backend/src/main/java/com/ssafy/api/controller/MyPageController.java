@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.UserUpdatePutReq;
-import com.ssafy.api.response.Response;
 import com.ssafy.api.service.MyPageService;
+import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.AdvancedResponseBody;
 import com.ssafy.common.model.response.BaseResponseBody;
 
@@ -31,6 +31,7 @@ public class MyPageController {
 	
 	@Autowired
 	private MyPageService myPageService;
+	private UserService userService;
 	
 	@PutMapping("/{userId}")
 	@ApiImplicitParam(name = "userId", value ="userId")
@@ -40,9 +41,13 @@ public class MyPageController {
         @ApiResponse(code = 400, message = "존재하지 않는 유저입니다."),
         @ApiResponse(code = 500, message = "서버 오류")
 	})
-	public Response modifyUser(@PathVariable("userId") int userId, @RequestBody UserUpdatePutReq updateInfo) {
-		ResponseEntity<? extends BaseResponseBody> result = myPageService.modifyUser(userId, updateInfo);
-		return new Response(result.getStatusCode());
+	public ResponseEntity<? extends BaseResponseBody> modifyUser(@PathVariable("userId") int userId, @RequestBody UserUpdatePutReq updateInfo) {
+		if (userService.getUserByUserId(userId).getNickname() != updateInfo.getNickname() // 닉네임을 변경하는 경우
+			&& userService.getUserByNickname(updateInfo.getNickname()) != null) // 닉네임 중복 검사
+				return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
+		
+		myPageService.modifyUser(userId, updateInfo);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원 정보 수정 성공"));
 	}
 	
 	@GetMapping("/{userId}/meeting")
