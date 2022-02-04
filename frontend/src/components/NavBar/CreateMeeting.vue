@@ -14,11 +14,11 @@
       <el-form-item label="제목" prop="title">
         <el-input v-model="ruleForm.title" placeholder="제목을 입력해주세요"></el-input>
       </el-form-item>
-      <el-form-item label="직군" prop="industry">
-        <IndustrySearchBar v-model="ruleForm.industry" />
+      <el-form-item label="직군" prop="industryName">
+        <IndustrySearchBar v-model="ruleForm.industryName" />
       </el-form-item>
       <el-form-item label="회사">
-        <CompanySearchBar v-model="ruleForm.company" />
+        <CompanySearchBar v-model="ruleForm.companyName" />
       </el-form-item>
       <el-form-item label="참가 인원">
         <el-radio-group v-model="ruleForm.userLimit" size="large">
@@ -38,7 +38,6 @@
             format="YYYY-MM-DD HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             placeholder="날짜"
-            style="width: 100%"
           ></el-date-picker>
         </el-col>
       </el-form-item>
@@ -50,7 +49,6 @@
             format="YYYY-MM-DD HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             placeholder="날짜"
-            style="width: 100%"
           ></el-date-picker>
         </el-col>
       </el-form-item>
@@ -75,6 +73,7 @@ import CompanySearchBar from '@/components/SearchFilterBar/CompanySearchBar.vue'
 import IndustrySearchBar from '@/components/SearchFilterBar/IndustrySearchBar.vue'
 import type { ElForm } from 'element-plus'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'CreateMeeting',
@@ -90,12 +89,12 @@ export default defineComponent({
       set: (value) => emit("update:modelValue", value),
     });
     const ruleFormRef = ref<InstanceType<typeof ElForm>>()
-
+    const companyName = ref('')
     const ruleForm = reactive({
       title: '',
-      industry: '',
-      company: '',
-      userLimit: '',
+      industryName: '',
+      companyNameList: [],
+      userLimit: 6,
       startTime: '',
       endTime: '',
       password: ''
@@ -149,7 +148,7 @@ export default defineComponent({
           trigger: 'blur',
         },
       ],
-      industry: [
+      industryName: [
         {
           required: true,
           message: '직군을 선택해주세요',
@@ -175,15 +174,43 @@ export default defineComponent({
       formEl.validate((valid) => {
         if (valid) {
           // console.log('submit!')
-          axios.post('/meeting', ruleForm).then(res => {
+          const { title, industryName, userLimit, startTime, endTime, password } = ruleForm
+          const companyNameList = companyName.value ? [companyName.value] : []
+          axios.post(
+            '/meeting', 
+            {
+              title,
+              industryName,
+              companyNameList: companyNameList,
+              userLimit,
+              startTime,
+              endTime,
+            }, 
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}).then(res => {
             console.log(res.data)
+            joinMeeting(res.data.data.id)
           }).catch(err => {
-            console.log(err.message)
+            console.log(err.response)
           })
         } else {
           // console.log('error submit!')
           return false
         }
+      })
+    }
+
+    const router = useRouter()
+    const joinMeeting = function (meetingId: number) {
+      axios.post(
+        `/meeting/${meetingId}/join`,
+        {},
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
+      ).then(res => {
+        console.log(res)
+        router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
+   
+      }).catch(err => {
+        console.log(err.response)
       })
     }
 
