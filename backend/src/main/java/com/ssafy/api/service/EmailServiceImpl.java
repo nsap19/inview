@@ -1,7 +1,5 @@
 package com.ssafy.api.service;
 
-import java.util.Random;
-
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -22,7 +20,6 @@ public class EmailServiceImpl implements EmailService {
 	@Autowired
     private final JavaMailSender emailSender;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public static final String ePw = createKey();
 
     public MimeMessage createMessage(String to) throws Exception{ // 회원가입 시 인증 메일 전송
         logger.info("대상 : "+ to);
@@ -66,17 +63,6 @@ public class EmailServiceImpl implements EmailService {
         message.setFrom(new InternetAddress("ssafy6a201@gmail.com","inview")); //보내는 사람
 
         return message;
-    }
-
-    // 인증코드 만들기
-    public static String createKey() {
-        StringBuffer key = new StringBuffer();
-        Random rnd = new Random();
-
-        for (int i = 0; i < 6; i++) { // 인증코드 6자리
-            key.append((rnd.nextInt(10)));
-        }
-        return key.toString();
     }
 
     public void sendSimpleMessage(String to, String content) throws Exception {

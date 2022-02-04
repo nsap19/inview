@@ -90,7 +90,7 @@ public class UserController {
         @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> verifyCode(@RequestBody VerifyCodePostReq verifyCodeInfo) {
-        if(EmailService.ePw.equals(verifyCodeInfo.getCode().get("code"))) {
+        if(EmailService.ePw.equals(verifyCodeInfo.getCode())) {
         	userService.verifyCode(verifyCodeInfo);
         	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 코드 검증 성공"));
         }
