@@ -117,7 +117,7 @@ public class UserController {
 		if(!passwordEncoder.matches(password, user.getPassword())) // 패스워드 일치 확인
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "잘못된 비밀번호"));
 		
-		return ResponseEntity.status(200).body(TokenResponseBody.of(200, "로그인 성공", user.getNickname(),JwtTokenUtil.getToken(email)));
+		return ResponseEntity.status(200).body(TokenResponseBody.of(200, "로그인 성공", user.getUserId(), user.getNickname(),JwtTokenUtil.getToken(email)));
 	}
 	
 	@GetMapping("/logout")
