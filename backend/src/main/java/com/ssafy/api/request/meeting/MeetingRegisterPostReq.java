@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.db.entity.Industry;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
@@ -31,9 +32,11 @@ public class MeetingRegisterPostReq {
 	@NotNull
 	String title;
 
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(name = "시작 시간", example = "2022-01-18 11:15:06")
 	LocalDateTime startTime;
 
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(name = "예상 종료 시간", example = "2022-01-18 13:15:06")
 	LocalDateTime endTime;
 
