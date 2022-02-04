@@ -28,6 +28,7 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 	@Autowired
 	ParticipantRepository participantRepository;
 
+	@Transactional
 	@Override
 	public void closeMeeting(int meetingId) {
 
