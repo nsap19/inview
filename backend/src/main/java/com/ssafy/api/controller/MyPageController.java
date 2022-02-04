@@ -43,9 +43,6 @@ public class MyPageController {
         @ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> modifyUser(@PathVariable("userId") int userId, @RequestBody UserUpdatePutReq updateInfo) {
-		System.out.println(userService.getUserByUserId(userId));
-		System.out.println(userService.getUserByUserId(userId).getNickname());
-		System.out.println(updateInfo.getNickname());
 		
 		if (!userService.getUserByUserId(userId).getNickname().equals(updateInfo.getNickname()) // 닉네임을 변경하는 경우
 			&& userService.getUserByNickname(updateInfo.getNickname()) != null) // 닉네임 중복 검사
