@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
+import com.ssafy.api.response.MeetingJoinRes;
 import com.ssafy.api.response.MeetingRegisterRes;
 import com.ssafy.api.service.meeting.MeetingService;
 import com.ssafy.common.model.response.AdvancedResponseBody;
@@ -69,17 +70,20 @@ public class MeetingController {
 
 	@PostMapping("/{meetingId}/join")
 	@ApiOperation(value = "미팅 참가")
-	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 참가 신청 성공"),
+	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 참가 신청 성공", response = MeetingJoinClass.class),
 			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 이미 최대 참가자가 참여한 미팅입니다. \n 존재하지 않는 유저입니다. \n 이미 참가한 유저입니다. \n 비밀번호가 일치하지 않습니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> join(@PathVariable("meetingId") int meetingId, String password) {
 
-		meetingService.joinMeeting(meetingId, password, CurrentUser.getUserId());
-
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "미팅 참가 신청 성공"));
+		return ResponseEntity.status(200).body(AdvancedResponseBody.of(200, "미팅 참가 신청 성공",
+				meetingService.joinMeeting(meetingId, password, CurrentUser.getUserId())));
 	}
 
 	@ApiModel
 	private class MeetingRegisterClass extends AdvancedResponseBody<MeetingRegisterRes> {
+	}
+
+	@ApiModel
+	private class MeetingJoinClass extends AdvancedResponseBody<MeetingJoinRes> {
 	}
 }

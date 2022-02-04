@@ -1,6 +1,7 @@
 package com.ssafy.api.service.meeting;
 
 import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
+import com.ssafy.api.response.MeetingJoinRes;
 import com.ssafy.api.response.MeetingRegisterRes;
 import com.ssafy.db.entity.meeting.Meeting;
 
@@ -14,7 +15,7 @@ public interface MeetingService {
 
 	void updateMeeting(int meetingId, String title, int hostId);
 
-	void joinMeeting(int meetingId, String password, int userId);
+	MeetingJoinRes joinMeeting(int meetingId, String password, int userId);
 
 	Meeting getMeetingById(int meetingId);
 }

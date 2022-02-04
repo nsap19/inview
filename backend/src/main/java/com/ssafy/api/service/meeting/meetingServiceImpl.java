@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
+import com.ssafy.api.response.MeetingJoinRes;
 import com.ssafy.api.response.MeetingRegisterRes;
 import com.ssafy.common.exception.handler.AlreadyFullParticipantException;
 import com.ssafy.common.exception.handler.AlreadyJoinMeetingException;
@@ -114,7 +115,7 @@ public class meetingServiceImpl implements MeetingService {
 
 	@Override
 	@Transactional
-	public void joinMeeting(int meetingId, String password, int userId) {
+	public MeetingJoinRes joinMeeting(int meetingId, String password, int userId) {
 		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
 		List<Participant> participantList = participantRepository.findByMeeting(meeting);
@@ -131,8 +132,10 @@ public class meetingServiceImpl implements MeetingService {
 			throw new AlreadyJoinMeetingException();
 		else if (meeting.getPassword() != null && meeting.getPassword().equals(password))
 			throw new NotEqualPasswordException();
-		else
+		else {
 			participantRepository.save(Participant.builder().meeting(meeting).user(user).build());
+			return MeetingJoinRes.builder().url(meeting.getUrl()).build();
+		}
 
 	}
 
