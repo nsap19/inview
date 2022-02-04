@@ -1,19 +1,12 @@
 package com.ssafy.api.service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
-import com.ssafy.common.exception.handler.NotExistsMeetingException;
 import com.ssafy.common.exception.handler.NotExistsUserException;
-import com.ssafy.api.request.UserUpdatePutReq;
-import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
@@ -33,20 +26,7 @@ public class UserServiceImpl implements UserService {
 	EmailService emailService;
 	
 	@Override
-	public ResponseEntity<? extends BaseResponseBody> createUser(UserRegisterPostReq userRegisterInfo) {
-		if(getUserByEmail(userRegisterInfo.getEmail()) != null) // 이메일 중복 검사
-			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 이메일입니다."));
-		else if(getUserByNickname(userRegisterInfo.getNickname()) != null) // 닉네임 중복 검사
-			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
-		
-		String regx = "^[A-Za-z0-9+_.-]+@(.+)$";
-		Pattern pattern = Pattern.compile(regx);
-		Matcher matcher = pattern.matcher(userRegisterInfo.getEmail());
-		if(!matcher.matches()) // 이메일 형식 유효성 검사
-			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이메일 형식이 올바르지 않습니다."));
-		if(userRegisterInfo.getPassword() == null || userRegisterInfo.getPassword().length() < 8) // 비밀번호 유효성 검사
-			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "비밀번호는 8글자 이상이어야 합니다."));
-		
+	public void createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
 		user.setEmail(userRegisterInfo.getEmail());
 		user.setNickname(userRegisterInfo.getNickname());
@@ -59,12 +39,9 @@ public class UserServiceImpl implements UserService {
 	    }
 			
 		userRepository.save(user);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원가입 성공"));
 	}
 	
-	public ResponseEntity<? extends BaseResponseBody> findUser(UserFindPwPostReq userFindInfo) {
-		if(getUserByEmail(userFindInfo.getEmail()) == null) // 이메일 중복 검사
-			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "존재하지 않는 이메일 입니다."));
+	public void findUser(UserFindPwPostReq userFindInfo) {
 		
 		String password = "";
 		for (int i = 0; i < 12; i++) {
@@ -82,7 +59,6 @@ public class UserServiceImpl implements UserService {
 		User user = getUserByEmail(userFindInfo.getEmail());
 		user.setPassword(password);
 		userRepository.save(user);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "임시 비밀번호 발급 성공"));
 	}
 	
 	@Override
@@ -102,10 +78,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<? extends BaseResponseBody> deleteUser(int userId) {
+	public void deleteUser(int userId) {
 		User user = getUserByUserId(userId);
 		userRepository.delete(user);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "유저 탈퇴 성공"));
 	}
 
 
@@ -113,5 +88,4 @@ public class UserServiceImpl implements UserService {
 	public User getUserById(int userId) {
 		return userRepository.findById(userId).orElseThrow(() -> new NotExistsUserException());
 	}
-
 }
