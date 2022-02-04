@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.request.VerifyCodePostReq;
 import com.ssafy.common.exception.handler.NotExistsUserException;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
@@ -30,15 +31,22 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setEmail(userRegisterInfo.getEmail());
 		user.setNickname(userRegisterInfo.getNickname());
-		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword())); // 패스워드 암호화하여 db에 저장
+		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword())); // 패스워드 암호화
 			
 		try {
 	    	emailService.sendSimpleMessage(userRegisterInfo.getEmail()); // 이메일 인증 코드 보내기
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
-			
-		userRepository.save(user);
+	}
+	
+	public void verifyCode(VerifyCodePostReq userVerifyInfo) {
+		User user = new User();
+		user.setEmail(userVerifyInfo.getEmail());
+		user.setNickname(userVerifyInfo.getNickname());
+		user.setPassword(userVerifyInfo.getPassword());
+		
+		userRepository.save(user); // db에 유저 저장
 	}
 	
 	public void findUser(UserFindPwPostReq userFindInfo) {
