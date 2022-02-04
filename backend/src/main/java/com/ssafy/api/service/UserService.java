@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserFindPwPostReq;
+import com.ssafy.api.request.UserIssuePwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.VerifyCodePostReq;
 import com.ssafy.db.entity.User;
@@ -17,4 +18,5 @@ public interface UserService {
 	User getUserById(int userId);
 	void deleteUser(int userId);
 	void findUser(UserFindPwPostReq userFindInfo);
+	void issuePassword(UserIssuePwPostReq issuePwInfo);
 }

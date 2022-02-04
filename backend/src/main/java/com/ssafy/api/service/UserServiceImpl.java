@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.api.request.UserIssuePwPostReq;
 import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.VerifyCodePostReq;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword())); // 패스워드 암호화
 			
 		try {
-	    	emailService.sendSimpleMessage(userRegisterInfo.getEmail()); // 이메일 인증 코드 보내기
+	    	emailService.sendSimpleMessage(userRegisterInfo.getEmail(), ""); // 이메일 인증 코드 보내기
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
@@ -50,22 +51,27 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public void findUser(UserFindPwPostReq userFindInfo) {
-		
+		try {
+	    	emailService.sendSimpleMessage(userFindInfo.getEmail(), ""); // 이메일 인증 코드 보내기
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	}
+	
+	public void issuePassword(UserIssuePwPostReq issuePwInfo) {
 		String password = "";
 		for (int i = 0; i < 12; i++) {
 			password += (char) ((Math.random() * 26) + 97);
 		}
 		
 		try {
-	    	emailService.sendSimpleMessage(userFindInfo.getEmail()); // 이메일 인증 코드 보내기
+	    	emailService.sendSimpleMessage(issuePwInfo.getEmail(), password); // 이메일 인증 코드 보내기
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
 		
-		// 코드 확인 후 맞으면 임시 비밀번호 보내기 !!!!!!!!!!!!!!!!!!!!
-		
-		User user = getUserByEmail(userFindInfo.getEmail());
-		user.setPassword(password);
+		User user = getUserByEmail(issuePwInfo.getEmail());
+		user.setPassword(passwordEncoder.encode(password));
 		userRepository.save(user);
 	}
 	

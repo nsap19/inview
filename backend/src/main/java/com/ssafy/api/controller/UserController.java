@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.UserFindPwPostReq;
+import com.ssafy.api.request.UserIssuePwPostReq;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserLogoutGetReq;
 import com.ssafy.api.request.UserRegisterPostReq;
@@ -59,7 +60,7 @@ public class UserController {
 	@ApiOperation(value = "회원 가입", notes = "<strong>email과 password, nickname</strong>을 통해 회원가입 해야 합니다.\n"
 			+ "email은 형식을 준수해야 하고, 비밀번호는<strong> 8자리 이상</strong>이어야 합니다.") 
     @ApiResponses({
-        @ApiResponse(code = 200, message = "회원가입 성공"),
+        @ApiResponse(code = 200, message = "이메일 인증 전송 성공"),
         @ApiResponse(code = 400, message = "회원가입 실패"),
         @ApiResponse(code = 500, message = "서버 오류")
     })
@@ -78,7 +79,7 @@ public class UserController {
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "비밀번호는 8글자 이상이어야 합니다."));
 		
 		userService.createUser(registerInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일,닉네임,비밀번호 유효성 검사 성공. 인증번호 전송 완료"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일, 닉네임, 비밀번호 유효성 검사 성공. 인증번호 전송 완료"));
 	} 
 	
 	@PostMapping("/signup/email-certi") 
@@ -91,7 +92,7 @@ public class UserController {
     public ResponseEntity<? extends BaseResponseBody> verifyCode(@RequestBody VerifyCodePostReq verifyCodeInfo) {
         if(EmailService.ePw.equals(verifyCodeInfo.getCode().get("code"))) {
         	userService.verifyCode(verifyCodeInfo);
-        	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 코드 검증 성공. 회원가입 성공"));
+        	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 코드 검증 성공"));
         }
         
         return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이메일 인증 코드 검증 실패"));
@@ -116,7 +117,7 @@ public class UserController {
 		if(!passwordEncoder.matches(password, user.getPassword())) // 패스워드 일치 확인
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "잘못된 비밀번호"));
 		
-		return ResponseEntity.status(200).body(TokenResponseBody.of(200, "로그인 성공", JwtTokenUtil.getToken(email)));
+		return ResponseEntity.status(200).body(TokenResponseBody.of(200, "로그인 성공", user.getNickname(),JwtTokenUtil.getToken(email)));
 	}
 	
 	@GetMapping("/logout")
@@ -138,16 +139,32 @@ public class UserController {
 	@PostMapping("/findpw")
 	@ApiOperation(value="비밀번호 찾기")
 	@ApiResponses({
-		@ApiResponse(code = 200, message = "이메일 인증 성공"),
+		@ApiResponse(code = 200, message = "이메일 인증 전송 성공"),
 		@ApiResponse(code = 400, message = "존재하지 않는 이메일 인증 정보입니다."),
 		@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> findPw(@RequestBody UserFindPwPostReq findInfo) {
 		if(userService.getUserByEmail(findInfo.getEmail()) == null) // 이메일 중복 검사
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "존재하지 않는 이메일 입니다."));
-		
+
 		userService.findUser(findInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "임시 비밀번호 발급 성공"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 전송 성공"));
+	}
+	
+	@PostMapping("/findpw/email-certi")
+	@ApiOperation(value="임시 비밀번호 발급")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "임시 비밀번호 발급 성공"),
+		@ApiResponse(code = 400, message = "임시 비밀번호 발급 실패"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> issuePw(@RequestBody UserIssuePwPostReq issuePwInfo) {
+		if(EmailService.ePw.equals(issuePwInfo.getCode().get("code"))) {
+        	userService.issuePassword(issuePwInfo);
+        	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "임시 비밀번호 발급 성공"));
+        }
+        
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 비밀번호 발급 실패"));
 	}
 	
 	@DeleteMapping("/{userId}")
