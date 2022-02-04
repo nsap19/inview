@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.request.VerifyCodePostReq;
 import com.ssafy.db.entity.User;
 
 /**
@@ -9,6 +10,7 @@ import com.ssafy.db.entity.User;
  */
 public interface UserService {
 	void createUser(UserRegisterPostReq userRegisterInfo);
+	void verifyCode(VerifyCodePostReq verifyCodeInfo);
 	User getUserByUserId(int userId);
 	User getUserByEmail(String email);
 	User getUserByNickname(String nickname);

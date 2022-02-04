@@ -78,7 +78,7 @@ public class UserController {
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "비밀번호는 8글자 이상이어야 합니다."));
 		
 		userService.createUser(registerInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원가입 성공"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일,닉네임,비밀번호 유효성 검사 성공. 인증번호 전송 완료"));
 	} 
 	
 	@PostMapping("/signup/email-certi") 
@@ -89,10 +89,12 @@ public class UserController {
         @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> verifyCode(@RequestBody VerifyCodePostReq verifyCodeInfo) {
-        if(EmailService.ePw.equals(verifyCodeInfo.getCode().get("code")))
-        	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 코드 검증 성공"));
-        else
-        	return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이메일 인증 코드 검증 실패"));
+        if(EmailService.ePw.equals(verifyCodeInfo.getCode().get("code"))) {
+        	userService.verifyCode(verifyCodeInfo);
+        	return ResponseEntity.status(200).body(BaseResponseBody.of(200, "이메일 인증 코드 검증 성공. 회원가입 성공"));
+        }
+        
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이메일 인증 코드 검증 실패"));
     }
 	
 	@PostMapping("/login")
