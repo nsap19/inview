@@ -1,22 +1,18 @@
 package com.ssafy.api.service;
 
-import org.springframework.http.ResponseEntity;
-
 import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
-import com.ssafy.api.request.UserUpdatePutReq;
-import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 인터페이스 정의.
  */
 public interface UserService {
-	ResponseEntity<? extends BaseResponseBody> createUser(UserRegisterPostReq userRegisterInfo);
+	void createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(int userId);
 	User getUserByEmail(String email);
 	User getUserByNickname(String nickname);
 	User getUserById(int userId);
-	ResponseEntity<? extends BaseResponseBody> deleteUser(int userId);
-	ResponseEntity<? extends BaseResponseBody> findUser(UserFindPwPostReq userFindInfo);
+	void deleteUser(int userId);
+	void findUser(UserFindPwPostReq userFindInfo);
 }
