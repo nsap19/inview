@@ -73,6 +73,7 @@ import CompanySearchBar from '@/components/SearchFilterBar/CompanySearchBar.vue'
 import IndustrySearchBar from '@/components/SearchFilterBar/IndustrySearchBar.vue'
 import type { ElForm } from 'element-plus'
 import axios from 'axios'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
@@ -168,37 +169,7 @@ export default defineComponent({
         }
       ],
     })
-
-    const submitForm = (formEl: InstanceType<typeof ElForm> | undefined) => {
-      if (!formEl) return
-      formEl.validate((valid) => {
-        if (valid) {
-          // console.log('submit!')
-          const { title, industryName, userLimit, startTime, endTime, password } = ruleForm
-          const companyNameList = companyName.value ? [companyName.value] : []
-          axios.post(
-            '/meeting', 
-            {
-              title,
-              industryName,
-              companyNameList: companyNameList,
-              userLimit,
-              startTime,
-              endTime,
-            }, 
-            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}).then(res => {
-            console.log(res.data)
-            joinMeeting(res.data.data.id)
-          }).catch(err => {
-            console.log(err.response)
-          })
-        } else {
-          // console.log('error submit!')
-          return false
-        }
-      })
-    }
-
+    const store = useStore()
     const router = useRouter()
     const joinMeeting = function (meetingId: number) {
       axios.post(
@@ -206,11 +177,56 @@ export default defineComponent({
         {},
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
-        console.log(res)
+        console.log(res, 'joinMeeting')
         router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
-   
       }).catch(err => {
         console.log(err.response)
+      })
+    }
+
+    interface createMeetingBody {
+      title: string
+      industryName: string
+      companyNameList: string[],
+      userLimit: number
+      startTime: string
+      endTime: string
+      password: string
+    }
+
+    const createMeeting = function (body: createMeetingBody) {
+      axios.post(
+        '/meeting', 
+        body,
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        }).then(res => {
+          console.log(res.data)
+          store.dispatch('setMeeting', res.data.data.id)
+          joinMeeting(res.data.data.id)
+        }).catch(err => {
+          console.log(err.response)
+        })
+    }
+    const submitForm = (formEl: InstanceType<typeof ElForm> | undefined) => {
+      if (!formEl) return
+      formEl.validate((valid) => {
+        if (valid) {
+          // console.log('submit!')
+          const { title, industryName, userLimit, startTime, endTime, password } = ruleForm
+          const companyNameList = companyName.value ? [companyName.value] : []
+          createMeeting({
+            title,
+            industryName,
+            companyNameList: companyNameList,
+            userLimit,
+            startTime,
+            endTime,
+            password
+          })
+        } else {
+          // console.log('error submit!')
+          return false
+        }
       })
     }
 

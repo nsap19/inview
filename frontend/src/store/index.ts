@@ -5,7 +5,7 @@ import axios from 'axios'
 export default createStore({
   plugins: [createPersistedState({
     // user라는 값만 새로고침해도 유지 할 수 있도록 
-    paths:['user']
+    paths:['user', 'meeting']
   })],
   state: {
     modal: {
@@ -16,7 +16,8 @@ export default createStore({
     options:[],
     location:{},
     fileList: [],
-    searchResult: []
+    searchResult: [],
+    meeting: {}
   },
   mutations: {
     SET_LOGIN_MODAL(state, data) {
@@ -28,9 +29,7 @@ export default createStore({
       state.modal.register = data;
     },
     SET_USER(state, data) {
-      console.log('뮤테이션 실행')
       state.user = data;
-      console.log(state.user)
     },
     SET_LOGOUT(state) {
       state.user = {};
@@ -45,8 +44,12 @@ export default createStore({
     SET_LOCATION(state, data){
       state.location = data;
     },
-    saveSearchResult(state, data) {
+    SAVE_SEARCH_RESULT(state, data) {
       state.searchResult = data
+    },
+    SET_MEETING(state, data) {
+      console.log('뮤테이션 실행', data)
+      state.meeting = data
     }
   },
   actions: {
@@ -59,18 +62,32 @@ export default createStore({
     },
     search( { commit }, payload ) {
       axios({
-        url: "http://localhost:8080/meeting/",
+        url: "/meeting/",
         method: 'GET',
         params: {
           title: payload.title,
           industry: payload.industry,
           company: payload.company
         }
-      })
-      .then(res => {
-        commit('saveSearchResult', res.data.data.content)
-      })
-    }
+      }).then(res => {
+          commit('SAVE_SEARCH_RESULT', res.data.data.content)
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    setMeeting ( { commit }, meetingId ) {
+      axios({
+        url: `/meeting/${meetingId}`,
+        method: 'GET',
+      }).then(res => {
+          commit('SET_MEETING', { 
+            id: meetingId,
+            participantNicknameList: res.data.data.participantNicknameList,
+            startTime: res.data.data.startTime,
+            title: res.data.data.title
+          })
+        })
+    },
   },
   modules: {},
 })
