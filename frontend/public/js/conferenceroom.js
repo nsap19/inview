@@ -71,14 +71,43 @@ ws.onmessage = function(message) {
 		receiveVideoResponse(parsedMessage);
 		break;
 	case 'iceCandidate':
+		if(parsedMessage.userId){
 		participants[parsedMessage.userId].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
 	        if (error) {
 		      console.error("Error adding candidate: " + error);
 		      return;
 	        }
 	    });
+		}
+		else{
+			webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
+				if (error)
+					return console.error('Error adding candidate: ' + error);
+			});
+		}
 	    break;
+		case 'startResponse':
+		startResponse(parsedMessage);
+		break;
+	case 'playResponse':
+		playResponse(parsedMessage);
+		break;
+	case 'playEnd':
+		playEnd();
+		break;
+	case 'error':
+		setState(NO_CALL);
+		onError('Error message from server: ' + parsedMessage.message);
+		break;
+	case 'stopped':
+		break;
+	case 'paused':
+		break;
+	case 'recording':
+		break;
 	default:
+		setState(NO_CALL);
+	
 		console.error('Unrecognized message', parsedMessage);
 	}
 }

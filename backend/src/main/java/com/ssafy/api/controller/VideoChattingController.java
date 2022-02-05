@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 //import com.ssafy.groupcall.CallHandler;
 //import com.ssafy.groupcall.Room;
 //import com.ssafy.groupcall.UserSession;
+import com.ssafy.api.service.VideoChatService;
 
 /**
  * 화상 회의 관련 WebSocket 요청 처리를 위한 컨트롤러 정의
@@ -24,19 +25,15 @@ import com.google.gson.JsonObject;
 
 @Controller
 public class VideoChattingController {
-	private final SimpMessagingTemplate template;
+	@Autowired
+	VideoChatService videoChatService;
+	
 	private static final Logger log = LoggerFactory.getLogger(VideoChattingController.class);
 	private static final Gson gson = new GsonBuilder().create();
 
-	@Autowired
-	public VideoChattingController(SimpMessagingTemplate template) {
-		this.template = template;
+	@MessageMapping("/videochat/recorded")
+	public void recorded() {
+		videoChatService.saveVideoChat();
 	}
-
 	
-	public void join(WebSocketSession session, TextMessage message) {
-	
-
-	}
-
 }

@@ -52,6 +52,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/icons/**").addResourceLocations("classpath:/dist/icons/");
 		registry.addResourceHandler("/img/**").addResourceLocations("classpath:/dist/img/");
 		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/dist/js/");
+		registry.addResourceHandler("/media/**").addResourceLocations("classpath:/dist/media/");
 	}
 
 	public Filter requestLoggingFilter() {

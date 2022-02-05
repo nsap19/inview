@@ -10,9 +10,9 @@ module.exports = {
       //   '/webjars': {
       //     target: 'https://localhost:8443/'
       //   },
-      //   '/groupcall': {
-      //     target: 'https://localhost:8443/'
-      //   },
+        // '/groupcall': {
+        //   target: 'https://localhost:8443/'
+        // },
       //   '/upload': {
       //     target: 'https://localhost:8443/'
       //   }
