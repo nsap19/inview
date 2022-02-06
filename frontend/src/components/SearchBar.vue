@@ -1,23 +1,21 @@
 <template>
-  <div class="">
-    <el-input
-      v-model="searchQuery"
-      placeholder="검색어를 입력하세요"
-      class="input custom-class"
-      size="large"
-      @keyup.enter="goToSearchResult"
-      :suffix-icon="Search"
-    >
-      <template #prepend>
-        <el-select v-model="selectedCategory" placeholder="제목" style="width: 110px">
-          <el-option label="제목" value="title"></el-option>
-          <el-option label="직군" value="industry"></el-option>
-          <el-option label="회사" value="company"></el-option>
-        </el-select>
-      </template>
-
-    </el-input>
-  </div>
+  <el-input
+    v-model="searchQuery"
+    placeholder="검색어를 입력하세요"
+    class="w-100"
+    size="large"
+    @keyup.enter="goToSearchResult"
+    :suffix-icon="Search"
+    :minlength="320"
+  >
+    <template #prepend>
+      <el-select v-model="selectedCategory" placeholder="제목" style="width: 110px">
+        <el-option label="제목" value="title"></el-option>
+        <el-option label="직군" value="industry"></el-option>
+        <el-option label="회사" value="company"></el-option>
+      </el-select>
+    </template>
+  </el-input>
 </template>
 
 <script lang="ts">

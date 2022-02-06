@@ -23,14 +23,27 @@ export default defineComponent({
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
+@font-face {
+    font-family: 'TmoneyRoundWindRegular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/TmoneyRoundWindRegular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TmoneyRoundWindExtraBold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/TmoneyRoundWindExtraBold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; */
-  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  /* font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; */
+  font-family: TmoneyRoundWindRegular, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  --el-color-primary: #76B57A;
-  /* --el-bg-color: #F3F0D7; */
 }
 
 #body {
@@ -38,7 +51,7 @@ export default defineComponent({
   /* background: linear-gradient(-45deg, #cee5d0, #f3f0d7, #e0c097, #ff7878);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite; */
-  padding: 0 10px;
+  /* padding: 0 10px; */
 }
 
 @keyframes gradient {

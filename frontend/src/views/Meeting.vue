@@ -24,13 +24,10 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<div class="d-flex flex-row justify-content-end p-3 meeting-nav">
-			<el-button type="warning">준비</el-button>
-			<el-button type="danger" @click="endMeeting">나가기</el-button>
-		</div>
+		<MeetingNavBar />
 
 		<!-- 미팅 메인 -->
-		<div class="d-flex flex-row meeting-content">
+		<div class="meeting-content">
 			<div class="meeting-content-main" ref="wholeVideosWrapper" >
 				<div 
 					class="video-wrapper"
@@ -48,7 +45,12 @@
 			</div>
 
 			<!-- 우측 aside -->
-			<div v-show="openAside" class="meeting-content-aside">
+			<div 
+				v-show="openAside" 
+				class="meeting-content-aside" 
+				:style="500 < windowWidth ? {'width': '420px'} : {'width': width + 'px'}"
+			>
+				<!-- {{windowWidth}} -->
 				<div class="d-flex flex-row justify-content-between p-2 align-items-center">
 					<span v-if="asideCategory.slice(0, 10) === 'evaluation'">{{ asideCategory.slice(10) }}님의 면접 평가</span>
 					<span v-else>{{ categoryKorName[asideCategory] }}</span>
@@ -112,6 +114,7 @@ import Evaluation from '@/components/Meeting/Evaluation.vue';
 import Chat from '@/components/Meeting/Chat.vue';
 import Memo from '@/components/Meeting/Memo.vue';
 import File from '@/components/Meeting/File.vue';
+import MeetingNavBar from '@/components/Meeting/MeetingNavBar.vue'
 import { ChatDotSquare, CloseBold, MoreFilled, List } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 
@@ -119,6 +122,7 @@ import { ElMessageBox } from 'element-plus'
 export default defineComponent({
 	name: 'Meeting',
 	components: {
+		MeetingNavBar,
 		ChooseQuestion,
 		Participant,
 		Evaluation,
@@ -127,20 +131,29 @@ export default defineComponent({
 		File
 	},
 	setup() {
-		const wholeVideosWrapper = ref()
+		const wholeVideosWrapper = ref<HTMLElement | null>(null)
 
+		let width = ref(0)
+		let height = ref(0)
+		let windowWidth = ref(0)
 		onMounted(() => {
 			// 초기 비디오 크기 설정
-			const width = wholeVideosWrapper.value.offsetWidth
-			const height = wholeVideosWrapper.value.offsetHeight
-			resize(width, height)
+			if (wholeVideosWrapper.value) {
+				width.value = wholeVideosWrapper.value.offsetWidth
+				height.value = wholeVideosWrapper.value.offsetHeight
+				resize(width.value, height.value)
+			}
 
 			// 반응형 비디오 크기 설정
 			window.addEventListener('resize', function () {
-				const width = wholeVideosWrapper.value.offsetWidth
-				const height = wholeVideosWrapper.value.offsetHeight
-				resize(width, height)
+				if (wholeVideosWrapper.value) {
+					width.value = wholeVideosWrapper.value.offsetWidth
+					height.value = wholeVideosWrapper.value.offsetHeight
+					resize(width.value, height.value)
+					windowWidth.value = window.innerWidth
+				}
 			})
+			windowWidth.value = window.innerWidth
 		})
 
 		const ratio = 9 / 16  // 비디오 화면 비율 (16: 9)
@@ -175,8 +188,7 @@ export default defineComponent({
 					}
 					i++;
 			}
-			// remove margins
-			max = max - (setMargin * 2);
+			max = max - (setMargin * 2)  // remove margins
 			maxWidth.value = max
 		}
 
@@ -192,9 +204,11 @@ export default defineComponent({
 		const dialogVisible = ref(false)
 
 		watch(openAside, (oldVal) => {
-			const width = oldVal ? wholeVideosWrapper.value.offsetWidth - 420 : wholeVideosWrapper.value.offsetWidth + 420
-			const height = wholeVideosWrapper.value.offsetHeight
-			resize(width, height)
+			if (wholeVideosWrapper.value) {
+				const width = oldVal ? wholeVideosWrapper.value.offsetWidth - 420 : wholeVideosWrapper.value.offsetWidth + 420
+				const height = wholeVideosWrapper.value.offsetHeight
+				resize(width, height)
+			}
 		})
 
 		// 이후 ChooseQuestion 컴포넌트로 옮길 것
@@ -234,7 +248,7 @@ export default defineComponent({
 		return { 
 			ChatDotSquare, CloseBold, MoreFilled, List, 
 			openAside, asideCategory, dialogVisible, memo, endSignal, participants, categoryKorName,
-			wholeVideosWrapper, maxWidth, ratio, setMargin,
+			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
 			handleClose, endMeeting
 		}
 	},
@@ -250,23 +264,19 @@ export default defineComponent({
 	background-color: #F4F4F5;
 }
 
-.meeting-nav {
-  flex: 0 1 auto;
-	flex: 0 1 66px;
-  /* The above is shorthand for:
-  flex-grow: 0,
-  flex-shrink: 1,
-  flex-basis: auto
-  */
-	border-radius: 10px;
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-	margin: 5px;
-}
-
 .meeting-content {
 	flex: 1 1 auto;
 	/* width: 100vw; */
 	height: 500px;
+	display: flex;
+	flex-direction: row;
+}
+
+@media screen and (max-width: 500px) {
+	.meeting-content {
+		flex-direction: column;
+		height: 250px;
+	}
 }
 
 .meeting-footer {
@@ -304,6 +314,15 @@ export default defineComponent({
 	border-radius: 10px;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	margin: 5px;
+}
+
+@media screen and (max-width: 500px) {
+	.meeting-content-aside {
+		height: 50%
+	}
+	.meeting-content-main {
+		height: 160px;
+	}
 }
 
 .video-wrapper {

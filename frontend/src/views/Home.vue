@@ -1,6 +1,6 @@
 <template>
   <div class="home container text-center">
-    <img alt="INVIEW logo" src="../assets/logo.png" class="w-50 m-4">
+    <img alt="INVIEW logo" src="../assets/logo.png" class="logo">
     <div class="py-4 search-bar">
       <SearchBar/>
     </div>
@@ -21,9 +21,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import SearchBar from '@/components/SearchBar.vue';
 import MeetingCard from '@/components/MeetingCard.vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Home',
@@ -31,153 +32,9 @@ export default defineComponent({
     SearchBar, MeetingCard
   },
   setup() {
-    const meetings = [
-      { 
-        meeting_id: 1,
-        title: '일이삼사오육칠팔구십일이삼사오육칠팔구십',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '2020-01-01 13:53',
-        endTime: '2020-01-01 14:59',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: '123'
-      },
-      { 
-        meeting_id: 2,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 3,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 4,
-        title: '제목은 제목제목',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 5,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 6,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 7,
-        title: '제목은 제목제목',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 8,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 9,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 10,
-        title: '제목은 제목제목',
-        industry: 'IT',
-        company: '',
-        userLimit: 6,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 11,
-        title: '두번째제목은 제목제목',
-        industry: '반도체',
-        company: '삼성전자',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-      { 
-        meeting_id: 12,
-        title: '세번째제목은 제목제목',
-        industry: '공기업',
-        company: '한전',
-        userLimit: 3,
-        startTime: '202201141500',
-        endTime: '',
-        url: '',
-        participants : ['참가자1', '참가자2', '참가자3'],
-        password: ''
-      },
-    ]
-
+    const store = useStore()
+    store.dispatch('search', {title: '', industry: '', company: ''})
+    const meetings = computed(() => store.state.searchResult)
     return { meetings }
   }
 });
@@ -188,14 +45,45 @@ export default defineComponent({
   margin: 20vw auto;
 }
 
+.logo {
+  width: 546px;
+}
+
+@media screen and (max-width: 620px) {
+  .logo {
+    width: 420px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .logo {
+    width: 300px;
+  }
+}
+
+
 .search-bar {
-  width: 400px;
+  width: 420px;
   margin: 0 auto;
   transform: scale(1.3);
 }
 
+@media screen and (max-width: 480px) {
+  .search-bar {
+    width: 300px;
+    transform: scale(1);
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .search-bar {
+    transform: scale(1);
+  }
+}
+
 .recent-result {
   margin: 10px auto;
+  padding: 0 10px;
 }
 
 @media screen and (min-width: 1200px) {
