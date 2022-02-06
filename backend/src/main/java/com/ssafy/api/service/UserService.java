@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ssafy.api.request.UserFindPwPostReq;
 import com.ssafy.api.request.UserIssuePwPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;

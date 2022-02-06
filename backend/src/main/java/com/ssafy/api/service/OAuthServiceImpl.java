@@ -15,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.ssafy.api.request.UserRegisterPostReq;
-import com.ssafy.api.response.Response;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
@@ -73,23 +72,23 @@ public class OAuthServiceImpl implements OAuthService {
 	}
 
 	@Override
-	public Response registerAndLogin(KakaoProfile kakaoProfile) {
+	public ResponseEntity<? extends BaseResponseBody> registerAndLogin(KakaoProfile kakaoProfile) {
 		UserRegisterPostReq registerInfo = new UserRegisterPostReq();
 
 		// 이메일 보유시 이메일 조회
+		boolean existMail = false;
 		if (kakaoProfile.getKakaoAccount().getHasEmail() && kakaoProfile.getKakaoAccount().getIsEmailVerified()) {
 			String email = kakaoProfile.getKakaoAccount().getEmail();
 			if (userService.getUserByEmail(email) != null) {
 				// 기존 유저인 경우, 로그인 처리
-				Response response = new Response(ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공")).getStatusCode());
-				response.add("token", JwtTokenUtil.getToken(email));
-				return response;
+				return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(email)));
 			} else {
 				// 이메일 정보 저장
+				existMail = true;
 				registerInfo.setEmail(email);
 			}
-		}else {
-			registerInfo.setEmail(UUID.randomUUID().toString());
+		} else {
+			registerInfo.setEmail("kakao_" + UUID.randomUUID().toString());
 		}
 
 		// 임시 유저 가입 & 로그인 처리
@@ -99,16 +98,13 @@ public class OAuthServiceImpl implements OAuthService {
 		registerInfo.setPassword(salt);
 		ResponseEntity<? extends BaseResponseBody> result = createUser(registerInfo);
 		if (!result.getStatusCode().toString().startsWith("200")) {
-			return new Response(result.getStatusCode());
+			return result;
 		}
 
-		Response response = new Response(result.getStatusCode());
-		if (registerInfo.getEmail() != null) {
-			response.add("token", JwtTokenUtil.getToken(registerInfo.getEmail()));
-		} else {
-			response.add("token", JwtTokenUtil.getToken(nickname));
+		if (!existMail) {
+			return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(nickname)));
 		}
-		return response;
+		return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(registerInfo.getEmail())));
 	}
 
 	public ResponseEntity<? extends BaseResponseBody> createUser(UserRegisterPostReq userRegisterInfo) {
