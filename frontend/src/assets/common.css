@@ -38,3 +38,27 @@
     max-width: 1000px;
   }
 }
+
+:root {
+  --el-color-primary: #4E7351;
+  --el-color-primary-light-7: #CEE5D0;
+  --el-color-primary-light-9: #F2F8F2;
+  --el-button-border-color: transparent;
+
+  /* 검색바 보더 색 */
+  /* --el-border-color-base: transparent;   */
+}
+
+.el-button--primary.is-plain.is-disabled, .el-button--primary.is-plain.is-disabled:active, .el-button--primary.is-plain.is-disabled:focus, .el-button--primary.is-plain.is-disabled:hover {
+  color: #ACD3AF;
+  background-color: #F2F8F2;
+  border-color: transparent;
+}
+
+.el-button--primary.is-plain {
+  --el-button-border-color: transparent
+}
+
+/* .el-input__inner {
+  background-color: #F4F4F5;
+} */

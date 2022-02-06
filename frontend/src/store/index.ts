@@ -48,13 +48,14 @@ export default createStore({
       state.searchResult = data
     },
     SET_MEETING(state, data) {
-      console.log('뮤테이션 실행', data)
       state.meeting = data
+    },
+    DELETE_MEETING(state) {
+      state.meeting = {}
     }
   },
   actions: {
     setUser({ commit }, payload) {
-      console.log('액션 실행')
       commit('SET_USER', payload)
     },
     logout({ commit }) {
@@ -67,7 +68,8 @@ export default createStore({
         params: {
           title: payload.title,
           industry: payload.industry,
-          company: payload.company
+          company: payload.company,
+          page: 1
         }
       }).then(res => {
           commit('SAVE_SEARCH_RESULT', res.data.data.content)
@@ -88,6 +90,9 @@ export default createStore({
           })
         })
     },
+    deleteMeeting ({ commit }) {
+      commit('DELETE_MEETING')
+    }
   },
   modules: {},
 })
