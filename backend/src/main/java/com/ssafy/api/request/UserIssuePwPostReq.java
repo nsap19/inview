@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserIssuePwPostRequest")
 public class UserIssuePwPostReq {
-	@ApiModelProperty(name="email 인증 코드", example="000000")
-	String code;
 	@ApiModelProperty(name="비밀번호 찾기 시 email", example="ssafy@ssafy.com")
 	String email;
 }

@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.util.Random;
+
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -20,13 +22,23 @@ public class EmailServiceImpl implements EmailService {
 	@Autowired
     private final JavaMailSender emailSender;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    public String createKey() {
+    	StringBuffer key = new StringBuffer();
+        Random rnd = new Random();
 
-    public MimeMessage createMessage(String to) throws Exception{ // 회원가입 시 인증 메일 전송
+        for (int i = 0; i < 6; i++) { // 인증코드 6자리
+            key.append((rnd.nextInt(10)));
+        }
+        return key.toString();
+	}
+
+    public MimeMessage createMessage(String to, String code) throws Exception{ // 회원가입 시 인증 메일 전송
         logger.info("대상 : " + to);
-        logger.info("인증 번호 : " + ePw);
+        logger.info("인증 번호 : " + code);
         MimeMessage  message = emailSender.createMimeMessage();
 
-        String code = ePw;
+        
         message.addRecipients(RecipientType.TO, to); //보내는 대상
         message.setSubject("확인 코드: " + code); //제목
 
@@ -64,11 +76,13 @@ public class EmailServiceImpl implements EmailService {
         return message;
     }
 
-    public void sendSimpleMessage(String to, String password) throws Exception {
+    public String sendSimpleMessage(String to, String password) throws Exception {
     	MimeMessage message;
     	
+    	String code = createKey();
+    	
     	if(password == "")
-    		message = createMessage(to);
+    		message = createMessage(to, code);
     	else
     		message = createMessagePw(to, password);
         try { //예외처리
@@ -77,5 +91,7 @@ public class EmailServiceImpl implements EmailService {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
+        
+        return code;
     }
 }

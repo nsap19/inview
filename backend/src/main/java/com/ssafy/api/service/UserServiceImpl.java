@@ -28,12 +28,16 @@ public class UserServiceImpl implements UserService {
 	EmailService emailService;
 	
 	@Override
-	public void createUser(UserRegisterPostReq userRegisterInfo) {
+	public String createUser(UserRegisterPostReq userRegisterInfo) {
+		String code = "";
+		
 		try {
-	    	emailService.sendSimpleMessage(userRegisterInfo.getEmail(), ""); // 이메일 인증 코드 보내기
+	    	code = emailService.sendSimpleMessage(userRegisterInfo.getEmail(), ""); // 이메일 인증 코드 보내기
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
+		
+		return code;
 	}
 	
 	public void verifyCode(VerifyCodePostReq userVerifyInfo) {
@@ -45,12 +49,16 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user); // db에 유저 저장
 	}
 	
-	public void findUser(UserFindPwPostReq userFindInfo) {
+	public String findUser(UserFindPwPostReq userFindInfo) {
+		String code = "";
+		
 		try {
-	    	emailService.sendSimpleMessage(userFindInfo.getEmail(), ""); // 이메일 인증 코드 보내기
+	    	code = emailService.sendSimpleMessage(userFindInfo.getEmail(), ""); // 이메일 인증 코드 보내기
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
+		
+		return code;
 	}
 	
 	public void issuePassword(UserIssuePwPostReq issuePwInfo) {
