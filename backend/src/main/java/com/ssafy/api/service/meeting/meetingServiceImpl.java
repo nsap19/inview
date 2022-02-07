@@ -75,9 +75,6 @@ public class meetingServiceImpl implements MeetingService {
 		// meeting 저장
 		Meeting meeting = meetingRepository.save(registerInfo.toMeeting(host, industry));
 
-		// host 참가 테이블에 저장
-		participantRepository.save(Participant.builder().meeting(meeting).user(host).build());
-
 		// meetingCompany 저장
 		companyList.stream().forEach(
 				c -> meetingCompanyRepository.save(MeetingCompany.builder().company(c).meeting(meeting).build()));

@@ -18,10 +18,10 @@ import com.ssafy.api.service.ArchiveService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.common.util.CurrentUser;
 import com.ssafy.common.util.MD5Generator;
 import com.ssafy.common.util.SaltGenerator;
 import com.ssafy.db.entity.ArchiveType;
-import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
 
 import io.swagger.annotations.Api;
@@ -45,11 +45,11 @@ public class MeetingInsideCotroller {
 	@PostMapping("/{meetingId}/close")
 	@ApiOperation(value = "미팅 종료")
 	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 종료 성공"),
-			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 이미 종료된 미팅입니다."),
+			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 이미 종료된 미팅입니다. \n 호스트가 아닙니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> close(@PathVariable("meetingId") int meetingId) {
 
-		meetingInsideService.closeMeeting(meetingId);
+		meetingInsideService.closeMeeting(meetingId, CurrentUser.getUserId());
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "미팅 종료 성공"));
 	}
