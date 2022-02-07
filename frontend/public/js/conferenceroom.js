@@ -22,32 +22,6 @@ var userId;
 
 const serverURL = "http://localhost:8080/groupcall";
 let ws = new SockJS(serverURL);
-// this.stompClient = Stomp.over(ws);
-// console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
-// this.stompClient.connect(
-//   {},
-//   frame => {
-// 	// 소켓 연결 성공
-// 	this.connected = true;
-// 	console.log('소켓 연결 성공', frame);
-
-// 	// send(path, message, header)로 메시지를 보낼 수 있습니다.
-// 	// this.stompClient.send('/publish/video-chat/join', JSON.stringify(message), {}); 
-
-// 	// this.subscribeId = this.stompClient.subscribe('/subscribe/chat/room/' + this.meetingId, res => {
-// 	//   console.log('구독으로 받은 메시지 입니다.', res.body);
-
-// 	//   // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-// 	//   this.recvList.push(JSON.parse(res.body))
-// 	// });
-//   },
-//   error => {
-// 	// 소켓 연결 실패
-// 	console.log('소켓 연결 실패', error);
-// 	this.connected = false;
-//   }
-//   )
-
   
 window.onbeforeunload = function() {
 	ws.close();
@@ -125,11 +99,6 @@ function register() {
 		userId : userId,
 		meetingId : meetingId,
 	}
-
-	// stompClient.send("/publish/video-chat/join",
-    //     {},
-    //     JSON.stringify({message: message, type: 'JOIN'})
-    // )
 
 	sendMessage(message);
 }
