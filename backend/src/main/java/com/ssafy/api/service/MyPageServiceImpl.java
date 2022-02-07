@@ -31,7 +31,7 @@ public class MyPageServiceImpl implements MyPageService {
 		User user = userService.getUserByUserId(userId);
 		user.setNickname(userUpdateInfo.getNickname()); // 닉네임 변경
 		
-		if (userService.getUserByUserId(userId).getPassword() != passwordEncoder.encode(userUpdateInfo.getPassword())) // 패스워드를 변경하는 경우
+		if (!userService.getUserByUserId(userId).getPassword().equals(passwordEncoder.encode(userUpdateInfo.getPassword()))) // 패스워드를 변경하는 경우
 			user.setPassword(passwordEncoder.encode(userUpdateInfo.getPassword())); // 패스워드 암호화하여 db에 저장
 
 		userRepository.save(user);

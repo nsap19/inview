@@ -62,12 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 																									// 인증 필터를 거치도록 필터를
 																									// 추가
 				.authorizeRequests()
-
 				.antMatchers("/users/**").permitAll()
+				.antMatchers("/oauth/**").permitAll()
 				.antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**",
 						/* Probably not needed */ "/swagger.json")
 				.permitAll()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
 				.antMatchers(HttpMethod.GET, "/meeting/**").permitAll()
+				.antMatchers("/stomp-chat/**").permitAll()
 				.anyRequest().authenticated()
 				.and().cors().and().logout().logoutSuccessUrl("/users/login") // 로그아웃 성공 시
 				// 리다이렉트할 주소

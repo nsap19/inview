@@ -31,18 +31,20 @@ public class MyPageController {
 	
 	@Autowired
 	private MyPageService myPageService;
+	@Autowired
 	private UserService userService;
 	
 	@PutMapping("/{userId}")
 	@ApiImplicitParam(name = "userId", value ="userId")
-	@ApiOperation(value = "회원 정보 수정", notes = "수정한 회원 정보로 db 업데이트")
+	@ApiOperation(value = "회원 정보 수정", notes = "이메일은 변경할 수 없고, 닉네임 또는 비밀번호를 변경할 수 있습니다.")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "회원 정보 수정 성공"),
         @ApiResponse(code = 400, message = "존재하지 않는 유저입니다."),
         @ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> modifyUser(@PathVariable("userId") int userId, @RequestBody UserUpdatePutReq updateInfo) {
-		if (userService.getUserByUserId(userId).getNickname() != updateInfo.getNickname() // 닉네임을 변경하는 경우
+		
+		if (!userService.getUserByUserId(userId).getNickname().equals(updateInfo.getNickname()) // 닉네임을 변경하는 경우
 			&& userService.getUserByNickname(updateInfo.getNickname()) != null) // 닉네임 중복 검사
 				return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다."));
 		
