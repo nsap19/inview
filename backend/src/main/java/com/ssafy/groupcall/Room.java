@@ -26,7 +26,6 @@ public class Room implements Closeable {
 
   private final ConcurrentMap<Integer, UserSession> participants = new ConcurrentHashMap<>(); //key : userId
   private final MediaPipeline pipeline;
-//  private final String name;
   private final int meetingId;
 
   public int getMeetingId() {

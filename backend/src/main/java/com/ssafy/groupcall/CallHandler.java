@@ -51,9 +51,6 @@ public class CallHandler extends TextWebSocketHandler {
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		final JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
 
-//		System.out.println(session.toString());
-//		System.out.println(message.toString());
-
 		final UserSession user = registry.getBySession(session);
 
 		if (user != null) {
@@ -81,7 +78,8 @@ public class CallHandler extends TextWebSocketHandler {
 			if (user != null) {
 				IceCandidate cand = new IceCandidate(candidate.get("candidate").getAsString(),
 						candidate.get("sdpMid").getAsString(), candidate.get("sdpMLineIndex").getAsInt());
-				user.addCandidate(cand, user.getUserId());
+				if(jsonMessage.get("userId")!=null) user.addCandidate(cand, jsonMessage.get("userId").getAsInt());
+				else user.addCandidate(cand, user.getUserId()); //녹화 기능에 필요
 			}
 			break;
 		case "start":
@@ -158,7 +156,6 @@ public class CallHandler extends TextWebSocketHandler {
 				public void onEvent(StoppedEvent event) {
 					JsonObject response = new JsonObject();
 					response.addProperty("id", "stopped");
-					System.out.println(recorder.getUri());
 					try {
 						synchronized (session) {
 							session.sendMessage(new TextMessage(response.toString()));
@@ -188,38 +185,6 @@ public class CallHandler extends TextWebSocketHandler {
 
 			// 2. Store user session
 			user.setRecorderEndpoint(recorder);
-
-//			// 3. SDP negotiation
-//			String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
-//			String sdpAnswer = user.getIpSdpAnswer();
-//
-//			// 4. Gather ICE candidates
-//			webRtcEndpoint.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
-//
-//				@Override
-//				public void onEvent(IceCandidateFoundEvent event) {
-//					JsonObject response = new JsonObject();
-//					response.addProperty("id", "iceCandidate");
-//					response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
-//					try {
-//						synchronized (session) {
-//							session.sendMessage(new TextMessage(response.toString()));
-//						}
-//					} catch (IOException e) {
-//						log.error(e.getMessage());
-//					}
-//				}
-//			});
-//
-//			JsonObject response = new JsonObject();
-//			response.addProperty("id", "startResponse");
-//			response.addProperty("sdpAnswer", sdpAnswer);
-//			response.addProperty("userId", user.getUserId());
-//
-//			
-//			synchronized (user) {
-//				session.sendMessage(new TextMessage(response.toString()));
-//			}
 
 			webRtcEndpoint.gatherCandidates();
 
@@ -260,11 +225,8 @@ public class CallHandler extends TextWebSocketHandler {
 			// 1. Media logic
 			final MediaPipeline pipeline = kurento.createMediaPipeline();
 			WebRtcEndpoint webRtcEndpoint = new WebRtcEndpoint.Builder(pipeline).build();
-//			RecorderEndpoint recorder = new RecorderEndpoint.Builder(pipeline, RECORDER_FILE_PATH)
-//					.withMediaProfile(profile).build();
 			PlayerEndpoint player = new PlayerEndpoint.Builder(pipeline, RECORDER_FILE_PATH).build();
 			player.connect(webRtcEndpoint);
-			System.out.println(player.getVideoInfo().toString());
 
 			// Player listeners
 			player.addErrorListener(new EventListener<ErrorEvent>() {
@@ -285,7 +247,6 @@ public class CallHandler extends TextWebSocketHandler {
 			// 2. Store user session
 			user.setMediaPipeline(pipeline);
 			user.setOutgoingMedia(webRtcEndpoint);
-//	      user.setWebRtcEndpoint(webRtcEndpoint);
 
 			// 3. SDP negotiation
 			String sdpOffer = jsonMessage.get("sdpOffer").getAsString();

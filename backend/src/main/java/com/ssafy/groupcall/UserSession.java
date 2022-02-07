@@ -28,30 +28,15 @@ class UserSession implements Closeable {
 
 	private static final Logger log = LoggerFactory.getLogger(UserSession.class);
 
-//	private final int userId;
-//	private final WebSocketSession session;
-//
-//	private MediaPipeline pipeline;
-//
-//	private final int meetingId;
-//	private WebRtcEndpoint outgoingMedia;
-//	private RecorderEndpoint recorderEndpoint;
-	
-	private int userId;
-	private WebSocketSession session;
+	private final int userId;
+	private final WebSocketSession session;
 	private MediaPipeline pipeline;
-	private int meetingId;
+	private final int meetingId;
 	private WebRtcEndpoint outgoingMedia;
 	private RecorderEndpoint recorderEndpoint;
-	private String ipSdpAnswer;
 
 	private final ConcurrentMap<Integer, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
 	
-	
-
-	public UserSession(WebSocketSession session) {
-		this.session = session;
-	}
 
 	public UserSession(final int userId, int meetingId, final WebSocketSession session, MediaPipeline pipeline) {
 
@@ -99,20 +84,12 @@ class UserSession implements Closeable {
 		return outgoingMedia;
 	}
 	
-	public String getIpSdpAnswer() {
-		return ipSdpAnswer;
-	}
-
 	public void setMediaPipeline(MediaPipeline pipeline) {
 		this.pipeline = pipeline;
 	}
 	
 	public void setOutgoingMedia(WebRtcEndpoint outgoingMedia) {
 		this.outgoingMedia = outgoingMedia;
-	}
-
-	public void setPipeline(MediaPipeline pipeline) {
-		this.pipeline = pipeline;
 	}
 
 	public void setRecorderEndpoint(RecorderEndpoint recorderEndpoint) {
@@ -131,7 +108,7 @@ class UserSession implements Closeable {
 
 		log.trace("USER {}: SdpOffer for {} is {}", this.userId, sender.getUserId(), sdpOffer);
 
-		ipSdpAnswer = this.getEndpointForUser(sender).processOffer(sdpOffer);
+		final String ipSdpAnswer = this.getEndpointForUser(sender).processOffer(sdpOffer);
 		final JsonObject scParams = new JsonObject();
 		scParams.addProperty("id", "receiveVideoAnswer");
 		scParams.addProperty("userId", sender.getUserId());
