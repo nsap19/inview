@@ -145,7 +145,7 @@ public class UserController {
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "존재하지 않는 이메일 입니다."));
 
 		String code = userService.findUser(findInfo);
-		return ResponseEntity.status(200).body(CodeResponseBody.of(200, code, "이메일 인증 전송 성공"));
+		return ResponseEntity.status(200).body(CodeResponseBody.of(200, "이메일 인증 전송 성공", code));
 	}
 	
 	@PostMapping("/findpw/email-certi")
