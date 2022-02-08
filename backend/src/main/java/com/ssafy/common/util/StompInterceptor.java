@@ -21,12 +21,7 @@ public class StompInterceptor implements ChannelInterceptor {
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-//		  System.out.println("Command : " + headerAccessor.getCommand());
-//        System.out.println("message : " + message);
-//        System.out.println("헤더 : " + message.getHeaders());
 		if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
-//        	System.out.println("토큰1 : " + headerAccessor.getNativeHeader("Authorization").toString());
-//        	System.out.println("토큰2 : " + Objects.requireNonNull(headerAccessor.getFirstNativeHeader("Authorization")).substring(7));
 			jwtTokenUtil.handleError(
 					Objects.requireNonNull(headerAccessor.getFirstNativeHeader("Authorization")).substring(7));
 		}

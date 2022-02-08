@@ -32,6 +32,7 @@ import com.google.gson.JsonObject;
 import com.ssafy.api.request.ArchiveRegisterPostReq;
 import com.ssafy.api.service.ArchiveService;
 import com.ssafy.api.service.meeting.MeetingInsideService;
+import com.ssafy.common.util.ArchiveUtil;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
@@ -55,6 +56,9 @@ public class GroupCallServiceImpl implements GroupCallService {
 	ArchiveService arhciveService;
 
 	@Autowired
+	ArchiveUtil archiveUtil;
+	
+	@Autowired
 	private KurentoClient kurento;
 
 	public void start(UserSession userSession, final WebSocketSession session, JsonObject jsonMessage) {
@@ -66,14 +70,16 @@ public class GroupCallServiceImpl implements GroupCallService {
 
 			MediaProfileSpecType profile = getMediaProfileFromMessage(jsonMessage);
 
-			User user = userRepositorySupport.findUserByUserId(userSession.getUserId()).get();
+			User user = userRepositorySupport.findUserByUserId(userSession.getUserId());
 			String meetingId = String.valueOf(userSession.getMeetingId());
-			String savePath = getVideoSavePath(meetingId, ArchiveType.VIDEO);
-			String fileName = getFileName(user, ".webm");
-			String filePath = savePath + "/" + fileName;
-			userSession.setFilePath(filePath);
-			videoInsertToArchive(meetingId, filePath, fileName, user);
-			RecorderEndpoint recorder = new RecorderEndpoint.Builder(pipeline, filePath).withMediaProfile(profile)
+			ArchiveType archiveType = ArchiveType.VIDEO;
+			String savepath = archiveUtil.getSavepath(archiveType, meetingId);
+			String filename = archiveUtil.getFilename(archiveType, user, "", ".webm");
+			String filepath = archiveUtil.getFilepath(archiveType, savepath, filename);
+			
+			archiveUtil.InsertToArchive(archiveType, meetingId, filepath, filename, user);
+			userSession.setFilePath(filepath);
+			RecorderEndpoint recorder = new RecorderEndpoint.Builder(pipeline, filepath).withMediaProfile(profile)
 					.build();
 
 			recorder.addRecordingListener(new EventListener<RecordingEvent>() {
@@ -250,33 +256,5 @@ public class GroupCallServiceImpl implements GroupCallService {
 		} catch (IOException e) {
 			log.error("Exception sending message", e);
 		}
-	}
-
-	// 파일 주소를 읽어온다.
-	private String getVideoSavePath(String meetingId, ArchiveType archiveType) {
-		String savePath = "file:///tmp/files/" + meetingId + "/" + String.valueOf(archiveType).toLowerCase();
-
-		return savePath;
-	}
-
-	private String getFileName(User user, String extension) {
-		LocalTime localTime = LocalTime.now();
-		String filename = String.valueOf(localTime.getHour()) + "시 " + String.valueOf(localTime.getMinute()) + "분 "
-				+ String.valueOf(localTime.getSecond()) + "초 " + user.getNickname() + extension;
-
-		return filename;
-	}
-
-	private void videoInsertToArchive(String meetingId, String filepath, String filename, User user) {
-		ArchiveRegisterPostReq archiveRegisterPostReq = new ArchiveRegisterPostReq();
-
-		archiveRegisterPostReq.setPath(filepath);
-		archiveRegisterPostReq.setArchiveName(filename);
-		archiveRegisterPostReq.setArchiveType(ArchiveType.VIDEO); // video
-		archiveRegisterPostReq.setUser(user);
-		Meeting meeting = meetingInsideService.getMeeting(Integer.parseInt(meetingId));
-		archiveRegisterPostReq.setMeeting(meeting);
-
-		arhciveService.createArchive(archiveRegisterPostReq);
 	}
 }

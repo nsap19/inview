@@ -27,6 +27,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.meeting.MeetingService;
 import com.ssafy.common.model.response.AdvancedResponseBody;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.common.util.ArchiveUtil;
 import com.ssafy.common.util.MD5Generator;
 import com.ssafy.db.entity.Archive;
 import com.ssafy.db.entity.User;
@@ -48,12 +49,15 @@ public class DownloadController {
 	ArchiveService archiveService;
 
 	@Autowired
+	ArchiveUtil archiveUtil;
+	
+	@Autowired
 	MeetingService meetingService;
 
 	@Autowired
 	UserService userService;
 
-	@GetMapping("/meeting/{meetingId}/user/{userId}")
+	@GetMapping("/meeting/{meetingId}/users/{userId}")
 	@ApiOperation(value = "파일 리스트 조회")
 	@ApiResponses({ @ApiResponse(code = 200, message = "파일 리스트 조회 성공"),
 			@ApiResponse(code = 400, message = "파일 리스트 조회 실패") })
@@ -73,7 +77,7 @@ public class DownloadController {
 				.body(new AdvancedResponseBody<List<ArchiveRes>>(200, "파일 리스트 조회 성공", ArchiveRes.of(archiveList)));
 	}
 
-	@GetMapping("/meeting/{meetingId}/user/{userId}/{archiveId}")
+	@GetMapping("/meeting/{meetingId}/users/{userId}/{archiveId}")
 	@ApiOperation(value = "파일 다운로드")
 	@ApiResponses({ @ApiResponse(code = 200, message = "파일 다운로드 성공"), @ApiResponse(code = 400, message = "파일 다운로드 실패"),
 			@ApiResponse(code = 500, message = "파일 손상, 다운로드 실패") })
@@ -92,8 +96,7 @@ public class DownloadController {
 			e.printStackTrace();
 			return ResponseEntity.status(400).body(null);
 		}
-
-		Path path = Paths.get(archive.getPath());
+		Path path = Paths.get(archiveUtil.getOsFilepath(archive.getArchiveType(), archive.getPath()));
 		String originalName = archive.getArchiveName();
 		switch (archive.getArchiveType()) {
 		case VIDEO:

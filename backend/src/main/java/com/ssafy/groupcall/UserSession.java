@@ -38,7 +38,7 @@ public class UserSession implements Closeable {
 
 	private final ConcurrentMap<Integer, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
 
-	public UserSession(final int userId, int meetingId, final WebSocketSession session, MediaPipeline pipeline) {
+	public UserSession(final int userId, final int meetingId, final WebSocketSession session, MediaPipeline pipeline) {
 		this.pipeline = pipeline;
 		this.userId = userId;
 		this.session = session;
