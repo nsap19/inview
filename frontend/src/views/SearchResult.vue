@@ -66,6 +66,12 @@ export default defineComponent({
 
     let page = 2
     onMounted(() => {
+      store.dispatch('search', {
+        title: route.query.title,
+        industry: route.query.industry,
+        company: route.query.company,
+        page: 1
+      })
       document.addEventListener('scroll', (event) => {
         // console.log(event)
         const {scrollHeight, scrollTop, clientHeight} = document.documentElement

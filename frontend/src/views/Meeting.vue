@@ -29,7 +29,7 @@
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
 			<div class="meeting-content-main" ref="wholeVideosWrapper" >
-				<div 
+				<!-- <div 
 					class="video-wrapper"
 					v-for="participant in participants" 
 					:key="participant"
@@ -41,7 +41,8 @@
 							{{ participant }}
 						</div>
 					</div>
-				</div>
+				</div> -->
+				<Video/>
 			</div>
 
 			<!-- 우측 aside -->
@@ -117,6 +118,7 @@ import File from '@/components/Meeting/File.vue';
 import MeetingNavBar from '@/components/Meeting/MeetingNavBar.vue'
 import { ChatDotSquare, CloseBold, MoreFilled, List } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
+import Video from '@/components/Meeting/Video.vue'
 
 
 export default defineComponent({
@@ -128,7 +130,8 @@ export default defineComponent({
 		Evaluation,
 		Chat,
 		Memo,
-		File
+		File,
+		Video
 	},
 	setup() {
 		const wholeVideosWrapper = ref<HTMLElement | null>(null)
@@ -137,6 +140,8 @@ export default defineComponent({
 		let height = ref(0)
 		let windowWidth = ref(0)
 		onMounted(() => {
+
+
 			// 초기 비디오 크기 설정
 			if (wholeVideosWrapper.value) {
 				width.value = wholeVideosWrapper.value.offsetWidth
@@ -245,11 +250,12 @@ export default defineComponent({
 			// 메모 저장은 Memo 컴포넌트에서 하는게 더 논리적일듯
 		}
 
+
 		return { 
 			ChatDotSquare, CloseBold, MoreFilled, List, 
 			openAside, asideCategory, dialogVisible, memo, endSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
-			handleClose, endMeeting
+			handleClose, endMeeting,
 		}
 	},
 })

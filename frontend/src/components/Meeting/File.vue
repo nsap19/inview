@@ -11,13 +11,16 @@
 
     <!-- 업로드 -->
     <div style="position: sticky; bottom: 0; background-color: lightgrey">
+      <input type="file" ref="file" multiple="multiple" v-on:change="handleFileUpload()"/>
+      <button v-on:click="submitFile()">Submit</button>
       <el-upload
         ref="upload"
         class="upload-demo"
-        action="http://localhost:8080/meeting/1/upload/"
+        action="http://localhost:8080/meeting/2/upload/"
         :limit="1"
         :on-exceed="handleExceed"
         :auto-upload="false"
+        :headers="headers"
       >
         <template #trigger>
           <el-button type="primary">select file</el-button>
@@ -36,12 +39,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import axios from 'axios'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: "File",
   setup() {
+    const store = useStore()
+    const meetingId = computed(() => store.state.meeting.id)
+    const userId = computed(() => store.state.user.id)
     const upload = ref()
 
     const files = ref([])
@@ -52,19 +59,30 @@ export default defineComponent({
 
     const getFiles = function () {      
       axios({
-        url: 'http://localhost:8080/download/meeting/1/user/1',
+        url: `/download/meeting/${meetingId.value}/user/${userId.value}`,
         method: 'GET',
-      })
-      .then(res => {
-        files.value = res.data.data
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      }).then(res => {
+        console.log(meetingId.value, userId.value)
+        console.log(res)
+        files.value = res.data.data.filter(function (file: {archiveName: string, archiveType: string, id: number, path: string}) {
+          if (file.archiveType === "FILE") {
+            return true
+          } else {
+            return false
+          }
+        })
+      }).catch(err => {
+        console.log(err)
       })
     }
 
     const downloadFile = function (fileId: number) {
       axios({
-        url: `http://localhost:8080/download/meeting/1/user/1/${fileId}?archiveType=file`, // File URL Goes Here
+        url: `/download/meeting/${meetingId.value}/user/${userId.value}/${fileId}?archiveType=file`, // File URL Goes Here
         method: 'GET',
         responseType: 'blob',
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(res => {
         const FILE = window.URL.createObjectURL(new Blob([res.data]));
@@ -88,7 +106,42 @@ export default defineComponent({
       // 오류가 발생하는데 이후 해결하기로...
       // upload.value.uploadFiles = []
     }
-    return { upload, downloadFile, handleExceed, submitUpload, files }
+
+    const file = ref()
+    const handleFileUpload = async() => {
+        // debugger;
+        console.log("selected file",file.value.files[0])
+        //Upload to server
+    }
+
+    const submitFile = function (){
+      let formData = new FormData();
+      formData.append('file', file.value.files[0]);
+      for (let value of formData.values()) {
+        console.log(value);
+      }
+      axios.post( `/meeting/${meetingId.value}/upload`,
+        formData,
+        {
+          headers: 
+          {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+      .then(res => {
+        console.log('SUCCESS!!');
+        console.log(res)
+      })
+      .catch(err => {
+        console.log('FAILURE!!');
+        console.log(err.response)
+      });
+    }
+
+    const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    return { upload, downloadFile, handleExceed, submitUpload, files, headers, file, handleFileUpload, submitFile }
   }
 })
 

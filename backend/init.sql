@@ -1,0 +1,1 @@
+create database IF NOT EXISTS inview collate utf8mb4_general_ci;

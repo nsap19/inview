@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:5.7
+    container_name: backend_db
+    restart: always
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ssafy
+      TZ: Asia/Seoul
+    privileged: true
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d #: 앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
+    networks:
+      - backend
+  kurento:
+    container_name: backend_kurento
+    image: kurento/kurento-media-server:latest
+    restart: always
+    ports:
+#        - "8888:8888"
+       - "8888:8888/tcp"
+       - "5000-5050:5000-5050/udp"
+    environment: 
+        TZ: "Asia/Seoul"
+        KMS_STUN_IP: "172-26-1-220"
+        KMS_STUN_PORT: "3478"
+        KMS_TURN_URL: "myuser:mypassword@172-26-1-220:3478?transport=udp"
+    networks: 
+      - backend
+    working_dir: /tmp # RUN, CMD, ADD, COPY등이 이루어질 기본 디렉토리를 설정합니다.
+    volumes: # 컨테이너 외부에 파일시스템을 마운트 할 때 사용합니다. 반드시 지정하지 않아도 마운트 할 수 있지만, 기본적으로 지정하는 것이 좋습니다.
+      - ./:/tmp
+
+  app: 
+    build: 
+      context: ./
+    container_name: ssafy_app
+    restart: always
+    ports: 
+      - "8080:8080"        
+      - "8443:8443"
+    environment: 
+      TZ: "Asia/Seoul"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/inview?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true"
+      JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
+      server.address: 0.0.0.0
+    depends_on:
+      - db
+      - kurento
+    networks:
+      - backend
+networks:
+  backend: 
+        

@@ -61,20 +61,22 @@
 
 <script>
 /* eslint-disable */
-
-// 라이브러리 임포트
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Chat',
   props: [ 
     'endSignal'
   ],
+  computed: {
+    ...mapState(['meeting', 'user'])
+  },
   data() {
     return {
-      meetingId: "1",
-      userName: "익명",
+      meetingId: "",
+      userName: "",
       message: "",
       recvList: [
         {"meetingId":"1","sender":"익명","time": "23:11","date":"2021년01월23일 일요일","message":"익명님이 입장하셨습니다.","type":null, "receiver":""},
@@ -111,19 +113,20 @@ export default {
         this.$el.scrollTop = this.$el.lastElementChild.offsetTop;
     },
     sendMessage (e) {
-      if(e.keyCode === 13 && this.userName !== '' && this.message !== ''){
+      if(e.keyCode === 13 && this.user.nickname !== '' && this.message !== ''){
         this.send()
         this.message = ''
       }
     },    
     send() {
-      console.log("Send message:" + this.message);
+      let headers = {token: `Bearer ${localStorage.getItem("token")}`};
+      console.log("Send message:" + this.message)
       if (this.stompClient && this.stompClient.connected) {
         const current_datetime = new Date()
         
         const msg = { 
-          meetingId : this.meetingId,
-          sender: this.userName,
+          meetingId : this.meeting.id,
+          sender: this.user.nickname,
           receiver: "",
           message: this.message,
           date: current_datetime.getFullYear() + "년" 
@@ -135,16 +138,19 @@ export default {
 
         console.log(msg)
         // send(path, message, header)로 메시지를 보낼 수 있다.
-        this.stompClient.send("/publish/chat/message", JSON.stringify(msg), {});
+        this.stompClient.send("/publish/chat/message", JSON.stringify(msg), headers);
       }
     },    
     connect() {
       const serverURL = "http://localhost:8080/stomp-chat"
       let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
+      let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()}
+      this.stompClient = Stomp.over(socket, options);
+      console.log(this.meeting.id)
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      let headers = {token: `Bearer ${localStorage.getItem("token")}`};
       this.stompClient.connect(
-        {},
+        headers,
         frame => {
           // 소켓 연결 성공
           this.connected = true;
@@ -152,8 +158,8 @@ export default {
 
           const current_datetime = new Date()
           const message = { 
-            meetingId : this.meetingId,
-            sender: this.userName,
+            meetingId : this.meeting.id,
+            sender: this.user.nickname,
             receiver: "",
             date: current_datetime.getFullYear() + "년" 
                   + ("0" + (1 + current_datetime.getMonth())).slice(-2) + "월" 
@@ -163,13 +169,13 @@ export default {
           };
           console.log('데이터', message);
           // send(path, message, header)로 메시지를 보낼 수 있습니다.
-          this.stompClient.send('/publish/chat/join', JSON.stringify(message), {}); 
+          this.stompClient.send('/publish/chat/join', JSON.stringify(message), headers); 
 
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub-sub 구조라고 합니다.
           // subscribe(path, callback)로 메시지를 받을 수 있습니다. 
           // callback 첫번째 파라미터의 body로 메시지의 내용이 들어옵니다.
-          this.subscribeId = this.stompClient.subscribe('/subscribe/chat/room/' + this.meetingId, res => {
+          this.subscribeId = this.stompClient.subscribe('/subscribe/chat/room/' + this.meeting.id, res => {
             console.log('구독으로 받은 메시지 입니다.', res.body);
 
             // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
@@ -184,13 +190,14 @@ export default {
       );        
     },
     disconnect(){
+      let headers = {token: `Bearer ${localStorage.getItem("token")}`};
       if(this.subscribeId != ""){
 
         const current_datetime = new Date()
         // 연결시 획득한 구독 id를 통해 구독을 정지할 수 있습니다.
         const message = {
-          meetingId: this.meetingId,
-          sender: this.userName,
+          meetingId: this.meeting.id,
+          sender: this.user.nickname,
           receiver: "",
           date: current_datetime.getFullYear() + "년" 
                 + ("0" + (1 + current_datetime.getMonth())).slice(-2) + "월" 
@@ -202,7 +209,7 @@ export default {
         this.stompClient.send(
           "/publish/chat/leave",
           JSON.stringify(message),
-          {}
+          headers
         );
         this.subscribeId.unsubscribe();
         this.subscribeId = "";
