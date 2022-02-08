@@ -62,3 +62,8 @@
 /* .el-input__inner {
   background-color: #F4F4F5;
 } */
+
+.el-dialog {
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

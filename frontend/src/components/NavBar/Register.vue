@@ -1,45 +1,56 @@
 <template>
   <el-dialog 
-    title="회원가입" 
     v-model="openDialog"
+    width="320px"
   >
+    <EmailCertification 
+      v-if="showEmailCertification" 
+      :code="emailCertificationCode" 
+      :signupInfo="ruleForm"
+      @closeDialog="[openDialog=false, showEmailCertification=false]"
+    />
     <el-form 
       ref="ruleFormRef"
       :model="ruleForm"
       :rules="rules"
-      label-width="120px"
       size="large"
       :hide-required-asterisk="true"
+      v-else
+      v-loading="loading"
      >
-      <el-form-item label="이메일" prop="email" :error="emailError">
-        <el-input v-model="ruleForm.email" autocomplete="off" @input="inputEmail"></el-input>
+      <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3">
+      <el-form-item prop="email" :error="emailError">
+        <el-input v-model="ruleForm.email" autocomplete="off" @input="inputEmail" placeholder="이메일"></el-input>
       </el-form-item>
-      <el-form-item label="닉네임" prop="nickname" :error="nicnknameError">
-        <el-input v-model="ruleForm.nickname" autocomplete="off" @input="inputNickname"></el-input>
+      <el-form-item prop="nickname" :error="nicnknameError">
+        <el-input v-model="ruleForm.nickname" autocomplete="off" @input="inputNickname" placeholder="닉네임"></el-input>
       </el-form-item>
-      <el-form-item label="비밀번호" prop="password">
-        <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+      <el-form-item  prop="password">
+        <el-input type="password" v-model="ruleForm.password" autocomplete="off" placeholder="비밀번호"></el-input>
       </el-form-item>
-      <el-form-item label="비밀번호 확인" prop="passwordCheck">
-        <el-input type="password" v-model="ruleForm.passwordCheck" autocomplete="off"></el-input>
+      <el-form-item prop="passwordCheck">
+        <el-input type="password" v-model="ruleForm.passwordCheck" autocomplete="off" placeholder="비밀번호 확인"></el-input>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="register(ruleFormRef)">가입</el-button>
-        <el-button @click="openDialog=false">취소</el-button>
-      </el-form-item>
+      <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
+        <el-button type="primary" round @click="register(ruleFormRef)">다음</el-button>
+      </div>
+      <div class="d-flex flex-row justify-content-center">
+        <el-button type="text" @click="$emit('login')">로그인</el-button>
+      </div>
     </el-form>
 
-    <el-button type="primary" @click="$emit('login')">로그인</el-button>
   </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, reactive } from 'vue'
+import { defineComponent, computed, ref, reactive, watch } from 'vue'
 import type { ElForm } from 'element-plus'
 import axios from 'axios'
+import EmailCertification from '@/components/NavBar/EmailCertification.vue';
 
 export default defineComponent({
   name: "Register",
+  components: { EmailCertification },
   props: {
     modelValue: Boolean,
   },
@@ -49,6 +60,14 @@ export default defineComponent({
       get: () => props.modelValue,
       set: (value) => emit("update:modelValue", value),
     });
+
+    watch(() => props.modelValue, (newValue, oldValue) => {
+      console.log('props.visible 의 변이가 감지되었을 때 ', {newValue, oldValue})
+      showEmailCertification.value = false
+    })
+
+    const loading = ref(false)
+
     const ruleFormRef = ref<InstanceType<typeof ElForm>>()
     const ruleForm = reactive({
       nickname: "",
@@ -108,28 +127,33 @@ export default defineComponent({
       passwordCheck: [{ validator: validatePasswordCheck, trigger: 'blur' }],
     }
 
+    const showEmailCertification = ref(false)
+    const emailCertificationCode = ref('')
+
+    const signup = function (body: {nickname: string, email: string, password: string}) {
+      axios.post("/users/signup/", body).then(res => {
+        loading.value = false
+        console.log(res)
+        emailCertificationCode.value = res.data.message  // 이후 백엔드 수정되면 message말고 code로 수정해야 함
+        showEmailCertification.value = true
+      }).catch(err => {
+        console.log(err.response)
+        if (err.response.data.message === "이미 등록된 닉네임입니다.") {
+          nicnknameError.value = "중복된 닉네임입니다"
+        } else if (err.response.data.message === "이미 등록된 이메일입니다.") {
+          emailError.value = "이미 등록된 이메일입니다"
+        }
+      })
+    }
+
     const register = (formEl: InstanceType<typeof ElForm> | undefined) => {
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
           console.log('valid')
+          loading.value = true
           const { nickname, email, password } = ruleForm
-
-          axios.post("/users/signup/", {
-            nickname,
-            email,
-            password,
-          }).then(res => {
-            console.log(res)
-          }).catch(err => {
-            console.log(err.response)
-            if (err.response.data.message === "이미 등록된 닉네임입니다.") {
-              nicnknameError.value = "중복된 닉네임입니다"
-            } else if (err.response.data.message === "이미 등록된 이메일입니다.") {
-              emailError.value = "이미 등록된 이메일입니다"
-            }
-          })
-
+          signup({nickname, email, password})
         } else {
           console.log('error submit!')
           return false
@@ -137,31 +161,11 @@ export default defineComponent({
       })
     } 
 
-    return { openDialog, ruleFormRef, ruleForm, rules, register, nicnknameError, inputNickname, emailError, inputEmail }
+    return { 
+      openDialog, ruleFormRef, ruleForm, rules, 
+      register, nicnknameError, inputNickname, emailError, inputEmail,
+      showEmailCertification, emailCertificationCode, loading
+    }
   },
-
-  // methods:{
-  //   ...mapMutations(['SET_REGISTER_MODAL', 'SET_LOGIN_MODAL' ]),
-  //   async register(){
-  //     try {
-  //       const {name, email, password} = this.form;
-  //       if(!name || !email || !password){
-  //         alert("이름, 이메일, 비밀번호를 모두 입력해주세요")
-  //         return;
-  //       }
-
-  //       const result = await userAPI.register(name, email, password);
-  //       if(result.data.status === "OK"){
-  //         alert("회원가입이 완료되었습니다");
-  //         // 회원가입이 완료되면 자동으로 로그인 modal을 띄운다
-  //         this.SET_LOGIN_MODAL(true);
-  //       }else{
-  //         alert("회원가입이 실패하였습니다.")
-  //       }
-  //     } catch (error) {
-  //       alert("회원가입이 실패하였습니다.")
-  //     }
-  //   }
-  // }
 })
 </script>
