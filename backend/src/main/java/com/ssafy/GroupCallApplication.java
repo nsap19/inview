@@ -3,6 +3,7 @@ package com.ssafy;
 import org.kurento.client.KurentoClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -18,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 @SpringBootApplication
 @EnableWebSocket
-public class GroupCallApplication  {
+public class GroupCallApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(GroupCallApplication.class, args);
 	}

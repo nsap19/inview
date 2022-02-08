@@ -20,7 +20,6 @@ import com.ssafy.common.util.MD5Generator;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
-import com.ssafy.test.BasicTest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

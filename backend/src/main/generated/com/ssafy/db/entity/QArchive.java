@@ -26,7 +26,7 @@ public class QArchive extends EntityPathBase<Archive> {
 
     public final StringPath archiveName = createString("archiveName");
 
-    public final NumberPath<Integer> archiveType = createNumber("archiveType", Integer.class);
+    public final EnumPath<ArchiveType> archiveType = createEnum("archiveType", ArchiveType.class);
 
     public final com.ssafy.db.entity.meeting.QMeeting meeting;
 

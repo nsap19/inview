@@ -12,6 +12,7 @@ import org.springframework.web.socket.WebSocketSession;
 public class UserRegistry {
 
 	private final ConcurrentHashMap<Integer, UserSession> usersByUserId = new ConcurrentHashMap<>();
+//	private final ConcurrentHashMap<String, UserSession> usersByName = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<String, UserSession> usersBySessionId = new ConcurrentHashMap<>();
 
 	public void register(UserSession user) {
