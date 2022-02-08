@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <!-- kurento test -->
+    <script src="/webjars/webrtc-adapter/release/adapter.js"></script>
+    <script src="/group-call/js/kurento-utils.js"></script>
+
+    <script src="/webjars/jquery/dist/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <!-- front 작업 -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="js/kurento-util.js"></script>
+    <!-- end -->
+
+    <script src="./js/conferenceroom.js"></script>
+    <script src="./js/participant.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="wrapper">
+            <div id="join" class="animate join">
+                <h1>Join a Room</h1>
+                <form onsubmit="register(); return false;" accept-charset="UTF-8">
+                    <p>
+                        <input type="text" name="userId" value="" id="userId" placeholder="userId" required />
+                    </p>
+                    <p>
+                        <input type="text" name="meetingId" value="" id="meetingId" placeholder="meetingId" required />
+                    </p>
+                    <p class="submit">
+                        <input type="submit" name="commit" value="Join!" />
+                    </p>
+                </form>
+            </div>
+            <div id="room" style="display: none">
+                <h2 id="room-header"></h2>
+                <div id="participants"></div>
+                <input type="button" id="button-leave" onmouseup="leaveRoom();" value="Leave room" />
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
