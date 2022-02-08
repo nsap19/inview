@@ -5,6 +5,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,19 +51,19 @@ public class JwtTokenUtil {
                 .build();
     }
     
-    public static String getToken(String userId) {
+    public static String getToken(String email) {
     		Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
         return JWT.create()
-                .withSubject(userId)
+                .withSubject(email)
                 .withExpiresAt(expires)
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
     }
 
-    public static String getToken(Instant expires, String userId) {
+    public static String getToken(Instant expires, String email) {
         return JWT.create()
-                .withSubject(userId)
+                .withSubject(email)
                 .withExpiresAt(Date.from(expires))
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
@@ -78,6 +82,7 @@ public class JwtTokenUtil {
                 .build();
 
         try {
+        	System.out.println(token.replace(TOKEN_PREFIX, ""));
             verifier.verify(token.replace(TOKEN_PREFIX, ""));
         } catch (AlgorithmMismatchException ex) {
             throw ex;
@@ -122,5 +127,16 @@ public class JwtTokenUtil {
         } catch (Exception ex) {
             throw ex;
         }
+    }
+    
+    /**
+     * Jwt Token을 복호화 하여 이름을 얻는다.
+     */
+    public String getUserEmailFromJwt(String token) {
+    	Jws<Claims> claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey.getBytes())
+                .build()
+                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""));
+    	return claims.getBody().getSubject();
     }
 }

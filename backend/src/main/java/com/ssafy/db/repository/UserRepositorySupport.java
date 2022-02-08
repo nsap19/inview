@@ -17,11 +17,22 @@ public class UserRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
+    
+    public User findUserByUserId(int userId) {
+    	User user = jpaQueryFactory.select(qUser).from(qUser)
+    			.where(qUser.userId.eq(userId)).fetchOne();
+    	return user;
+    }
 
-    public Optional<User> findUserByUserId(String userId) {
+    public User findUserByEmail(String email) {
         User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userId.eq(userId)).fetchOne();
-        if(user == null) return Optional.empty();
-        return Optional.ofNullable(user);
+                .where(qUser.email.eq(email)).fetchOne();
+        return user;
+    }
+    
+    public User findUserByNickname(String nickname){
+    	User user = jpaQueryFactory.select(qUser).from(qUser)
+    			.where(qUser.nickname.eq(nickname)).fetchOne();
+    	return user;
     }
 }

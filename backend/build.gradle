@@ -142,6 +142,18 @@ dependencies {
 
     implementation("com.querydsl:querydsl-jpa:${querydslVer}")
     implementation("com.querydsl:querydsl-apt:${querydslVer}")
+    
+    //mail을 주고받기 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    
+    //SpringSecurity를 사용하기 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    
+    //Validation을 사용하기 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    
+    //Test를 하기 위한 의존성 추가
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5")
 
     //STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
     implementation("org.springframework.boot:spring-boot-starter-mustache")
@@ -150,6 +162,12 @@ dependencies {
     implementation('org.webjars:sockjs-client:1.1.2')
     implementation('org.webjars:stomp-websocket:2.3.3-1')
     implementation('org.webjars:webjars-locator:0.30')
+    //STOMP 인증 관련 JWT 라이브러리
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2',
+            // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
+            //'org.bouncycastle:bcprov-jdk15on:1.60',
+            'io.jsonwebtoken:jjwt-jackson:0.11.2' // or 'io.jsonwebtoken:jjwt-gson:0.11.2' for gson
     //WebRTC 클라이언트 의존성 추가
     implementation('org.webjars.bower:webrtc-adapter:7.4.0')
     //Kurento (미디어서버) 관련 의존성 추가
@@ -183,7 +201,8 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    //testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {
