@@ -29,7 +29,6 @@ import { useStore } from 'vuex'
 export default defineComponent({
   name: 'Home',
   components: {
-<<<<<<< HEAD
     SearchBar, MeetingCard
   },
   setup() {
@@ -93,9 +92,3 @@ export default defineComponent({
   }
 }
 </style>
-=======
-    HelloWorld,
-  },
-});
-</script>
->>>>>>> 70c1049e1211d0fe133ce1e09af14b7d4c914fab
