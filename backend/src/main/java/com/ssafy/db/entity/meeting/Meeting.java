@@ -1,7 +1,7 @@
 package com.ssafy.db.entity.meeting;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -48,9 +48,9 @@ public class Meeting {
 	@Column(length = 100, nullable = false)
 	String title;
 
-	Date startTime;
+	LocalDateTime startTime;
 
-	Date endTime;
+	LocalDateTime endTime;
 
 	@Column(length = 100)
 	String password;
@@ -70,7 +70,7 @@ public class Meeting {
 
 	String url;
 
-	Date closeTime;
+	LocalDateTime closeTime;
 
 	@Column(nullable = false)
 	@ColumnDefault("0")

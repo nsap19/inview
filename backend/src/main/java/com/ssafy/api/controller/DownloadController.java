@@ -1,9 +1,11 @@
 package com.ssafy.api.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -25,6 +27,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.meeting.MeetingService;
 import com.ssafy.common.model.response.AdvancedResponseBody;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.common.util.MD5Generator;
 import com.ssafy.db.entity.Archive;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
@@ -72,21 +75,22 @@ public class DownloadController {
 
 	@GetMapping("/meeting/{meetingId}/user/{userId}/{archiveId}")
 	@ApiOperation(value = "파일 다운로드")
-	@ApiResponses({ @ApiResponse(code = 200, message = "파일 다운로드 성공"),
-			@ApiResponse(code = 400, message = "파일 다운로드 실패") })
-	public ResponseEntity<? extends BaseResponseBody> archiveDownload(@PathVariable("meetingId") int meetingId,
+	@ApiResponses({ @ApiResponse(code = 200, message = "파일 다운로드 성공"), @ApiResponse(code = 400, message = "파일 다운로드 실패"),
+			@ApiResponse(code = 500, message = "파일 손상, 다운로드 실패") })
+	public ResponseEntity<Resource> archiveDownload(@PathVariable("meetingId") int meetingId,
 			@PathVariable("archiveId") int archiveId, @PathVariable("userId") int userId,
 			@RequestParam("archiveType") String archiveType) throws IOException {
 		Archive archive;
 		try {
 			archive = archiveService.getArchivesById(archiveId);
 
-			if (archive.getMeeting().getMeetingId() != meetingId || archive.getUser().getUserId() != userId) {
-				return ResponseEntity.status(400).body(new BaseResponseBody(400, "파일 다운 실패"));
+			if (archive.getMeeting().getMeetingId() != meetingId || archive.getUser().getUserId() != userId
+					|| !archive.getArchiveType().toString().equals(archiveType.toUpperCase())) {
+				return ResponseEntity.status(400).body(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.status(400).body(new BaseResponseBody(400, "파일 다운 실패"));
+			return ResponseEntity.status(400).body(null);
 		}
 
 		Path path = Paths.get(archive.getPath());
@@ -106,8 +110,23 @@ public class DownloadController {
 		case FILE:
 			// file
 			StringTokenizer st = new StringTokenizer(archive.getArchiveName(), "_");
-			st.nextToken();
-			originalName = st.nextToken();
+			String hash = st.nextToken();
+			String salt = st.nextToken();
+			StringBuilder sb = new StringBuilder();
+			while (st.hasMoreTokens()) {
+				sb.append(st.nextToken()).append("_");
+			}
+			sb.setLength(sb.length() - 1);
+			originalName = String.valueOf(sb);
+			try {
+				String newHash = new MD5Generator(salt + originalName).toString();
+				if (!newHash.equals(hash)) {
+					return ResponseEntity.status(500).body(null);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return ResponseEntity.status(500).body(null);
+			}
 			break;
 		case CHAT:
 			// chat
@@ -115,7 +134,8 @@ public class DownloadController {
 		}
 		Resource resource = new InputStreamResource(Files.newInputStream(path));
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
+				.header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition")
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalName + "\"")
-				.body(new AdvancedResponseBody<Resource>(200, "파일 다운로드 성공", resource));
+				.body(resource);
 	}
 }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.request.ArchiveRegisterPostReq;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.util.CurParticipant;
-import com.ssafy.common.util.MD5Generator;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.ChatMessage;
 import com.ssafy.db.entity.User;
@@ -45,12 +44,14 @@ public class ChatMessageServiceImple implements ChatMessageService {
 						date + "\t" + time + "\t" + sender + "가 " + receiver + "에게 : " + msg + "\n");
 			}
 		} else {
-			User u = userRepositorySupport.findUserByNickname(sender).get();
+			User u = userRepositorySupport.findUserByNickname(sender);
 			subscribe = false;
 			if (ope.equals("subscribe")) {
 				// 구독자 추가
-				participantList.add(u);
-				subscribe = true;
+				if(!participantList.contains(u)) {
+					participantList.add(u);
+					subscribe = true;
+				}
 			} else {
 				// 구독자 삭제
 				participantList.remove(u);
@@ -67,12 +68,9 @@ public class ChatMessageServiceImple implements ChatMessageService {
 		String savePath = System.getProperty("user.dir") + "\\files\\" + meetingId + "\\chat";
 		String filePath = savePath + "\\" + sender + "_" + receiver + ".txt";
 
-		// d드라이브의 chat 폴더의 chat 파일
-		File file = new File(filePath);
-		// 파일 있는지 검사
-		if (!file.exists()) {
+		if (!isReadableFile(filePath))
 			return "";
-		}
+
 		// 파일을 읽어온다.
 		try (RandomAccessFile raf = new RandomAccessFile(filePath, "r")) {
 			byte[] bytesData = new byte[(int) raf.length()];
@@ -88,19 +86,19 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	// 파일를 저장하는 함수
 	private void saveFile(String meetingId, User user, String receiver, String message) {
 		/* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
-		String savePath = System.getProperty("user.dir") + "\\" + meetingId + "\\chat";
+		String savePath = System.getProperty("user.dir") + "\\files\\" + meetingId + "\\chat";
 		String filename = user.getNickname() + "_" + receiver + ".txt";
+		String filePath = savePath + "\\" + filename;
 		/* 파일이 저장되는 폴더가 없으면 폴더를 생성합니다. */
 		if (!new File(savePath).exists()) {
 			try {
-				new File(savePath).mkdir();
+				new File(savePath).mkdirs();
 			} catch (Exception e) {
 				e.getStackTrace();
 			}
 		}
-		String filePath = savePath + "\\" + filename;
 
-		if (subscribe) {
+		if (subscribe && !isReadableFile(filePath)) {
 			chatInsertToArchive(meetingId, filePath, filename, user);
 		}
 
@@ -110,6 +108,16 @@ public class ChatMessageServiceImple implements ChatMessageService {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+
+	private boolean isReadableFile(String filePath) {
+		// d드라이브의 chat 폴더의 chat 파일
+		File file = new File(filePath);
+		// 파일 있는지 검사
+		if (!file.exists()) {
+			return false;
+		}
+		return true;
 	}
 
 	private void chatInsertToArchive(String meetingId, String filepath, String filename, User user) {

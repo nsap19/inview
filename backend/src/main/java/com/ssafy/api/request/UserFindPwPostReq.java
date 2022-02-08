@@ -7,10 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel("UserLoginPostRequest")
-public class UserLoginPostReq {
+@ApiModel("UserFindPwPostRequest")
+public class UserFindPwPostReq {
 	@ApiModelProperty(name="email", example="ssafy@ssafy.com")
 	String email;
-	@ApiModelProperty(name="password", example="your_password")
-	String password;
 }

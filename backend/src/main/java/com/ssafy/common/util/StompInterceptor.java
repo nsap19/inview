@@ -1,5 +1,8 @@
 package com.ssafy.common.util;
 
+import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
@@ -12,13 +15,22 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class StompInterceptor implements ChannelInterceptor {
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-		System.out.println("full message:" + message);
-//		System.out.println("auth:" + headerAccessor.getNativeHeader("Authorization"));
-//		System.out.println(headerAccessor.getHeader("nativeHeaders").getClass());
-		System.out.println("Command : " + headerAccessor.getCommand());
+//		  System.out.println("Command : " + headerAccessor.getCommand());
+//        System.out.println("message : " + message);
+//        System.out.println("헤더 : " + message.getHeaders());
+		if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
+//        	System.out.println("토큰1 : " + headerAccessor.getNativeHeader("Authorization").toString());
+//        	System.out.println("토큰2 : " + Objects.requireNonNull(headerAccessor.getFirstNativeHeader("Authorization")).substring(7));
+			jwtTokenUtil.handleError(
+					Objects.requireNonNull(headerAccessor.getFirstNativeHeader("Authorization")).substring(7));
+		}
+
 		return message;
 	}
 
@@ -47,6 +59,5 @@ public class StompInterceptor implements ChannelInterceptor {
 		default:
 			break;
 		}
-
 	}
 }

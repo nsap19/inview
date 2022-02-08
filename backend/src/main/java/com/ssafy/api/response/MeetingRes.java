@@ -1,8 +1,10 @@
 package com.ssafy.api.response;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,11 +23,13 @@ public class MeetingRes {
 	@ApiModelProperty(name = "방제목", example = "방제목")
 	String title;
 
-	@ApiModelProperty(name = "시작 시간", example = "2022-01-18T11:15:06.000+00:00")
-	Date startTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@ApiModelProperty(name = "시작 시간", example = "2022-01-18 11:15:06")
+	LocalDateTime startTime;
 
-	@ApiModelProperty(name = "종료 예상 시간", example = "2022-01-18T11:15:06.000+00:00")
-	Date endTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@ApiModelProperty(name = "종료 예상 시간", example = "2022-01-18 11:15:06")
+	LocalDateTime endTime;
 
 	@ApiModelProperty(name = "참가자 닉네임 리스트", example = "[닉네임1, 닉네임2]")
 	@Builder.Default
@@ -45,4 +49,7 @@ public class MeetingRes {
 
 	@ApiModelProperty(name = "미팅 상태", example = "WAITING")
 	String status;
+
+	@ApiModelProperty(name = "비밀번호 유/무", example = "false")
+	Boolean isLock;
 }

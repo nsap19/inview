@@ -1,6 +1,6 @@
 package com.ssafy.api.request.meeting;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,11 +34,11 @@ public class MeetingRegisterPostReq {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(name = "시작 시간", example = "2022-01-18 11:15:06")
-	Date startTime;
+	LocalDateTime startTime;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(name = "예상 종료 시간", example = "2022-01-18 13:15:06")
-	Date endTime;
+	LocalDateTime endTime;
 
 	@ApiModelProperty(name = "비밀번호", example = "1111")
 	String password;

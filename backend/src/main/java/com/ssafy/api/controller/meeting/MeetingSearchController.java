@@ -33,7 +33,8 @@ public class MeetingSearchController {
 	MeetingSearchService meetingSearchService;
 
 	@GetMapping
-	@ApiOperation(value = "미팅 조회", notes = "title and industryList and companyList 연산 실행. \n industryList와 companyList 내부에서는 or 연산 수행")
+	@ApiOperation(value = "미팅 조회", notes = "title and industryList and companyList 연산 실행. \n industryList와 companyList 내부에서는 or 연산 수행 \n "
+			+ "미팅은 WAITING, RUNNING, CLOSING 세 가지 상태를 가짐.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 전체 조회 성공", response = MeetingResClass.class),
 			@ApiResponse(code = 400, message = "존재하지 않는 직군입니다. \n 존재하지 않는 기업명입니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
@@ -79,7 +80,7 @@ public class MeetingSearchController {
 	}
 
 	@ApiModel
-	private class MeetingResClass extends AdvancedResponseBody<List<MeetingRes>> {
+	private class MeetingResClass extends AdvancedResponseBody<Page<List<MeetingRes>>> {
 	}
 
 	@ApiModel
