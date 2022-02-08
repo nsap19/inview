@@ -17,16 +17,16 @@
         </div>
       </div>
     </div>
-    <div class="d-flex flex-row justify-content-between align-items-center">
-      <p class="m-0"><i class="bi bi-person"></i> {{ props.meeting.participants.length }} / {{ props.meeting.userLimit }}</p>
+    <div v-if="props.meeting.participantNicknameList" class="d-flex flex-row justify-content-between align-items-center">
+      <p class="m-0"><i class="bi bi-person"></i> {{ props.meeting.participantNicknameList.length }} / {{ props.meeting.userLimit }}</p>
       <el-button 
         class="button" 
         type="primary" 
         plain 
-        :disabled="props.meeting.participants.length < props.meeting.userLimit ? false: true"
+        :disabled="props.meeting.participantNicknameList.length < props.meeting.userLimit ? false: true"
         @click="clickJoin"
       >
-        <el-icon v-if="props.meeting.password"><lock /></el-icon>
+        <el-icon v-if="props.meeting.isLock"><lock /></el-icon>
         <span>참가</span>
       </el-button>
     </div>
@@ -62,11 +62,11 @@ export default defineComponent({
     const meetingData = [
       {
         category: '직군',
-        content: props.meeting.industry,
+        content: props.meeting.industryName,
       },
       {
         category: '회사',
-        content: props.meeting.company,
+        content: props.meeting.companyNameList,
       },
       {
         category: '시작 시간',
@@ -85,6 +85,7 @@ export default defineComponent({
       password: ''
     })
 
+    // eslint-disable-next-line
     const validPassword = (rule: any, value: any, callback: any) => {
       if (passwordForm.password !== props.meeting.password) {
         callback(new Error('비밀번호가 일치하지 않습니다'))

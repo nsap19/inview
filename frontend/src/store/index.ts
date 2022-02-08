@@ -47,6 +47,9 @@ export default createStore({
     SAVE_SEARCH_RESULT(state, data) {
       state.searchResult = data
     },
+    ADD_SEARCH_RESULT(state, data) {
+      state.searchResult = state.searchResult.concat(data)
+    },
     SET_MEETING(state, data) {
       state.meeting = data
     },
@@ -69,10 +72,14 @@ export default createStore({
           title: payload.title,
           industry: payload.industry,
           company: payload.company,
-          page: 1
+          page: payload.page ? payload.page : 1
         }
       }).then(res => {
-          commit('SAVE_SEARCH_RESULT', res.data.data.content)
+          if (payload.page) {
+            commit('ADD_SEARCH_RESULT', res.data.data.content)
+          } else {
+            commit('SAVE_SEARCH_RESULT', res.data.data.content)
+          }
         }).catch(err => {
           console.log(err)
         })
@@ -86,7 +93,8 @@ export default createStore({
             id: meetingId,
             participantNicknameList: res.data.data.participantNicknameList,
             startTime: res.data.data.startTime,
-            title: res.data.data.title
+            title: res.data.data.title,
+            hostId: res.data.data.hostId
           })
         })
     },
