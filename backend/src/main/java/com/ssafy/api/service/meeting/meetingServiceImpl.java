@@ -125,9 +125,9 @@ public class meetingServiceImpl implements MeetingService {
 		Boolean isAlreadyParticipant = participantRepository.findByMeeting(meeting).stream()
 				.anyMatch(p -> p.equals(user));
 
-		if (isAlreadyParticipant)
+		if (meeting.getUser().getUserId() == user.getUserId() || isAlreadyParticipant)
 			throw new AlreadyJoinMeetingException();
-		else if (meeting.getPassword() != null && meeting.getPassword().equals(password))
+		else if (meeting.getPassword() != null && !meeting.getPassword().equals(password))
 			throw new NotEqualPasswordException();
 		else {
 			participantRepository.save(Participant.builder().meeting(meeting).user(user).build());
