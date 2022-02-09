@@ -86,6 +86,7 @@ export default defineComponent({
         .then(() => {
           closeMeeting()
           store.dispatch('deleteMeeting')
+          router.push({ name: 'Home'})
           ElMessage({
             type: 'success',
             message: '종료되었습니다',
