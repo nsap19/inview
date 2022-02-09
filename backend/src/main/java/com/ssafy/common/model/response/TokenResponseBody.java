@@ -16,7 +16,7 @@ public class TokenResponseBody extends BaseResponseBody {
 	int userId = 0;
 	String nickname = null;
 	
-	public TokenResponseBody(Integer statusCode, String message, int userId, String token, String nickname) {
+	public TokenResponseBody(Integer statusCode, String message, int userId, String nickname, String token) {
 		this.statusCode = statusCode;
 		this.message = message;
 		this.userId = userId;

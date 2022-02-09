@@ -90,7 +90,7 @@ function register() {
 	userId = document.getElementById('userId').value;
 	var meetingId = document.getElementById('meetingId').value;
 
-	document.getElementById('room-header').innerText = 'ROOM ' + meetingId;
+	// document.getElementById('room-header').innerText = 'ROOM ' + meetingId;
 	document.getElementById('join').style.display = 'none';
 	document.getElementById('room').style.display = 'block';
 
@@ -99,6 +99,8 @@ function register() {
 		userId : userId,
 		meetingId : meetingId,
 	}
+
+	console.log(message)
 
 	sendMessage(message);
 }
@@ -167,7 +169,7 @@ function leaveRoom() {
 	}
 
 	document.getElementById('join').style.display = 'block';
-	document.getElementById('room').style.display = 'none';
+	// document.getElementById('room').style.display = 'none';
 
 	ws.close();
 }
