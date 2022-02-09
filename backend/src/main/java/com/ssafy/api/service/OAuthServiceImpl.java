@@ -84,7 +84,6 @@ public class OAuthServiceImpl implements OAuthService {
 				return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(email)));
 			} else {
 				// 이메일 정보 저장
-				existMail = true;
 				registerInfo.setEmail(email);
 			}
 		} else {
@@ -101,9 +100,6 @@ public class OAuthServiceImpl implements OAuthService {
 			return result;
 		}
 
-		if (!existMail) {
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(nickname)));
-		}
 		return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(registerInfo.getEmail())));
 	}
 
@@ -112,8 +108,7 @@ public class OAuthServiceImpl implements OAuthService {
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 등록된 닉네임입니다.\n 카카오 회원가입/ 로그인 실패"));
 
 		User user = new User();
-		if (userRegisterInfo.getEmail() != null)
-			user.setEmail(userRegisterInfo.getEmail());
+		user.setEmail(userRegisterInfo.getEmail());
 		user.setNickname(userRegisterInfo.getNickname());
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword())); // 패스워드 암호화하여 db에 저장
 

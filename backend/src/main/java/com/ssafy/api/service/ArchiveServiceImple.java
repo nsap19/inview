@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.ArchiveRegisterPostReq;
-import com.ssafy.common.util.CurParticipant;
+import com.ssafy.common.util.MeetingParticipant;
 import com.ssafy.db.entity.Archive;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
@@ -20,6 +20,9 @@ public class ArchiveServiceImple implements ArchiveService {
 
 	@Autowired
 	ArchiveRepositorySupport archiveRepositorySupport;
+
+	@Autowired
+	private MeetingParticipant meetingParticipant;
 
 	@Override
 	public String createArchive(ArchiveRegisterPostReq archiveRegisterPostReq) {
@@ -42,7 +45,7 @@ public class ArchiveServiceImple implements ArchiveService {
 	public String createAllArchive(ArchiveRegisterPostReq archiveRegisterPostReq) {
 		String path = archiveRegisterPostReq.getPath();
 		String meetingId = String.valueOf(archiveRegisterPostReq.getMeeting().getMeetingId());
-		List<User> participantList = new CurParticipant().getParticipantList(meetingId);
+		List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
 		for (User user : participantList) {
 			if (this.findByPathAndUser(path, user) == null) {
 				Archive archive = new Archive();
