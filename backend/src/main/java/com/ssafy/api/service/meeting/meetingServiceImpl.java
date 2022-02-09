@@ -122,8 +122,8 @@ public class meetingServiceImpl implements MeetingService {
 
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotExistsUserException());
 
-		Boolean isAlreadyParticipant = participantRepository.findByMeeting(meeting).stream()
-				.anyMatch(p -> p.equals(user));
+		boolean isAlreadyParticipant = participantRepository.findByMeeting(meeting).stream()
+				.anyMatch(p -> p.getUser().equals(user));
 
 		if (meeting.getUser().getUserId() == user.getUserId() || isAlreadyParticipant)
 			throw new AlreadyJoinMeetingException();
