@@ -73,6 +73,9 @@
 
 		<!-- meeting footer -->
 		<div class="d-flex flex-row justify-content-end p-3 meeting-footer">
+			<input type="button" name="commit" value="비디오 참가" id="joinButton" />
+			<input type="text" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
+			<input type="text" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" placeholder="meetingId" required />
 			<el-dropdown size='large' class="mx-3">
 				<el-button type="primary" size="large" circle :icon="List"></el-button>
 				<template #dropdown>
@@ -107,7 +110,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref, onMounted, watch } from 'vue'
 import ChooseQuestion from '@/components/Meeting/ChooseQuestion.vue';
 import Participant from '@/components/Meeting/Participant.vue';
@@ -134,13 +137,22 @@ export default defineComponent({
 		Video
 	},
 	setup() {
-		const wholeVideosWrapper = ref<HTMLElement | null>(null)
+		const wholeVideosWrapper = ref(null)
 
 		let width = ref(0)
 		let height = ref(0)
 		let windowWidth = ref(0)
 		onMounted(() => {
-
+			document.getElementById('joinButton').onclick=function(){register(1, 1); return false;};
+			// var script = document.createElement('script');
+			// script.src = "../js/kurento-util.js";
+			// document.head.appendChild(script); 
+			// var script2 = document.createElement('script');
+			// script2.src = "../js/conferenceroom.js";
+			// document.head.appendChild(script2); 
+			// var script3 = document.createElement('script');
+			// script3.src = "../js/participant.js";
+			// document.head.appendChild(script3); 
 
 			// 초기 비디오 크기 설정
 			if (wholeVideosWrapper.value) {
@@ -165,7 +177,7 @@ export default defineComponent({
 		const setMargin = 10  // 비디오 margin
 		let maxWidth = ref(0)  // 비디오 최대 넓이
 
-    const getArea = function(increment: number, width: number, height: number) {
+    const getArea = function(increment, width, height) {
 			let i = 0;
 			let w = 0;
 			let h = increment * ratio + (setMargin * 2);
@@ -182,7 +194,7 @@ export default defineComponent({
     }
 
 		// 비디오의 너비 계산
-		const resize = function (width: number, height: number) {
+		const resize = function (width, height) {
 			let max = 0
 			let i = 1
 			while (i < 5000) {
