@@ -1,0 +1,73 @@
+/* use for overriding element plus css */
+
+/* divider 내부 글씨 */
+.el-divider__text {
+  position: absolute;
+  background-color: #fff;
+  padding: 0 20px;
+  font-weight: 500;
+  color: gray;
+  font-size: 12px; 
+}
+
+/* textarea 내부 textarea */
+.el-textarea__inner {
+  height: 100%;
+  width: 100%;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+/* el-button 내부 span */
+.el-button>span {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.container {
+  max-width: 1000px;
+  padding: 0;
+}
+
+@media screen and (min-width: 1200px) {
+  .container {
+    max-width: 1000px;
+  }
+}
+
+:root {
+  --el-color-primary: #4E7351;
+  --el-color-primary-light-7: #CEE5D0;
+  --el-color-primary-light-9: #F2F8F2;
+  --el-button-border-color: transparent;
+
+  /* 검색바 보더 색 */
+  /* --el-border-color-base: transparent;   */
+}
+
+.el-button--primary.is-plain.is-disabled, .el-button--primary.is-plain.is-disabled:active, .el-button--primary.is-plain.is-disabled:focus, .el-button--primary.is-plain.is-disabled:hover {
+  color: #ACD3AF;
+  background-color: #F2F8F2;
+  border-color: transparent;
+}
+
+.el-button--primary.is-plain {
+  --el-button-border-color: transparent
+}
+
+/* .el-input__inner {
+  background-color: #F4F4F5;
+} */
+
+.el-dialog {
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.el-card.is-always-shadow {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.socket.WebSocketSession;
 
 import com.ssafy.api.service.ChatMessageService;
 import com.ssafy.common.util.JwtTokenUtil;
@@ -39,7 +40,6 @@ public class ChatMessageController {
 
 	@MessageMapping("/chat/message")
 	public void message(@Payload ChatMessage message, @Header("Authorization") String token) {
-		System.out.println(jwtTokenUtil.getUserEmailFromJwt(token));
 		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		chatMessageService.saveChatMessage(message, "send");
 		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);

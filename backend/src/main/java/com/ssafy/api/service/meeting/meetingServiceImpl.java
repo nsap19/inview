@@ -75,9 +75,6 @@ public class meetingServiceImpl implements MeetingService {
 		// meeting 저장
 		Meeting meeting = meetingRepository.save(registerInfo.toMeeting(host, industry));
 
-		// host 참가 테이블에 저장
-		participantRepository.save(Participant.builder().meeting(meeting).user(host).build());
-
 		// meetingCompany 저장
 		companyList.stream().forEach(
 				c -> meetingCompanyRepository.save(MeetingCompany.builder().company(c).meeting(meeting).build()));
@@ -128,9 +125,9 @@ public class meetingServiceImpl implements MeetingService {
 		Boolean isAlreadyParticipant = participantRepository.findByMeeting(meeting).stream()
 				.anyMatch(p -> p.equals(user));
 
-		if (isAlreadyParticipant)
+		if (meeting.getUser().getUserId() == user.getUserId() || isAlreadyParticipant)
 			throw new AlreadyJoinMeetingException();
-		else if (meeting.getPassword() != null && meeting.getPassword().equals(password))
+		else if (meeting.getPassword() != null && !meeting.getPassword().equals(password))
 			throw new NotEqualPasswordException();
 		else {
 			participantRepository.save(Participant.builder().meeting(meeting).user(user).build());

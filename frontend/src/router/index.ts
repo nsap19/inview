@@ -8,13 +8,33 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
+    path: '/search',
+    name: 'Search',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    component: () => import(/* webpackChunkName: "search" */ '@/views/SearchResult.vue')
+  },
+  {
+    path: '/meeting/:meetingUrl',
+    name: 'Meeting',
+    component: () => import(/* webpackChunkName: "create" */ '@/views/Meeting.vue')
+  },
+  {
+    path: '/result/:userName/:meetingId',
+    name: 'Result',
+    component: () => import(/* webpackChunkName: "create" */ '@/views/Result.vue')
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: () => import(/* webpackChunkName: "create" */ '@/views/Mypage.vue')
+  },
+  {
+    path: '/video',
+    name: 'Video',
+    component: () => import(/* webpackChunkName: "create" */ '@/components/Meeting/Video.vue')
+  },
 ]
 
 const router = createRouter({

@@ -35,4 +35,7 @@ public class MeetingDetailRes {
 	@Builder.Default
 	List<String> participantNicknameList = new ArrayList<String>();
 
+	@ApiModelProperty(name = "호스트 아이디", example = "1")
+	int hostId;
+
 }

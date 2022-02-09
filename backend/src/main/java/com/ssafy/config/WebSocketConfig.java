@@ -17,7 +17,7 @@ import com.ssafy.common.util.StompInterceptor;
 @Configuration
 @EnableWebSocketMessageBroker
 @EnableWebSocket
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer,WebSocketConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSocketConfigurer {
 
 	@Bean
 	public CallHandler groupCallHandler() {

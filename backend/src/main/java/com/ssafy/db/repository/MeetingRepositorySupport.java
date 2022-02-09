@@ -36,7 +36,8 @@ public class MeetingRepositorySupport {
 
 	public MeetingDetailRes findById(int meetingId) {
 		List<Tuple> tuple = jpaQueryFactory
-				.select(qMeeting.meetingId, qMeeting.title, qMeeting.startTime, qMeeting.closeTime, qUser.nickname)
+				.select(qMeeting.meetingId, qMeeting.title, qMeeting.startTime, qMeeting.closeTime, qUser.nickname,
+						qMeeting.user.userId)
 				.from(qMeeting).leftJoin(qParticipant).on(qMeeting.eq(qParticipant.meeting)).leftJoin(qUser)
 				.on(qParticipant.user.eq(qUser)).where(qMeeting.meetingId.eq(meetingId)).fetch();
 
@@ -46,7 +47,7 @@ public class MeetingRepositorySupport {
 
 		MeetingDetailRes ret = MeetingDetailRes.builder().id(tuple.get(0).get(qMeeting.meetingId))
 				.title(tuple.get(0).get(qMeeting.title)).startTime(tuple.get(0).get(qMeeting.startTime))
-				.closeTime(tuple.get(0).get(qMeeting.closeTime)).build();
+				.closeTime(tuple.get(0).get(qMeeting.closeTime)).hostId(tuple.get(0).get(qMeeting.user.userId)).build();
 
 		tuple.stream().forEach(n -> ret.getParticipantNicknameList().add(n.get(qUser.nickname)));
 

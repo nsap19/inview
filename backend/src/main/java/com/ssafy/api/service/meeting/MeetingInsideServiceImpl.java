@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.common.exception.handler.NotExistsMeetingException;
 import com.ssafy.common.exception.handler.NotExistsUserException;
+import com.ssafy.common.exception.handler.NotHostException;
 import com.ssafy.db.entity.Participant;
 import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.entity.meeting.Status;
@@ -30,12 +31,14 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 
 	@Transactional
 	@Override
-	public void closeMeeting(int meetingId) {
-
-		//
+	public void closeMeeting(int meetingId, int hostId) {
 
 		// 미팅 종료 시간 삽입 및 상태 변경
 		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
+
+		if (meeting.getUser().getUserId() != hostId) {
+			throw new NotHostException();
+		}
 
 		meeting.setCloseTime(LocalDateTime.now());
 		meeting.setStatus(Status.CLOSING);

@@ -24,22 +24,21 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.google.gson.JsonObject;
 
-class UserSession implements Closeable {
+public class UserSession implements Closeable {
 
 	private static final Logger log = LoggerFactory.getLogger(UserSession.class);
 
 	private final int userId;
-	private final WebSocketSession session;
-	private MediaPipeline pipeline;
 	private final int meetingId;
+	private final WebSocketSession session;
+	private String filePath;
+	private MediaPipeline pipeline;
 	private WebRtcEndpoint outgoingMedia;
 	private RecorderEndpoint recorderEndpoint;
 
 	private final ConcurrentMap<Integer, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
-	
 
-	public UserSession(final int userId, int meetingId, final WebSocketSession session, MediaPipeline pipeline) {
-
+	public UserSession(final int userId, final int meetingId, final WebSocketSession session, MediaPipeline pipeline) {
 		this.pipeline = pipeline;
 		this.userId = userId;
 		this.session = session;
@@ -75,7 +74,7 @@ class UserSession implements Closeable {
 	public WebSocketSession getSession() {
 		return session;
 	}
-	
+
 	public MediaPipeline getPipeline() {
 		return pipeline;
 	}
@@ -83,11 +82,11 @@ class UserSession implements Closeable {
 	public WebRtcEndpoint getOutgoingWebRtcPeer() {
 		return outgoingMedia;
 	}
-	
+
 	public void setMediaPipeline(MediaPipeline pipeline) {
 		this.pipeline = pipeline;
 	}
-	
+
 	public void setOutgoingMedia(WebRtcEndpoint outgoingMedia) {
 		this.outgoingMedia = outgoingMedia;
 	}
@@ -239,29 +238,37 @@ class UserSession implements Closeable {
 			}
 		}
 	}
-	
-	public void stop() {
-	    if (recorderEndpoint != null) {
-	      final CountDownLatch stoppedCountDown = new CountDownLatch(1);
-	      ListenerSubscription subscriptionId = recorderEndpoint
-	          .addStoppedListener(new EventListener<StoppedEvent>() {
 
-	            @Override
-	            public void onEvent(StoppedEvent event) {
-	              stoppedCountDown.countDown();
-	            }
-	          });
-	      recorderEndpoint.stop();
-	      try {
-	        if (!stoppedCountDown.await(5, TimeUnit.SECONDS)) {
-	          log.error("Error waiting for recorder to stop");
-	        }
-	      } catch (InterruptedException e) {
-	        log.error("Exception while waiting for state change", e);
-	      }
-	      recorderEndpoint.removeStoppedListener(subscriptionId);
-	    }
-	  }
+	public void stop() {
+		if (recorderEndpoint != null) {
+			final CountDownLatch stoppedCountDown = new CountDownLatch(1);
+			ListenerSubscription subscriptionId = recorderEndpoint
+					.addStoppedListener(new EventListener<StoppedEvent>() {
+
+						@Override
+						public void onEvent(StoppedEvent event) {
+							stoppedCountDown.countDown();
+						}
+					});
+			recorderEndpoint.stop();
+			try {
+				if (!stoppedCountDown.await(5, TimeUnit.SECONDS)) {
+					log.error("Error waiting for recorder to stop");
+				}
+			} catch (InterruptedException e) {
+				log.error("Exception while waiting for state change", e);
+			}
+			recorderEndpoint.removeStoppedListener(subscriptionId);
+		}
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 
 	@Override
 	public int hashCode() {
