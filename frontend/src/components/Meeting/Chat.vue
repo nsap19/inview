@@ -1,51 +1,51 @@
 <template>
-  <div style="overflow-y: auto;" id="container" ref="container">
-    <div class="px-2" id="chat1" >
-      <div class="">
-        <div v-for="(item, idx) in recvList" :key="idx">
+  <div id="container" ref="container" class="d-flex flex-column justify-content-between" style="height: 90%; margin: auto 0;">
+    <div class="px-2" id="chat1" style="overflow-y: auto;" ref="chatArea">
 
-          <!-- 날짜 경계선 -->
-          <div 
-            class="text-center py-3 date" 
-            v-if="(0 < idx) && (item.date !== recvList[idx - 1].date)"
-          >
-            <el-divider>{{ item.date }}</el-divider>
-          </div>
+      <div v-for="(item, idx) in recvList" :key="idx">
 
-          <!-- 내가 보낸 메세지 -->
-          <div class="d-flex flex-row justify-content-end mb-1" v-if="item.sender === '익명'">
-            <div class="">
-              <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1 text-end" style="font-size: 14px;">{{ item.sender }}</p>
-              <div class="d-flex flex-row justify-content-end">
-                <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
-                  {{ item.time }}
-                </div>
-                <div class="p-3 border d-inline-block" style="border-radius: 15px; background-color: #cee5d0;">
-                  <p class="small mb-0 text-break">{{ item.message }}</p>
-                </div>
+        <!-- 날짜 경계선 -->
+        <div 
+          class="text-center py-3 date" 
+          v-if="(0 < idx) && (item.date !== recvList[idx - 1].date)"
+        >
+          <el-divider>{{ item.date }}</el-divider>
+        </div>
+
+        <!-- 내가 보낸 메세지 -->
+        <div class="d-flex flex-row justify-content-end mb-1" v-if="item.sender === this.$store.state.user.nickname">
+          <div class="">
+            <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1 text-end" style="font-size: 14px;">{{ item.sender }}</p>
+            <div class="d-flex flex-row justify-content-end">
+              <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
+                {{ item.time }}
               </div>
-            </div>
-          </div>
-
-          <!-- 다른 사용자가 보낸 메세지 -->
-          <div class="d-flex flex-row justify-content-start mb-1" v-else>
-            <div>
-              <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1" style="font-size: 14px;">{{ item.sender }}</p>
-              <div class="d-flex flex-row justify-content-start">
-                <div class="p-3 d-inline-block" style="border-radius: 15px; background-color: #f3f0d7;">
-                  <p class="small mb-0 text-break">{{ item.message }}</p>
-                </div>
-                <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
-                  {{ item.time }}
-                </div>
+              <div class="p-3 border d-inline-block" style="border-radius: 15px; background-color: #cee5d0;">
+                <p class="small mb-0 text-break">{{ item.message }}</p>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 다른 사용자가 보낸 메세지 -->
+        <div class="d-flex flex-row justify-content-start mb-1" v-else>
+          <div>
+            <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1" style="font-size: 14px;">{{ item.sender }}</p>
+            <div class="d-flex flex-row justify-content-start">
+              <div class="p-3 d-inline-block" style="border-radius: 15px; background-color: #f3f0d7;">
+                <p class="small mb-0 text-break">{{ item.message }}</p>
+              </div>
+              <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
+                {{ item.time }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+  
     </div>
-    <div class="form-outline message-input" style="position: sticky; bottom: 0">
+    <div class="form-outline message-input">
       <el-input
         v-model="message"
         :autosize="{ minRows: 2, maxRows: 4 }"
@@ -75,21 +75,21 @@ export default {
   },
   data() {
     return {
-      meetingId: "",
-      userName: "",
+      // meetingId: "",
+      // userName: "",
       message: "",
       recvList: [
-        {"meetingId":"1","sender":"익명","time": "23:11","date":"2021년01월23일 일요일","message":"익명님이 입장하셨습니다.","type":null, "receiver":""},
-        {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "23:12","date":"2021년01월23일 일요일","message":"일이삼사오육칠팔구십님이 입장하셨습니다.","type":null, "receiver":""},
-        {"meetingId":"1","sender":"익명","time": "23:13","date":"2021년01월23일 일요일","message":"2321","type":null, "receiver":""},
-        {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "23:14","date":"2021년01월23일 일요일","message":"456133","type":null, "receiver":""},
-        {"meetingId":"1","sender":"익명","time": "23:15","date":"2021년01월23일 일요일","message":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","type":null, "receiver":""},
-        {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "00:01","date":"2021년01월24일 월요일","message":"월요일 시작","type":null, "receiver":""},
-        {"meetingId":"1","sender":"익명","time": "01:11","date":"2021년01월24일 월요일","message":"111111111sfdddddddddddd","type":null, "receiver":""},
-        {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "02:11","date":"2021년01월24일 월요일","message":"s","type":null, "receiver":""},
-        {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "03:11","date":"2021년01월24일 월요일","message":"대통령·국무총리·국무위원·행정각부의 장·헌법재판소 재판관·법관·중앙선거관리위원회 위원·감사원장·감사위원 기타 법률이 정한 공무원이 그 직무집행에 있어서 헌법이나 법률을 위배한 때에는 국회는 탄핵의 소추를 의결할 수 있다. 헌법재판소에서 법률의 위헌결정, 탄핵의 결정, 정당해산의 결정 또는 헌법소원에 관한 인용결정을 할 때에는 재판관 6인 이상의 찬성이 있어야 한다. 이 헌법시행 당시에 이 헌법에 의하여 새로 설치될 기관의 권한에 속하는 직무를 행하고 있는 기관은 이 헌법에 의하여 새로운 기관이 설치될 때까지 존속하며 그 직무를 행한다. 국가는 농·어민과 중소기업의 자조조직을 육성하여야 하며, 그 자율적 활동과 발전을 보장한다.","type":null, "receiver":""},
-        {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "04:11","date":"2021년01월24일 월요일","message":"sssss","type":null, "receiver":""},
-        {"meetingId":"1","sender":"헐","time": "05:11","date":"2021년01월24일 월요일","message":"sss","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"익명","time": "23:11","date":"2021년01월23일 일요일","message":"익명님이 입장하셨습니다.","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "23:12","date":"2021년01월23일 일요일","message":"일이삼사오육칠팔구십님이 입장하셨습니다.","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"익명","time": "23:13","date":"2021년01월23일 일요일","message":"2321","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "23:14","date":"2021년01월23일 일요일","message":"456133","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"익명","time": "23:15","date":"2021년01월23일 일요일","message":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "00:01","date":"2021년01월24일 월요일","message":"월요일 시작","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"익명","time": "01:11","date":"2021년01월24일 월요일","message":"111111111sfdddddddddddd","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "02:11","date":"2021년01월24일 월요일","message":"s","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "03:11","date":"2021년01월24일 월요일","message":"대통령·국무총리·국무위원·행정각부의 장·헌법재판소 재판관·법관·중앙선거관리위원회 위원·감사원장·감사위원 기타 법률이 정한 공무원이 그 직무집행에 있어서 헌법이나 법률을 위배한 때에는 국회는 탄핵의 소추를 의결할 수 있다. 헌법재판소에서 법률의 위헌결정, 탄핵의 결정, 정당해산의 결정 또는 헌법소원에 관한 인용결정을 할 때에는 재판관 6인 이상의 찬성이 있어야 한다. 이 헌법시행 당시에 이 헌법에 의하여 새로 설치될 기관의 권한에 속하는 직무를 행하고 있는 기관은 이 헌법에 의하여 새로운 기관이 설치될 때까지 존속하며 그 직무를 행한다. 국가는 농·어민과 중소기업의 자조조직을 육성하여야 하며, 그 자율적 활동과 발전을 보장한다.","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "04:11","date":"2021년01월24일 월요일","message":"sssss","type":null, "receiver":""},
+        // {"meetingId":"1","sender":"헐","time": "05:11","date":"2021년01월24일 월요일","message":"sss","type":null, "receiver":""},
       ],
       subscribeId: "",
     }
@@ -97,6 +97,9 @@ export default {
   watch: {
     endSignal: () => {
       this.disconnect()
+    },
+    recvList: () => {
+      this.scrollToEnd()
     }
   },
   created() {
@@ -111,6 +114,8 @@ export default {
     scrollToEnd: function () {
         // scroll to the start of the last message
         this.$el.scrollTop = this.$el.lastElementChild.offsetTop;
+        let messageDisplay = this.$refs.chatArea
+        messageDisplay.scrollTop = messageDisplay.scrollHeight
     },
     sendMessage (e) {
       if(e.keyCode === 13 && this.user.nickname !== '' && this.message !== ''){
@@ -225,6 +230,8 @@ export default {
 .message-input {
   background-color: #F4F4F5;
   padding: 10px 5px;
+  border-radius: 10px;
+  margin: 0 5px;
 }
 
 #chat1 .form-outline .form-control~.form-notch div {
