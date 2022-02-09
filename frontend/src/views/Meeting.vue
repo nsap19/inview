@@ -28,8 +28,8 @@
 
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
-			<div class="meeting-content-main" ref="wholeVideosWrapper" >
-				<!-- <div 
+			<!-- <div class="meeting-content-main" ref="wholeVideosWrapper" >
+				<div 
 					class="video-wrapper"
 					v-for="participant in participants" 
 					:key="participant"
@@ -41,9 +41,9 @@
 							{{ participant }}
 						</div>
 					</div>
-				</div> -->
-				<Video/>
-			</div>
+				</div>
+			</div> -->
+			<Video/>
 
 			<!-- 우측 aside -->
 			<div 

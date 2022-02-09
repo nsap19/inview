@@ -83,9 +83,9 @@ ws.onmessage = function(message) {
 	}
 }
 
-function register(userId, meetingId) {
-	// userId = document.getElementById('userId').value;
-	// var meetingId = document.getElementById('meetingId').value;
+function register() {
+	userId = document.getElementById('userId').value;
+	var meetingId = document.getElementById('meetingId').value;
 
 	// document.getElementById('room-header').innerText = 'ROOM ' + meetingId;
 	document.getElementById('join').style.display = 'none';

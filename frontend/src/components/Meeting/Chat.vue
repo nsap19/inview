@@ -119,7 +119,7 @@ export default {
       }
     },    
     send() {
-      let headers = {token: `Bearer ${localStorage.getItem("token")}`};
+      let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`};
       console.log("Send message:" + this.message)
       if (this.stompClient && this.stompClient.connected) {
         const current_datetime = new Date()
@@ -146,9 +146,10 @@ export default {
       let socket = new SockJS(serverURL);
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()}
       this.stompClient = Stomp.over(socket, options);
+      let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`, meetingId : this.meetingId};
+      console.log('headers' + headers)
       console.log(this.meeting.id)
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
-      let headers = {token: `Bearer ${localStorage.getItem("token")}`};
       this.stompClient.connect(
         headers,
         frame => {
@@ -190,9 +191,8 @@ export default {
       );        
     },
     disconnect(){
-      let headers = {token: `Bearer ${localStorage.getItem("token")}`};
+      let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`};
       if(this.subscribeId != ""){
-
         const current_datetime = new Date()
         // 연결시 획득한 구독 id를 통해 구독을 정지할 수 있습니다.
         const message = {
