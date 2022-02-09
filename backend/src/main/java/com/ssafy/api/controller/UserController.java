@@ -80,7 +80,7 @@ public class UserController {
 		
 		String code = userService.createUser(registerInfo);
 		
-		return ResponseEntity.status(200).body(CodeResponseBody.of(200, code, "이메일, 닉네임, 비밀번호 유효성 검사 성공. 인증번호 전송 완료"));
+		return ResponseEntity.status(200).body(CodeResponseBody.of(200, "이메일, 닉네임, 비밀번호 유효성 검사 성공. 인증번호 전송 완료", code));
 	} 
 	
 	@PostMapping("/signup/email-certi") 
