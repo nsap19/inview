@@ -13,4 +13,7 @@ import lombok.ToString;
 public class MeetingRegisterRes {
 	@ApiModelProperty(name = "아이디", example = "1")
 	int id;
+
+	@ApiModelProperty(name = "url", example = "b3452cbd-0f01-47b7-85cd-a871784e882e")
+	String url;
 }

@@ -79,7 +79,7 @@ public class meetingServiceImpl implements MeetingService {
 		companyList.stream().forEach(
 				c -> meetingCompanyRepository.save(MeetingCompany.builder().company(c).meeting(meeting).build()));
 
-		return MeetingRegisterRes.builder().id(meeting.getMeetingId()).build();
+		return MeetingRegisterRes.builder().id(meeting.getMeetingId()).url(meeting.getUrl()).build();
 
 	}
 
