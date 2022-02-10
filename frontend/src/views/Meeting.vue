@@ -49,7 +49,7 @@
 			<div 
 				v-show="openAside" 
 				class="meeting-content-aside" 
-				:style="500 < windowWidth ? {'width': '420px'} : {'width': width + 'px'}"
+				:style="600 < windowWidth ? {'width': '420px'} : {'width': windowWidth - 10 + 'px'}"
 			>
 				<!-- {{windowWidth}} -->
 				<div class="d-flex flex-row justify-content-between p-2 align-items-center">
@@ -73,6 +73,9 @@
 
 		<!-- meeting footer -->
 		<div class="d-flex flex-row justify-content-end p-3 meeting-footer">
+			<input type="button" name="commit" value="비디오 참가" id="joinButton" />
+			<input type="text" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
+			<input type="text" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" placeholder="meetingId" required />
 			<el-dropdown size='large' class="mx-3">
 				<el-button type="primary" size="large" circle :icon="List"></el-button>
 				<template #dropdown>
@@ -107,7 +110,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref, onMounted, watch } from 'vue'
 import ChooseQuestion from '@/components/Meeting/ChooseQuestion.vue';
 import Participant from '@/components/Meeting/Participant.vue';
@@ -134,42 +137,61 @@ export default defineComponent({
 		Video
 	},
 	setup() {
-		const wholeVideosWrapper = ref<HTMLElement | null>(null)
+		const wholeVideosWrapper = ref(null)
 
 		let width = ref(0)
 		let height = ref(0)
 		let windowWidth = ref(0)
-		onMounted(() => {
 
+		onMounted(() => {
+			document.getElementById('joinButton').onclick=function(){register(1, 1); return false;};
+			// var script = document.createElement('script');
+			// script.src = "../js/kurento-util.js";
+			// document.head.appendChild(script); 
+			// var script2 = document.createElement('script');
+			// script2.src = "../js/conferenceroom.js";
+			// document.head.appendChild(script2); 
+			// var script3 = document.createElement('script');
+			// script3.src = "../js/participant.js";
+			// document.head.appendChild(script3); 
 
 			// 초기 비디오 크기 설정
-			if (wholeVideosWrapper.value) {
-				width.value = wholeVideosWrapper.value.offsetWidth
-				height.value = wholeVideosWrapper.value.offsetHeight
-				resize(width.value, height.value)
-			}
+			// if (wholeVideosWrapper.value) {
+			// 	width.value = wholeVideosWrapper.value.offsetWidth
+			// 	height.value = wholeVideosWrapper.value.offsetHeight
+			// 	resize(width.value, height.value)
+			// }
 
 			// 반응형 비디오 크기 설정
 			window.addEventListener('resize', function () {
-				if (wholeVideosWrapper.value) {
-					width.value = wholeVideosWrapper.value.offsetWidth
-					height.value = wholeVideosWrapper.value.offsetHeight
-					resize(width.value, height.value)
-					windowWidth.value = window.innerWidth
+				console.log('window 크기 변경 resize좀 제발')
+				// const width = document.getElementById('container').offsetWidth
+				let width =  openAside.value ? window.innerWidth - 420 : document.getElementById('container').offsetWidth
+				// let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
+				if (window.innerWidth < 600) {
+					width = window.innerWidth
 				}
+				const height = document.getElementById('container').offsetHeight
+				resize(width, height)
+				// if (wholeVideosWrapper.value) {
+				// 	width.value = wholeVideosWrapper.value.offsetWidth
+				// 	height.value = wholeVideosWrapper.value.offsetHeight
+				// 	resize(width.value, height.value)
+				// 	windowWidth.value = window.innerWidth
+				// }
+				windowWidth.value = window.innerWidth
 			})
-			windowWidth.value = window.innerWidth
 		})
 
 		const ratio = 9 / 16  // 비디오 화면 비율 (16: 9)
 		const setMargin = 10  // 비디오 margin
 		let maxWidth = ref(0)  // 비디오 최대 넓이
 
-    const getArea = function(increment: number, width: number, height: number) {
+    const getArea = function(increment, width, height) {
 			let i = 0;
 			let w = 0;
 			let h = increment * ratio + (setMargin * 2);
-			while (i < (participants.length)) {
+			while (i < (document.getElementsByClassName('participant')).length) {
 					if ((w + increment) > width) {
 							w = 0;
 							h = h + (increment * ratio) + (setMargin * 2);
@@ -182,7 +204,8 @@ export default defineComponent({
     }
 
 		// 비디오의 너비 계산
-		const resize = function (width: number, height: number) {
+		const resize = function (width, height) {
+			console.log('resize한다', width, height)
 			let max = 0
 			let i = 1
 			while (i < 5000) {
@@ -195,6 +218,21 @@ export default defineComponent({
 			}
 			max = max - (setMargin * 2)  // remove margins
 			maxWidth.value = max
+			console.log("max", max)
+			resizer(max)
+		}
+
+		function resizer(width) {
+			console.log('resizer한다', width)
+			const participant = document.getElementsByClassName('participant')
+			for (var s = 0; s < participant.length; s++) {
+					let element = participant[s];
+					// custom margin
+					element.style.margin = setMargin + "px"
+					// calculate dimensions
+					element.style.width = width + "px"
+					element.style.height = (width * ratio) + "px"
+			}
 		}
 
 		const openAside = ref(false)
@@ -208,12 +246,21 @@ export default defineComponent({
 		}
 		const dialogVisible = ref(false)
 
-		watch(openAside, (oldVal) => {
-			if (wholeVideosWrapper.value) {
-				const width = oldVal ? wholeVideosWrapper.value.offsetWidth - 420 : wholeVideosWrapper.value.offsetWidth + 420
-				const height = wholeVideosWrapper.value.offsetHeight
-				resize(width, height)
+		watch(windowWidth, (oldVal, newVal) => {
+			if (newVal <= 600) {
+				console.log('ohoho')
 			}
+		})
+
+		watch(openAside, (oldVal) => {
+			let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
+			let height = document.getElementById('container').offsetHeight
+			if (window.innerWidth < 600) {
+				width = window.innerWidth
+				height = oldVal ? (window.innerHeight - 150) / 2 : window.innerHeight - 150
+			}
+			console.log(width)
+			resize(width, height)
 		})
 
 		// 이후 ChooseQuestion 컴포넌트로 옮길 것
@@ -278,7 +325,7 @@ export default defineComponent({
 	flex-direction: row;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 	.meeting-content {
 		flex-direction: column;
 		height: 250px;
@@ -322,9 +369,9 @@ export default defineComponent({
 	margin: 5px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 	.meeting-content-aside {
-		height: 50%
+		height: 50%;
 	}
 	.meeting-content-main {
 		height: 160px;

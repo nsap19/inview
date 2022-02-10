@@ -8,26 +8,26 @@ export default createStore({
     paths:['user', 'meeting']
   })],
   state: {
-    modal: {
-      login: false,
-      register: false,
-    },
+    // modal: {
+    //   login: false,
+    //   register: false,
+    // },
     user: {},
-    options:[],
-    location:{},
-    fileList: [],
+    // options:[],
+    // location:{},
+    // fileList: [],
     searchResult: [],
     meeting: {}
   },
   mutations: {
-    SET_LOGIN_MODAL(state, data) {
-      state.modal.register = false;
-      state.modal.login = data;
-    },
-    SET_REGISTER_MODAL(state, data) {
-      state.modal.login = false;
-      state.modal.register = data;
-    },
+    // SET_LOGIN_MODAL(state, data) {
+    //   state.modal.register = false;
+    //   state.modal.login = data;
+    // },
+    // SET_REGISTER_MODAL(state, data) {
+    //   state.modal.login = false;
+    //   state.modal.register = data;
+    // },
     SET_USER(state, data) {
       state.user = data;
     },
@@ -35,15 +35,15 @@ export default createStore({
       state.user = {};
       localStorage.removeItem("token");
     },
-    SET_OPTION(state, data){
-      state.options = data;
-    },
-    SET_FILE_LIST(state, data) {
-      state.fileList = data;
-    },
-    SET_LOCATION(state, data){
-      state.location = data;
-    },
+    // SET_OPTION(state, data){
+    //   state.options = data;
+    // },
+    // SET_FILE_LIST(state, data) {
+    //   state.fileList = data;
+    // },
+    // SET_LOCATION(state, data){
+    //   state.location = data;
+    // },
     SAVE_SEARCH_RESULT(state, data) {
       state.searchResult = data
     },

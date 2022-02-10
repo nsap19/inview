@@ -40,8 +40,8 @@ function Participant(userId) {
 	const setMargin = 10
 	const ratio = 9/16
 	
-	console.log(document.getElementById('container').offsetWidth)
-	console.log(document.getElementById('container').offsetHeight)
+	// console.log(document.getElementById('container').offsetWidth)
+	// console.log(document.getElementById('container').offsetHeight)
 	
 	function getArea(increment) {
 		let i = 0;
@@ -50,6 +50,7 @@ function Participant(userId) {
 
 		const width = document.getElementById('container').offsetWidth
 		const height = document.getElementById('container').offsetHeight
+		// console.log('getArea', width, height)
 
 		while (i < (document.getElementsByClassName('participant')).length) {
 				if ((w + increment) > width) {
@@ -81,22 +82,19 @@ function Participant(userId) {
 	function resizer(width) {
 		const participant = document.getElementsByClassName('participant')
 		for (var s = 0; s < participant.length; s++) {
-
-				// camera fron dish (div without class)
 				let element = participant[s];
-
 				// custom margin
 				element.style.margin = setMargin + "px"
-
 				// calculate dimensions
 				element.style.width = width + "px"
 				element.style.height = (width * ratio) + "px"
 		}
 	}
 
-	window.addEventListener('resize', function () {
-		resize()
-	})
+	// window.addEventListener('resize', function () {
+	// 	console.log(window.innerWidth)
+	// 	resize()
+	// })
 
 	container.appendChild(video);
 	// container.appendChild(span);

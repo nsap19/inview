@@ -11,11 +11,11 @@
       > 
         <MeetingCard :meeting="meeting" />
       </div>
-      <div v-loading="loading" class="loading">
-      </div>
     </div>
     <div v-else>
       검색 결과가 존재하지 않습니다
+    </div>
+    <div v-loading="loading" class="loading">
     </div>
   </div>
 </template>
