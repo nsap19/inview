@@ -28,14 +28,14 @@ plugins {
     id 'java'
     id 'idea'
     id 'org.springframework.boot' version "${springBootVer}"
-    id 'war'
+    // id 'war'
 }
 
-bootWar {
-	archiveBaseName = 'inview'; // war 패키징 이름 설정
-	archiveFileName = 'inview.war';
-	archiveVersion = '0.0.1';
-}
+// bootWar {
+// 	archiveBaseName = 'inview'; // war 패키징 이름 설정
+// 	archiveFileName = 'inview.war';
+// 	archiveVersion = '0.0.1';
+// }
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
@@ -211,7 +211,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-test')
     
     // war파일 생성을 위한 내장톰켓 미사용
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	// providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
 test {

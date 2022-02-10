@@ -20,8 +20,7 @@ import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * API 문서 관련 swagger2 설정 정의.
- * http://localhost:8080/swagger-ui/index.html
+ * API 문서 관련 swagger2 설정 정의. http://localhost:8080/api/swagger-ui/
  */
 @Configuration
 @EnableSwagger2

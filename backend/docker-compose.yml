@@ -7,11 +7,14 @@ services:
     ports:
       - "32000:3306"
     environment:
+      MYSQL_DATABASE: inview
       MYSQL_ROOT_PASSWORD: ssafy
+      MYSQL_ROOT_HOST: '%' #외부  접근 가능
       TZ: Asia/Seoul
     privileged: true
     volumes:
-      - ./db:/docker-entrypoint-initdb.d #: 앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
+      - ./db/initdb.d:/docker-entrypoint-initdb.d #: 앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
+      - ./db/conf.d:/etc/mysql/conf.d
     networks:
       - backend
   kurento:
@@ -42,8 +45,11 @@ services:
       - "8080:8080"        
       - "8443:8443"
     environment: 
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/inview?&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ssafy
+      DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
       TZ: "Asia/Seoul"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/inview?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true"
       JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
       server.address: 0.0.0.0
     depends_on:
