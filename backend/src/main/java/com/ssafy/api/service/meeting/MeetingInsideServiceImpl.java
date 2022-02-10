@@ -56,10 +56,16 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 		// DB에서 userId 삭제
 		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
-		Participant participant = participantRepository.findByMeetingIdAndUserId(meetingId, userId)
-				.orElseThrow(() -> new NotExistsUserException());
+		Participant participant = this.checkParticipant(meetingId, userId);
 
 		participantRepository.delete(participant);
+	}
+
+	@Override
+	public Participant checkParticipant(int meetingId, int userId) {
+		Participant participant = participantRepository.findByMeetingIdAndUserId(meetingId, userId)
+				.orElseThrow(() -> new NotExistsUserException());
+		return participant;
 	}
 
 }

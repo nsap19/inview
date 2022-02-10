@@ -1,5 +1,6 @@
 package com.ssafy.api.service.meeting;
 
+import com.ssafy.db.entity.Participant;
 import com.ssafy.db.entity.meeting.Meeting;
 
 /**
@@ -11,4 +12,6 @@ public interface MeetingInsideService {
 	Meeting getMeeting(int meetingId);
 
 	void kickParticipant(int meetingId, int userId);
+	
+	Participant checkParticipant(int meetingId, int userId);
 }

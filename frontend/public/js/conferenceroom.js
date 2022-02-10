@@ -87,16 +87,15 @@ ws.onmessage = function(message) {
 }
 
 function register() {
-	userId = document.getElementById('userId').value;
 	var meetingId = document.getElementById('meetingId').value;
+	let token = localStorage.getItem("token");
 
-	// document.getElementById('room-header').innerText = 'ROOM ' + meetingId;
-	// document.getElementById('join').style.display = 'none';
-	// document.getElementById('room').style.display = 'block';
+	document.getElementById('join').style.display = 'none';
+	document.getElementById('room').style.display = 'block';
 
 	var message = {
 		id : 'joinRoom',
-		userId : userId,
+		accessToken : token,
 		meetingId : meetingId,
 	}
 
@@ -137,7 +136,9 @@ function onExistingParticipants(msg) {
 			}
 		}
 	};
-
+	
+	userId = msg.userId;
+	meetingId = msg.meetingId;
 	console.log(userId + " registered in room " + meetingId);
 	var participant = new Participant(userId);
 	participants[userId] = participant;
