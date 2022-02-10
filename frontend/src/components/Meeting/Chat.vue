@@ -1,59 +1,61 @@
 <template>
-  <div id="container" ref="container" class="d-flex flex-column justify-content-between" style="height: 90%; margin: auto 0;">
-    <div class="px-2" id="chat1" style="overflow-y: auto;" ref="chatArea">
+  <div id="container" ref="container" style="height: 90%; margin: auto 0;">
+    <div class="d-flex flex-column justify-content-between h-100">
+      <div class="px-2" id="chat1" style="overflow-y: auto;" ref="chatArea">
 
-      <div v-for="(item, idx) in recvList" :key="idx">
+        <div v-for="(item, idx) in recvList" :key="idx">
 
-        <!-- 날짜 경계선 -->
-        <div 
-          class="text-center py-3 date" 
-          v-if="(0 < idx) && (item.date !== recvList[idx - 1].date)"
-        >
-          <el-divider>{{ item.date }}</el-divider>
-        </div>
+          <!-- 날짜 경계선 -->
+          <div 
+            class="text-center py-3 date" 
+            v-if="(0 < idx) && (item.date !== recvList[idx - 1].date)"
+          >
+            <el-divider>{{ item.date }}</el-divider>
+          </div>
 
-        <!-- 내가 보낸 메세지 -->
-        <div class="d-flex flex-row justify-content-end mb-1" v-if="item.sender === this.$store.state.user.nickname">
-          <div class="">
-            <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1 text-end" style="font-size: 14px;">{{ item.sender }}</p>
-            <div class="d-flex flex-row justify-content-end">
-              <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
-                {{ item.time }}
+          <!-- 내가 보낸 메세지 -->
+          <div class="d-flex flex-row justify-content-end mb-1" v-if="item.sender === this.$store.state.user.nickname">
+            <div class="">
+              <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1 text-end" style="font-size: 14px;">{{ item.sender }}</p>
+              <div class="d-flex flex-row justify-content-end">
+                <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
+                  {{ item.time }}
+                </div>
+                <div class="p-3 border d-inline-block" style="border-radius: 15px; background-color: #cee5d0;">
+                  <p class="small mb-0 text-break">{{ item.message }}</p>
+                </div>
               </div>
-              <div class="p-3 border d-inline-block" style="border-radius: 15px; background-color: #cee5d0;">
-                <p class="small mb-0 text-break">{{ item.message }}</p>
+            </div>
+          </div>
+
+          <!-- 다른 사용자가 보낸 메세지 -->
+          <div class="d-flex flex-row justify-content-start mb-1" v-else>
+            <div>
+              <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1" style="font-size: 14px;">{{ item.sender }}</p>
+              <div class="d-flex flex-row justify-content-start">
+                <div class="p-3 d-inline-block" style="border-radius: 15px; background-color: #f3f0d7;">
+                  <p class="small mb-0 text-break">{{ item.message }}</p>
+                </div>
+                <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
+                  {{ item.time }}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 다른 사용자가 보낸 메세지 -->
-        <div class="d-flex flex-row justify-content-start mb-1" v-else>
-          <div>
-            <p v-if="idx === 0 || (1 <= idx && recvList[idx - 1].sender !== item.sender)" class="m-1" style="font-size: 14px;">{{ item.sender }}</p>
-            <div class="d-flex flex-row justify-content-start">
-              <div class="p-3 d-inline-block" style="border-radius: 15px; background-color: #f3f0d7;">
-                <p class="small mb-0 text-break">{{ item.message }}</p>
-              </div>
-              <div class="align-self-end m-1 mb-0" style="font-size:12px; color:grey">
-                {{ item.time }}
-              </div>
-            </div>
-          </div>
-        </div>
+    
       </div>
-
-  
-    </div>
-    <div class="form-outline message-input">
-      <el-input
-        v-model="message"
-        :autosize="{ minRows: 2, maxRows: 4 }"
-        type="textarea"
-        placeholder=""
-        @keyup="sendMessage"
-        resize="none"
-      ></el-input>
+      <div class="form-outline message-input">
+        <el-input
+          v-model="message"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          type="textarea"
+          placeholder=""
+          @keyup="sendMessage"
+          resize="none"
+        ></el-input>
+      </div>
     </div>
   </div>
   
@@ -95,7 +97,8 @@ export default {
     }
   },
   watch: {
-    endSignal: () => {
+    endSignal: function(newVal, oldVal) {
+      console.log(newVal, oldVal)
       this.disconnect()
     },
     recvList: () => {
