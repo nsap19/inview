@@ -72,8 +72,15 @@ public class meetingServiceImpl implements MeetingService {
 				.map(c -> companyRepository.findByCompanyName(c).orElseThrow(() -> new NotExistsCompanyException()))
 				.collect(Collectors.toList());
 
+		// 비밀번호가 빈문자열이면 제거
+		if (registerInfo.getPassword().trim().length() == 0)
+			registerInfo.setPassword(null);
+
 		// meeting 저장
 		Meeting meeting = meetingRepository.save(registerInfo.toMeeting(host, industry));
+
+		// 방장 participant 테이블에 저장
+		participantRepository.save(Participant.builder().meeting(meeting).user(host).build());
 
 		// meetingCompany 저장
 		companyList.stream().forEach(
