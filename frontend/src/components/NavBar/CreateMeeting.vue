@@ -36,7 +36,7 @@
             v-model="ruleForm.startTime"
             type="datetime"
             format="YYYY-MM-DD HH:mm"
-            value-format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm:ss"
             placeholder="날짜"
           ></el-date-picker>
         </el-col>
@@ -47,7 +47,7 @@
             v-model="ruleForm.endTime"
             type="datetime"
             format="YYYY-MM-DD HH:mm"
-            value-format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm:ss"
             placeholder="날짜"
           ></el-date-picker>
         </el-col>
@@ -202,7 +202,8 @@ export default defineComponent({
         }).then(res => {
           console.log(res.data)
           store.dispatch('setMeeting', res.data.data.id)
-          joinMeeting(res.data.data.id)
+          // joinMeeting(res.data.data.id)
+          router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
         }).catch(err => {
           console.log(err.response)
         })
