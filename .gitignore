@@ -15,3 +15,10 @@ local.properties
 .loadpath
 .recommenders
 .target/
+
+backend/src/main/resources/dist/js/about*
+backend/src/main/resources/dist/js/app*
+backend/src/main/resources/dist/js/chunk-vendors*
+backend/src/main/resources/dist/css/app*
+backend/src/main/resources/dist/css/chunk-vendors*
+backend/ssafy-web.log*

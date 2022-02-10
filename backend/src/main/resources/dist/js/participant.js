@@ -27,9 +27,7 @@ const PARTICIPANT_CLASS = 'participant';
  * @return
  */
 function Participant(userId) {
-	console.log(userId);
 	this.userId = userId;
-	console.log(this.userId);
 	var container = document.createElement('div');
 	container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
 	container.id = userId;
@@ -37,8 +35,71 @@ function Participant(userId) {
 	var video = document.createElement('video');
 	var rtcPeer;
 
+	video.setAttribute('style', 'width: 100%; height: 100%;')
+	container.setAttribute('style', 'position: relative; vertical-align: middle; align-self: center; border-radius: 10px; overflow: hidden; display: inline-block; box-shadow: var(--shadow-dark); background: #fff; animation: show 0.4s ease;')
+	const setMargin = 10
+	const ratio = 9/16
+	
+	console.log(document.getElementById('container').offsetWidth)
+	console.log(document.getElementById('container').offsetHeight)
+	
+	function getArea(increment) {
+		let i = 0;
+		let w = 0;
+		let h = increment * ratio + (setMargin * 2);
+
+		const width = document.getElementById('container').offsetWidth
+		const height = document.getElementById('container').offsetHeight
+
+		while (i < (document.getElementsByClassName('participant')).length) {
+				if ((w + increment) > width) {
+						w = 0;
+						h = h + (increment * ratio) + (setMargin * 2);
+				}
+				w = w + increment + (setMargin * 2);
+				i++;
+		}
+		if (h > height || increment > width) return false;
+		else return increment;
+	}
+
+	function resize() {
+		let max = 0
+		let i = 1
+		while (i < 5000) {
+				let area = getArea(i);
+				if (area === false) {
+						max = i - 1;
+						break;
+				}
+				i++;
+		}
+		max = max - (setMargin * 2)  // remove margins
+		resizer(max)
+	}
+
+	function resizer(width) {
+		const participant = document.getElementsByClassName('participant')
+		for (var s = 0; s < participant.length; s++) {
+
+				// camera fron dish (div without class)
+				let element = participant[s];
+
+				// custom margin
+				element.style.margin = setMargin + "px"
+
+				// calculate dimensions
+				element.style.width = width + "px"
+				element.style.height = (width * ratio) + "px"
+		}
+	}
+
+	window.addEventListener('resize', function () {
+		resize()
+	})
+
 	container.appendChild(video);
-	container.appendChild(span);
+	// container.appendChild(span);
 	container.onclick = switchContainerClass;
 	document.getElementById('participants').appendChild(container);
 
@@ -47,7 +108,7 @@ function Participant(userId) {
 	video.id = 'video-' + userId;
 	video.autoplay = true;
 	video.controls = false;
-
+	resize()
 
 	this.getElement = function() {
 		return container;
