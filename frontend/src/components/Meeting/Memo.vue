@@ -1,27 +1,92 @@
 <template>
-  <el-input
-    v-model="textarea"
-    type="textarea"
-    placeholder="작성하신 메모는 면접 종료 후 다운로드 받을 수 있습니다."
-    resize="none"
-    class="textarea p-2"
-  />
+  <div>
+    <el-input
+      v-model="textarea"
+      type="textarea"
+      placeholder="작성하신 메모는 면접 종료 후 다운로드 받을 수 있습니다."
+      resize="none"
+      class="textarea p-2"
+    />
+
+    <!-- 디버그용 서버 업로드 버튼 -->
+    <!-- 이후 div와 함께 삭제할 것 -->
+    <button @click="createHtmlFile">sda</button>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import axios from 'axios'
 
 export default defineComponent({
   name: "Memo",
   props: {
-    modelValue: String,
+    endSignal: Boolean,
   },
   setup(props, { emit }) {
-    const textarea = computed({
-      get: () => props.modelValue,
-      set: (value) => emit("update:modelValue", value),
-    });
-    return { textarea }
+    const textarea = ref('')
+
+    const store = useStore()
+    const makeHtml = function () {
+      let htmlCode = "<!DOCTYPE html><html><head><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css' /><style type='text/css' media='screen, print'>body { font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; }div { padding: 20px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; margin: 10px }h3 { padding: 0 5px; }p { padding: 0 10px; }</style></head><body><div><h1>"
+      htmlCode += `${ store.state.user.nickname }님의 메모</h1></div>`
+      htmlCode += `<div><p>${ textarea.value }</p></div>`
+      htmlCode += "</body></html>"
+      return [htmlCode]
+    }
+
+    const createHtmlFile = function () {
+      var htmlCode = null;
+      var data = new Blob(makeHtml(), {type: 'text/html'}); 
+      if (htmlCode !== null) {  
+        window.URL.revokeObjectURL(htmlCode);  
+      }  
+      htmlCode = window.URL.createObjectURL(data);  
+      console.log(htmlCode)
+      console.log(data)
+
+
+      let formData = new FormData();
+      formData.append('file', data, 'memo.html');
+      for (let value of formData.values()) {
+        console.log(value);
+      }
+      axios.post( `/meeting/${store.state.meeting.id}/upload?archiveType=memo`,
+        formData,
+        {
+          headers: 
+          {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+      .then(res => {
+        console.log('SUCCESS!!');
+        console.log(res)
+      })
+      .catch(err => {
+        console.log('FAILURE!!');
+        console.log(err.response)
+      });
+      
+      // 디버그용 파일 다운로드
+      var a = document.createElement('a');
+      a.download = 'fileName';
+      a.href = htmlCode;
+      a.click();
+    }
+
+    watch(()=>props.endSignal, () => {
+      // console.log(props.userId)
+      // console.log(evaluations)
+      if (props.endSignal == true) {
+        // createHtmlFile()
+        console.log('평가에서 종료신호 받음')
+      }
+    })
+    return { textarea, createHtmlFile }
   }
 })
 </script>

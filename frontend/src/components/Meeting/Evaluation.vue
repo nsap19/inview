@@ -1,6 +1,9 @@
 <template>
   <div class="h-100">
     <!-- pagination -->
+
+    <!-- 디버그용 다운버튼 -->
+    <button @click="createHtmlFile">다운</button>  
     <div class="p-2 d-flex justify-content-center">
       <el-pagination 
         background 
@@ -39,6 +42,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, Ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'Evaluation',
@@ -121,11 +126,72 @@ export default defineComponent({
         }
       )
     })
+
+    const store = useStore()
+    const makeHtml = function () {
+      let htmlCode = "<!DOCTYPE html><html><head><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css' /><style type='text/css' media='screen, print'>body { font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; }div { padding: 20px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; margin: 10px }h3 { padding: 0 5px; }p { padding: 0 10px; }</style></head><body><div><h1>"
+      htmlCode += `${ store.state.user.nickname }님의 평가</h1></div>`
+      let i = 1
+      evaluations.forEach(element => {
+        htmlCode += `<div><h3>${i}. ${element.question}</h3><hr>`
+        htmlCode += `<p>${ element.content.value }</p></div>`
+        i++
+      })
+      htmlCode += "</body></html>"
+      return [htmlCode]
+    }
+
+    const createHtmlFile = function () {
+      var htmlCode = null;
+      var data = new Blob(makeHtml(), {type: 'text/html'}); 
+      if (htmlCode !== null) {  
+        window.URL.revokeObjectURL(htmlCode);  
+      }  
+      htmlCode = window.URL.createObjectURL(data);  
+      console.log(htmlCode)
+      console.log(data)
+
+
+      let formData = new FormData();
+      formData.append('file', data, 'evaluation.html');
+      for (let value of formData.values()) {
+        console.log(value);
+      }
+      axios.post( `/meeting/${store.state.meeting.id}/upload?archiveType=evaluation`,
+        formData,
+        {
+          headers: 
+          {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+      .then(res => {
+        console.log('SUCCESS!!');
+        console.log(res)
+      })
+      .catch(err => {
+        console.log('FAILURE!!');
+        console.log(err.response)
+      });
+      
+      // 디버그용 파일 다운로드
+      var a = document.createElement('a');
+      a.download = 'fileName';
+      a.href = htmlCode;
+      a.click();
+    }
+
     watch(()=>props.endSignal, () => {
       // console.log(props.userId)
       // console.log(evaluations)
+      if (props.endSignal == true) {
+        // createHtmlFile()
+        console.log('평가에서 종료신호 받음')
+      }
     })
-    return { questions, evaluations, currentPage, paginate }
+    return { questions, evaluations, currentPage, paginate, createHtmlFile }
   }
 })
 </script>

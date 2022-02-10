@@ -10,10 +10,13 @@
     </div>
 
     <!-- 업로드 -->
-    <div style="position: sticky; bottom: 0; background-color: lightgrey">
+    <div class="p-2">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <span>공유할 파일을 올려주세요.</span>
+        <el-button v-on:click="submitFile()">전송</el-button>
+      </div>
       <input type="file" ref="file" multiple="multiple" v-on:change="handleFileUpload()"/>
-      <button v-on:click="submitFile()">Submit</button>
-      <el-upload
+      <!-- <el-upload
         ref="upload"
         class="upload-demo"
         action="http://localhost:8080/meeting/2/upload/"
@@ -33,7 +36,7 @@
             limit 1 file, new file will cover the old file
           </div>
         </template>
-      </el-upload>
+      </el-upload> -->
     </div>
   </div>
 </template>
@@ -58,6 +61,7 @@ export default defineComponent({
     })
 
     const getFiles = function () {      
+      console.log('get Files')
       axios({
         url: `/download/meeting/${meetingId.value}/user/${userId.value}`,
         method: 'GET',
@@ -120,7 +124,7 @@ export default defineComponent({
       for (let value of formData.values()) {
         console.log(value);
       }
-      axios.post( `/meeting/${meetingId.value}/upload`,
+      axios.post( `/meeting/${meetingId.value}/upload?archiveType=file`,
         formData,
         {
           headers: 
@@ -133,6 +137,7 @@ export default defineComponent({
       .then(res => {
         console.log('SUCCESS!!');
         console.log(res)
+        getFiles()
       })
       .catch(err => {
         console.log('FAILURE!!');

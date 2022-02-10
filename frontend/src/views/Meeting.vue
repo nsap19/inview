@@ -24,7 +24,7 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<MeetingNavBar />
+		<MeetingNavBar @leaveMeeting="endSignal=true" />
 
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
@@ -51,7 +51,6 @@
 				class="meeting-content-aside" 
 				:style="600 < windowWidth ? {'width': '420px'} : {'width': windowWidth - 10 + 'px'}"
 			>
-				<!-- {{windowWidth}} -->
 				<div class="d-flex flex-row justify-content-between p-2 align-items-center">
 					<span v-if="asideCategory.slice(0, 10) === 'evaluation'">{{ asideCategory.slice(10) }}님의 면접 평가</span>
 					<span v-else>{{ categoryKorName[asideCategory] }}</span>
@@ -66,16 +65,17 @@
 						v-show="asideCategory === 'evaluation' + participant.toString()" />
 				</div>
 				<Chat :endSignal="endSignal" v-show="asideCategory === 'chat'" />
-				<Memo v-model="memo" v-show="asideCategory === 'memo'" />
-				<File v-show="asideCategory === 'file'" />
+				<Memo :endSignal="endSignal" v-show="asideCategory === 'memo'" />
+				<File v-if="asideCategory === 'file'" />
 			</div>
 		</div>
 
 		<!-- meeting footer -->
 		<div class="d-flex flex-row justify-content-end p-3 meeting-footer">
-			<input type="button" name="commit" value="비디오 참가" id="joinButton" />
-			<input type="text" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
-			<input type="text" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" placeholder="meetingId" required />
+			<el-button :icon="VideoCamera" size="large" circle name="commit" id="joinButton"></el-button>
+			<!-- <input type="button" name="commit" value="비디오 참가" id="joinButton" /> -->
+			<input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
+			<input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" placeholder="meetingId" required />
 			<el-dropdown size='large' class="mx-3">
 				<el-button type="primary" size="large" circle :icon="List"></el-button>
 				<template #dropdown>
@@ -119,7 +119,7 @@ import Chat from '@/components/Meeting/Chat.vue';
 import Memo from '@/components/Meeting/Memo.vue';
 import File from '@/components/Meeting/File.vue';
 import MeetingNavBar from '@/components/Meeting/MeetingNavBar.vue'
-import { ChatDotSquare, CloseBold, MoreFilled, List } from '@element-plus/icons-vue'
+import { ChatDotSquare, CloseBold, MoreFilled, List, VideoCamera } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import Video from '@/components/Meeting/Video.vue'
 
@@ -164,7 +164,7 @@ export default defineComponent({
 
 			// 반응형 비디오 크기 설정
 			window.addEventListener('resize', function () {
-				console.log('window 크기 변경 resize좀 제발')
+				// console.log('window 크기 변경 resize좀 제발')
 				// const width = document.getElementById('container').offsetWidth
 				let width =  openAside.value ? window.innerWidth - 420 : document.getElementById('container').offsetWidth
 				// let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
@@ -223,7 +223,7 @@ export default defineComponent({
 		}
 
 		function resizer(width) {
-			console.log('resizer한다', width)
+			// console.log('resizer한다', width)
 			const participant = document.getElementsByClassName('participant')
 			for (var s = 0; s < participant.length; s++) {
 					let element = participant[s];
@@ -246,11 +246,11 @@ export default defineComponent({
 		}
 		const dialogVisible = ref(false)
 
-		watch(windowWidth, (oldVal, newVal) => {
-			if (newVal <= 600) {
-				console.log('ohoho')
-			}
-		})
+		// watch(windowWidth, (oldVal, newVal) => {
+		// 	if (newVal <= 600) {
+		// 		console.log('ohoho')
+		// 	}
+		// })
 
 		watch(openAside, (oldVal) => {
 			let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
@@ -259,7 +259,7 @@ export default defineComponent({
 				width = window.innerWidth
 				height = oldVal ? (window.innerHeight - 150) / 2 : window.innerHeight - 150
 			}
-			console.log(width)
+			// console.log(width)
 			resize(width, height)
 		})
 
@@ -286,23 +286,15 @@ export default defineComponent({
 				// })	
 		}
 
-		const memo = ref("")
-
 		const endSignal = ref(false)  
 
 		const participants = [142, 123, 2354, 12354326423, 4234, 1]
 
-		const endMeeting = function () {
-			endSignal.value = !endSignal.value
-			// 메모 저장은 Memo 컴포넌트에서 하는게 더 논리적일듯
-		}
-
-
 		return { 
-			ChatDotSquare, CloseBold, MoreFilled, List, 
-			openAside, asideCategory, dialogVisible, memo, endSignal, participants, categoryKorName,
+			ChatDotSquare, CloseBold, MoreFilled, List, VideoCamera,
+			openAside, asideCategory, dialogVisible, endSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
-			handleClose, endMeeting,
+			handleClose,
 		}
 	},
 })
