@@ -29,7 +29,7 @@ public class Participant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int participantId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "userId")
 	User user;
 

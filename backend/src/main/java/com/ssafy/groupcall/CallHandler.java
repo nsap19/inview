@@ -2,22 +2,8 @@ package com.ssafy.groupcall;
 
 import java.io.IOException;
 
-import org.kurento.client.EndOfStreamEvent;
-import org.kurento.client.ErrorEvent;
-import org.kurento.client.EventListener;
 import org.kurento.client.IceCandidate;
-import org.kurento.client.IceCandidateFoundEvent;
-import org.kurento.client.KurentoClient;
 import org.kurento.client.MediaPipeline;
-import org.kurento.client.MediaProfileSpecType;
-import org.kurento.client.MediaType;
-import org.kurento.client.PausedEvent;
-import org.kurento.client.PlayerEndpoint;
-import org.kurento.client.RecorderEndpoint;
-import org.kurento.client.RecordingEvent;
-import org.kurento.client.StoppedEvent;
-import org.kurento.client.WebRtcEndpoint;
-import org.kurento.jsonrpc.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +15,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.ssafy.common.util.MeetingVerify;
+import com.ssafy.db.entity.User;
 import com.ssafy.groupcall.service.GroupCallService;
 
 public class CallHandler extends TextWebSocketHandler {
@@ -46,11 +34,14 @@ public class CallHandler extends TextWebSocketHandler {
 	@Autowired
 	private GroupCallService groupCallService;
 	
+	@Autowired
+	private MeetingVerify meetingVerify;
+	
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		final JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
 		final UserSession user = registry.getBySession(session);
-
+		
 		if (user != null) {
 			log.debug("Incoming message from user '{}': {}", user.getUserId(), jsonMessage);
 		} else {
@@ -94,7 +85,7 @@ public class CallHandler extends TextWebSocketHandler {
 			break;
 		}
 	}
-
+	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		UserSession user = registry.removeBySession(session);
@@ -103,7 +94,11 @@ public class CallHandler extends TextWebSocketHandler {
 
 	private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
 		final int meetingId = params.get("meetingId").getAsInt();
-		final int userId = params.get("userId").getAsInt();
+		String token = params.get("accessToken").getAsString();
+		
+		User userInfo = meetingVerify.verifyToken(token, meetingId); //토큰 검증 및 해당회의실 participant인지 확인
+		
+		final int userId = userInfo.getUserId();
 		log.info("PARTICIPANT {}: trying to join room {}", userId, meetingId);
 
 		Room room = roomManager.getRoom(meetingId);
