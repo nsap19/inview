@@ -83,7 +83,7 @@ public class DownloadController {
 			@ApiResponse(code = 500, message = "파일 손상, 다운로드 실패") })
 	public ResponseEntity<Resource> archiveDownload(@PathVariable("meetingId") int meetingId,
 			@PathVariable("archiveId") int archiveId, @PathVariable("userId") int userId,
-			@RequestParam("archiveType") String archiveType) throws IOException {
+			@RequestParam("archive-type") String archiveType) throws IOException {
 		Archive archive;
 		try {
 			archive = archiveService.getArchivesById(archiveId);

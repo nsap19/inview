@@ -23,11 +23,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 	public CallHandler groupCallHandler() {
 		return new CallHandler();
 	}
+	
+	@Bean
+	public StompInterceptor stompInterceptor() {
+		return new StompInterceptor();
+	}
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/stomp-chat").setAllowedOrigins("http://localhost:3000").withSockJS();
-//		registry.addEndpoint("/groupcall").setAllowedOrigins("http://localhost:3000").withSockJS();
 	}
 
 	@Override
@@ -43,6 +47,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 	}
 
 	public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new StompInterceptor());
+        registration.interceptors(stompInterceptor());
     }
 }

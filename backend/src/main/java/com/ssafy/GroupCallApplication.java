@@ -1,21 +1,20 @@
 package com.ssafy;
 
+import java.nio.charset.StandardCharsets;
+
 import org.kurento.client.KurentoClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 import com.ssafy.groupcall.RoomManager;
 import com.ssafy.groupcall.UserRegistry;
-
-import java.nio.charset.StandardCharsets;
 
 @SpringBootApplication
 @EnableWebSocket

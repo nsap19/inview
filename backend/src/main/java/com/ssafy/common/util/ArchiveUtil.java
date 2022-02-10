@@ -106,7 +106,6 @@ public class ArchiveUtil {
 	public void InsertToArchive(ArchiveType archiveType, String meetingId, String filepath, String filename,
 			User user) {
 		ArchiveRegisterPostReq archiveRegisterPostReq = new ArchiveRegisterPostReq();
-
 		archiveRegisterPostReq.setArchiveType(archiveType);
 		Meeting meeting = meetingInsideService.getMeeting(Integer.parseInt(meetingId));
 		archiveRegisterPostReq.setMeeting(meeting);
