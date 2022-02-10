@@ -42,6 +42,9 @@ public class MeetingInsideCotroller {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ArchiveUtil archiveUtil;
 
 	@PostMapping("/{meetingId}/close")
 	@ApiOperation(value = "미팅 종료")
@@ -59,15 +62,14 @@ public class MeetingInsideCotroller {
 	@ApiOperation(value = "미팅 중 파일 업로드")
 	@ApiResponses({ @ApiResponse(code = 200, message = "파일 업로드 성공"), @ApiResponse(code = 400, message = "파일 업로드 실패") })
 	public ResponseEntity<? extends BaseResponseBody> upload(@RequestParam("file") MultipartFile files,
-			@PathVariable("meetingId") int meetingId) {
-		ArchiveUtil archiveUtil = new ArchiveUtil();
+			@PathVariable("meetingId") int meetingId, @RequestParam("archiveType") String archiveType) {
 		try {
 			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
-			ArchiveType archiveType = ArchiveType.FILE;
+			ArchiveType saveArchiveType = ArchiveType.valueOf(archiveType.toUpperCase());
 			String origFilename = files.getOriginalFilename();
-			String filename = archiveUtil.getFilename(archiveType, null, origFilename, null);
+			String filename = archiveUtil.getFilename(saveArchiveType, null, origFilename, null);
 			/* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
-			String savepath = archiveUtil.getSavepath(archiveType, String.valueOf(meetingId));
+			String savepath = archiveUtil.getSavepath(saveArchiveType, String.valueOf(meetingId));
 			/* 파일이 저장되는 폴더가 없으면 폴더를 생성합니다. */
 			if (!new File(savepath).exists()) {
 				try {
@@ -76,10 +78,10 @@ public class MeetingInsideCotroller {
 					e.getStackTrace();
 				}
 			}
-			String filepath = archiveUtil.getFilepath(archiveType, savepath, filename);
+			String filepath = archiveUtil.getFilepath(saveArchiveType, savepath, filename);
 			files.transferTo(new File(filepath));
 
-			archiveUtil.InsertToArchive(archiveType, String.valueOf(meetingId), filepath, filename, null);
+			archiveUtil.InsertToArchive(saveArchiveType, String.valueOf(meetingId), filepath, filename, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "파일 업로드 실패"));

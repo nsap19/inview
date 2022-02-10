@@ -71,3 +71,7 @@
 .el-card.is-always-shadow {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+.el-divider__text {
+  background-color: #f4f4f5;
+}

@@ -27,21 +27,22 @@
         @click="clickJoin"
       >
         <el-icon v-if="props.meeting.isLock"><lock /></el-icon>
-        <span>참가</span>
+        <span>{{props.meeting.isLock}}참가</span>
       </el-button>
     </div>
   </el-card>
 
   <el-dialog v-model="passwordFormVisible" title="비밀번호를 입력해주세요" width="30%" top="30vh">
     <el-form ref="ruleFormRef" :model="passwordForm" :rules="rules">
-      <el-form-item prop="password">
+      <el-form-item prop="password" :error="passwordError">
         <el-input v-model="passwordForm.password" autocomplete="off" size="large"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="passwordFormVisible = false">취소</el-button>
-        <el-button type="primary" @click="submitForm(ruleFormRef)"
+        <!-- <el-button type="primary" @click="submitForm(ruleFormRef)" -->
+        <el-button type="primary" @click="joinMeeting(props.meeting.id)"
           >입장</el-button
         >
       </span>
@@ -53,6 +54,9 @@
 import { defineComponent, ref, reactive } from 'vue'
 import { Lock } from '@element-plus/icons-vue'
 import type { ElForm } from 'element-plus'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'MeetingCard',
@@ -101,15 +105,33 @@ export default defineComponent({
         }
       ]
     }
-
+    const passwordError = ref('')
     const clickJoin = function () {
-      if (props.meeting.password) {
+      if (props.meeting.isLock) {
         passwordFormVisible.value = true
+      } else {
+        joinMeeting(props.meeting.id)
       }
     }
-
-    const joinMeeting = function () {
-      alert('join')
+    
+    const router = useRouter()
+    const store = useStore()
+    const joinMeeting = function (meetingId: number) {
+      axios({
+        url: `/meeting/${meetingId}/join`,
+        method: 'POST',
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        params: { password: passwordForm.password },
+      }).then(res => {
+        console.log(res, 'joinMeeting')
+        store.dispatch('setMeeting', meetingId)
+        router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
+      }).catch(err => {
+        console.log(err)
+        if (err.data.message == "비밀번호가 일치하지 않습니다.") {
+          passwordError.value = "비밀번호가 일치하지 않습니다"
+        }
+      })
     }
 
     const submitForm = (formEl: InstanceType<typeof ElForm> | undefined) => {
@@ -117,7 +139,7 @@ export default defineComponent({
       formEl.validate((valid) => {
         if (valid) {
           console.log('submit!')
-          joinMeeting()
+          joinMeeting(props.meeting.id)
         } else {
           console.log('error submit!')
           return false
@@ -126,9 +148,9 @@ export default defineComponent({
     }
 
     return { 
-      props, meetingData, passwordFormVisible, passwordForm, rules, ruleFormRef,
+      props, meetingData, passwordFormVisible, passwordForm, rules, ruleFormRef, passwordError,
       Lock, 
-      clickJoin, submitForm
+      clickJoin, submitForm, joinMeeting
     }
   },
 })

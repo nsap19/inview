@@ -134,7 +134,7 @@ export default defineComponent({
       axios.post("/users/signup/", body).then(res => {
         loading.value = false
         console.log(res)
-        emailCertificationCode.value = res.data.message  // 이후 백엔드 수정되면 message말고 code로 수정해야 함
+        emailCertificationCode.value = res.data.code
         showEmailCertification.value = true
       }).catch(err => {
         console.log(err.response)
