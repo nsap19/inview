@@ -90,8 +90,8 @@ function register() {
 	var meetingId = document.getElementById('meetingId').value;
 	let token = localStorage.getItem("token");
 
-	document.getElementById('join').style.display = 'none';
-	document.getElementById('room').style.display = 'block';
+	// document.getElementById('join').style.display = 'none';
+	// document.getElementById('room').style.display = 'block';
 
 	var message = {
 		id : 'joinRoom',
