@@ -137,6 +137,7 @@ export default defineComponent({
         emailCertificationCode.value = res.data.code
         showEmailCertification.value = true
       }).catch(err => {
+        loading.value = false
         console.log(err.response)
         if (err.response.data.message === "이미 등록된 닉네임입니다.") {
           nicnknameError.value = "중복된 닉네임입니다"

@@ -3,7 +3,7 @@
     <div class="mb-4">
       <SearchFilterBar/>
     </div>
-    <div v-if="meetings" class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+    <div v-if="meetings.length > 0" class="row row-cols-1 row-cols-md-3 g-4 mb-3">
       <div 
         v-for="meeting in meetings" 
         :key="meeting.id" 
@@ -12,8 +12,8 @@
         <MeetingCard :meeting="meeting" />
       </div>
     </div>
-    <div v-else>
-      검색 결과가 존재하지 않습니다
+    <div v-else class="text-center p-5">
+      검색 결과가 존재하지 않습니다.
     </div>
     <div v-loading="loading" class="loading">
     </div>
@@ -56,7 +56,7 @@ export default defineComponent({
 
     const loading = ref(false)
     watch(meetings, (oldValue, newValue) => {
-      console.log(oldValue, newValue)
+      // console.log(oldValue, newValue)
       if (oldValue.length === newValue.length) {
         loading.value = false
       } else {

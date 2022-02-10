@@ -45,8 +45,10 @@ public class ArchiveServiceImple implements ArchiveService {
 	public String createAllArchive(ArchiveRegisterPostReq archiveRegisterPostReq) {
 		String path = archiveRegisterPostReq.getPath();
 		String meetingId = String.valueOf(archiveRegisterPostReq.getMeeting().getMeetingId());
+		System.out.println("meetingParticipant : " + meetingParticipant);
 		List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
 		for (User user : participantList) {
+			System.out.println(user.toString());
 			if (this.findByPathAndUser(path, user) == null) {
 				Archive archive = new Archive();
 				archive.setArchiveName(archiveRegisterPostReq.getArchiveName());

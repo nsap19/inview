@@ -27,7 +27,7 @@
         @click="clickJoin"
       >
         <el-icon v-if="props.meeting.isLock"><lock /></el-icon>
-        <span>{{props.meeting.isLock}}참가</span>
+        <span>참가</span>
       </el-button>
     </div>
   </el-card>
@@ -128,6 +128,7 @@ export default defineComponent({
         router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
       }).catch(err => {
         console.log(err)
+        console.log(err.response)
         if (err.data.message == "비밀번호가 일치하지 않습니다.") {
           passwordError.value = "비밀번호가 일치하지 않습니다"
         }

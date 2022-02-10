@@ -42,17 +42,23 @@ public class ArchiveUtil {
 
 	public String getFilename(ArchiveType archiveType, User user, String option, String extension) {
 		LocalTime localTime = LocalTime.now();
+		String salt = new SaltGenerator(localTime.toString()).toString();
 		switch (archiveType) {
 		case VIDEO:
 			return String.valueOf(localTime.getHour()) + "시 " + String.valueOf(localTime.getMinute()) + "분 "
 					+ String.valueOf(localTime.getSecond()) + "초 " + user.getNickname() + extension;
 		case MEMO:
-			return "";
+			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
+			try {
+				return new MD5Generator(salt + option).toString() + "_" + salt + "_" + option;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
 		case EVALUATION:
-			return "";
+			return option;
 		case FILE:
 			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
-			String salt = new SaltGenerator(localTime.toString()).toString();
 			try {
 				return new MD5Generator(salt + option).toString() + "_" + salt + "_" + option;
 			} catch (Exception e) {
@@ -100,7 +106,6 @@ public class ArchiveUtil {
 	public void InsertToArchive(ArchiveType archiveType, String meetingId, String filepath, String filename,
 			User user) {
 		ArchiveRegisterPostReq archiveRegisterPostReq = new ArchiveRegisterPostReq();
-
 		archiveRegisterPostReq.setArchiveType(archiveType);
 		Meeting meeting = meetingInsideService.getMeeting(Integer.parseInt(meetingId));
 		archiveRegisterPostReq.setMeeting(meeting);
@@ -113,10 +118,11 @@ public class ArchiveUtil {
 			arhciveService.createArchive(archiveRegisterPostReq);
 			break;
 		case MEMO:
-			// todo
+			archiveRegisterPostReq.setUser(user);
+			arhciveService.createArchive(archiveRegisterPostReq);
 			break;
 		case EVALUATION:
-			// todo
+			arhciveService.createAllArchive(archiveRegisterPostReq);
 			break;
 		case FILE:
 			arhciveService.createAllArchive(archiveRegisterPostReq);

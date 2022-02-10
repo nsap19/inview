@@ -8,51 +8,33 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.api.service.UserService;
-import com.ssafy.db.entity.Participant;
+import com.ssafy.common.util.bean.ChattingParticipant;
+import com.ssafy.common.util.bean.ChattingUser;
 import com.ssafy.db.entity.User;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Component
 public class MeetingParticipant {
-	private static UserService userService;
-	private static HashMap<String, Map<String, Participant>> participantByMeetingId;
-	private static HashMap<String, Participant> participantBySessionId;
-
-	@Getter
-	static class Participant {
-		String sessionId;
-		String meetingId;
-		User user;
-
-		public Participant(String sessionId, String meetingId, User user) {
-			this.sessionId = sessionId;
-			this.meetingId = meetingId;
-			this.user = user;
-		}
+	ChattingUser chattingUser;
+	
+	public MeetingParticipant(ChattingUser chattingUser) {
+		this.chattingUser = chattingUser;
 	}
 
-	@Autowired
-	public MeetingParticipant(UserService userService, HashMap<String, Map<String, Participant>> participantByMeetingId,
-			HashMap<String, Participant> participantBySessionId) {
-		this.userService = userService;
-		this.participantByMeetingId = participantByMeetingId;
-		this.participantBySessionId = participantBySessionId;
-	}
-
-	public static List<User> getParticipantByMeetingId(String meetingId) {
-		Map<String, Participant> hashMap = participantByMeetingId.getOrDefault(meetingId, new HashMap<>());
+	public List<User> getParticipantByMeetingId(String meetingId) {
+		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().getOrDefault(meetingId,
+				new HashMap<>());
 		List<User> participantList = new LinkedList<>();
 		for (String sessionId : hashMap.keySet()) {
+			System.out.println(sessionId);
 			participantList.add(hashMap.get(sessionId).getUser());
 		}
 		return participantList;
 	}
 
-	public static boolean checkParticipant(String meetingId, String email) {
-		Map<String, Participant> hashMap = participantByMeetingId.getOrDefault(meetingId, new HashMap<>());
+	public boolean checkParticipant(String meetingId, String email) {
+		System.out.println("checkParticipant / chattingUser : " + chattingUser);
+		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().getOrDefault(meetingId,
+				new HashMap<>());
 		List<User> participantList = new LinkedList<>();
 		for (String sessionId : hashMap.keySet()) {
 			if (hashMap.get(sessionId).getUser().getEmail().equals(email))
@@ -61,25 +43,27 @@ public class MeetingParticipant {
 		return true;
 	}
 
-	public static void addParticipantBySessionId(String sessionId, String meetingId, String email) {
-		Map<String, Participant> hashMap = participantByMeetingId.getOrDefault(meetingId, new HashMap<>());
-		Participant participant = new Participant(sessionId, meetingId, userService.getUserByEmail(email));
+	public void addParticipantBySessionId(String sessionId, String meetingId, User user) {
+		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().getOrDefault(meetingId,
+				new HashMap<>());
+		ChattingParticipant participant = new ChattingParticipant(sessionId, meetingId, user);
 		hashMap.put(sessionId, participant);
-		participantByMeetingId.put(meetingId, hashMap);
-		participantBySessionId.put(sessionId, participant);
+		chattingUser.getParticipantByMeetingId().put(meetingId, hashMap);
+		chattingUser.getParticipantBySessionId().put(sessionId, participant);
 	}
 
-	public static void deleteParticipantBySessionId(String sessionId) {
-		Participant participant = participantBySessionId.get(sessionId);
+	public void deleteParticipantBySessionId(String sessionId) {
+		ChattingParticipant participant = chattingUser.getParticipantBySessionId().get(sessionId);
 		if (participant == null) {
 			return;
 		}
 		String meetingId = participant.getMeetingId();
-		Map<String, Participant> hashMap = participantByMeetingId.getOrDefault(meetingId, new HashMap<>());
+		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().getOrDefault(meetingId,
+				new HashMap<>());
 		hashMap.remove(sessionId);
 		if (hashMap.isEmpty())
-			participantByMeetingId.remove(meetingId);
-		participantBySessionId.remove(sessionId);
+			chattingUser.getParticipantByMeetingId().remove(meetingId);
+		chattingUser.getParticipantBySessionId().remove(sessionId);
 	}
 
 }

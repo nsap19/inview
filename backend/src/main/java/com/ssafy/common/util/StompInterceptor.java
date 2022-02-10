@@ -17,7 +17,9 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
-@Component
+import com.ssafy.api.service.UserService;
+import com.ssafy.db.entity.User;
+
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class StompInterceptor implements ChannelInterceptor {
 	@Autowired
@@ -26,6 +28,9 @@ public class StompInterceptor implements ChannelInterceptor {
 	@Autowired
 	private MeetingParticipant meetingParticipant;
 
+	@Autowired
+	private UserService userService;
+	
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
@@ -38,21 +43,24 @@ public class StompInterceptor implements ChannelInterceptor {
 			String match = "[\\[\\],]";
 
 			for (Entry<String, List<String>> head : multiValueMap.entrySet()) {
+//				System.out.println((head.getKey() +"#"+ String.valueOf(head.getValue()).replaceAll(match, "")));
 				hashMap.put(head.getKey(), String.valueOf(head.getValue()).replaceAll(match, ""));
 			}
 
-			System.out.println(hashMap.get("Authorization"));
 			String token = Objects.requireNonNull(hashMap.get("Authorization"));
 			jwtTokenUtil.handleError(token);
 			String email = Objects.requireNonNull(jwtTokenUtil.getUserEmailFromJwt(token));
-			String meetingId = hashMap.get("meetingId");
+			String meetingId = Objects.requireNonNull(hashMap.get("meetingId"));
 
+			System.out.println("meetingId : " + meetingId);
+			System.out.println("StompInterceptor / meetingParticipant : " + meetingParticipant);
+			System.out.println("StompInterceptor / jwtTokenUtil : " + jwtTokenUtil);
+			System.out.println("StompInterceptor / userService : " + userService);
+			User user = userService.getUserByEmail(email);
 			if (!meetingParticipant.checkParticipant(meetingId, email)) {
-				// 프론트와 처리 논의하기
 				System.out.println("중복입장 에러 발생!!!");
 			}
-
-			meetingParticipant.addParticipantBySessionId(sessionId, meetingId, email);
+			meetingParticipant.addParticipantBySessionId(sessionId, meetingId, user);
 		}
 
 		return message;

@@ -5,8 +5,9 @@
     </div>
     <div>
       <el-button type="warning">준비</el-button>
-      <el-button type="danger" @click="clickDeleteMeeting">삭제</el-button>
-      <el-button type="danger" @click="clickCloseMeeting">나가기</el-button>
+      <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickDeleteMeeting">삭제</el-button>
+      <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickCloseMeeting">종료</el-button>
+      <el-button type="danger" @click="clickLeaveMeeting">나가기</el-button>
     </div>
   </div>
 </template>
@@ -20,7 +21,7 @@ import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'MeetingNavBar',
-  setup() {
+  setup(props, { emit }) {
     const store = useStore()
     const router = useRouter()
     const meetingId = computed(() => store.state.meeting.id)
@@ -61,7 +62,7 @@ export default defineComponent({
         .then(() => {
           ElMessage({
             type: 'success',
-            message: '삭제되었습니다',
+            message: '삭제되었습니다.',
           })
           deleteMeeting()
           store.dispatch('deleteMeeting')
@@ -69,11 +70,38 @@ export default defineComponent({
         .catch(() => {
           ElMessage({
             type: 'info',
-            message: '취소되었습니다',
+            message: '취소되었습니다.',
           })
         })
     }
     const clickCloseMeeting = function () {
+      ElMessageBox.confirm(
+        '종료하시겠습니까?',
+        '종료',
+        {
+          confirmButtonText: '종료',
+          cancelButtonText: '취소',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          emit('closeMeeting')
+          closeMeeting()
+          store.dispatch('deleteMeeting')
+          router.push({ name: 'Home'})
+          ElMessage({
+            type: 'success',
+            message: '종료되었습니다.',
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '취소되었습니다.',
+          })
+        })
+    }
+    const clickLeaveMeeting = function () {
       ElMessageBox.confirm(
         '방을 나가시겠습니까?',
         '방 나가기',
@@ -84,22 +112,22 @@ export default defineComponent({
         }
       )
         .then(() => {
-          closeMeeting()
+          emit('leaveMeeting')
           store.dispatch('deleteMeeting')
           router.push({ name: 'Home'})
           ElMessage({
             type: 'success',
-            message: '종료되었습니다',
+            message: '퇴장하셨습니다.',
           })
         })
         .catch(() => {
           ElMessage({
             type: 'info',
-            message: '취소되었습니다',
+            message: '취소되었습니다.',
           })
         })
     }
-    return { clickDeleteMeeting, clickCloseMeeting }
+    return { clickDeleteMeeting, clickCloseMeeting, clickLeaveMeeting }
   }
 })
 </script>
