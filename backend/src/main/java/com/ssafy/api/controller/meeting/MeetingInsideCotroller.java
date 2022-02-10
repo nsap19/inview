@@ -1,7 +1,6 @@
 package com.ssafy.api.controller.meeting;
 
 import java.io.File;
-import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.api.request.ArchiveRegisterPostReq;
 import com.ssafy.api.service.ArchiveService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.ArchiveUtil;
 import com.ssafy.common.util.CurrentUser;
-import com.ssafy.common.util.MD5Generator;
-import com.ssafy.common.util.SaltGenerator;
 import com.ssafy.db.entity.ArchiveType;
-import com.ssafy.db.entity.meeting.Meeting;
+import com.ssafy.db.entity.User;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,10 +58,11 @@ public class MeetingInsideCotroller {
 	@ApiOperation(value = "미팅 중 파일 업로드")
 	@ApiResponses({ @ApiResponse(code = 200, message = "파일 업로드 성공"), @ApiResponse(code = 400, message = "파일 업로드 실패") })
 	public ResponseEntity<? extends BaseResponseBody> upload(@RequestParam("file") MultipartFile files,
-			@PathVariable("meetingId") int meetingId, @RequestParam("archiveType") String archiveType) {
+			@PathVariable("meetingId") int meetingId, @RequestParam("archive-type") String archiveType, @RequestParam(required = false, value = "user-id")String userId) {
 		try {
 			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
 			ArchiveType saveArchiveType = ArchiveType.valueOf(archiveType.toUpperCase());
+			System.out.println(saveArchiveType);
 			String origFilename = files.getOriginalFilename();
 			String filename = archiveUtil.getFilename(saveArchiveType, null, origFilename, null);
 			/* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
@@ -80,8 +77,11 @@ public class MeetingInsideCotroller {
 			}
 			String filepath = archiveUtil.getFilepath(saveArchiveType, savepath, filename);
 			files.transferTo(new File(filepath));
-
-			archiveUtil.InsertToArchive(saveArchiveType, String.valueOf(meetingId), filepath, filename, null);
+			User user = null;
+			if(userId != null) {
+				user = userService.getUserById(Integer.parseInt(userId));
+			}
+			archiveUtil.InsertToArchive(saveArchiveType, String.valueOf(meetingId), filepath, filename, user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "파일 업로드 실패"));
