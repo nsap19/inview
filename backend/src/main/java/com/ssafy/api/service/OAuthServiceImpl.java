@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.common.model.response.TokenResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.common.util.SaltGenerator;
 import com.ssafy.db.entity.KakaoProfile;
@@ -79,9 +80,11 @@ public class OAuthServiceImpl implements OAuthService {
 		boolean existMail = false;
 		if (kakaoProfile.getKakaoAccount().getHasEmail() && kakaoProfile.getKakaoAccount().getIsEmailVerified()) {
 			String email = kakaoProfile.getKakaoAccount().getEmail();
-			if (userService.getUserByEmail(email) != null) {
+			User user = userService.getUserByEmail(email);
+			if (user != null) {
 				// 기존 유저인 경우, 로그인 처리
-				return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(email)));
+				return ResponseEntity.status(200).body(TokenResponseBody.of(200, "로그인 성공", user.getUserId(),
+						user.getNickname(), JwtTokenUtil.getToken(email)));
 			} else {
 				// 이메일 정보 저장
 				registerInfo.setEmail(email);
@@ -99,8 +102,10 @@ public class OAuthServiceImpl implements OAuthService {
 		if (!result.getStatusCode().toString().startsWith("200")) {
 			return result;
 		}
+		User user = userService.getUserByNickname(nickname);
 
-		return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(registerInfo.getEmail())));
+		return ResponseEntity.status(200).body(TokenResponseBody.of(200, "로그인 성공", user.getUserId(), user.getNickname(),
+				JwtTokenUtil.getToken(user.getEmail())));
 	}
 
 	public ResponseEntity<? extends BaseResponseBody> createUser(UserRegisterPostReq userRegisterInfo) {
