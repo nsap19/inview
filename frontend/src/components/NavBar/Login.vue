@@ -18,6 +18,7 @@
       <el-form-item prop="password" :error="errorMessage">
         <el-input type="password" v-model="ruleForm.password" autocomplete="off" @input="clearErrorMessage" placeholder="비밀번호"></el-input>
       </el-form-item>
+      <Kakao />
 
       <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
         <el-button type="primary" round @click="login(ruleFormRef)">로그인</el-button>
@@ -37,11 +38,15 @@ import axios from 'axios'
 import { useStore } from 'vuex'
 import { defineComponent, computed, ref, reactive } from 'vue'
 import type { ElForm } from 'element-plus'
+import Kakao from './Kakao.vue'
 
 export default defineComponent({
   name: "Login",
   props: {
     modelValue: Boolean,
+  },
+  components:{
+    Kakao
   },
   emits: ['signup', 'update:modelValue'],
   setup(props, { emit }) {

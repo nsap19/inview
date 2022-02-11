@@ -12,8 +12,19 @@
       <div class="d-flex flex-row justify-content-end">
         <CreateMeeting v-model="openCreateMeetingDialog" />
         <div v-if="Object.keys(user).length">
-          <el-button class="m-1" :icon="Plus" round @click="openCreateMeetingDialog = true">방 만들기</el-button>
-          <el-button class="m-1" round @click="this.$store.dispatch('logout')">로그아웃</el-button>
+          <el-button class="m-1" :icon="Plus" round @click="openCreateMeetingDialog = true">방 만들기</el-button>   
+           <el-dropdown>
+            <el-button type="primary">
+              회원정보
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <router-link to="/myproject"><el-dropdown-item>회의 목록 조회</el-dropdown-item></router-link>
+                <router-link to="/mypage"><el-dropdown-item>회원 정보 수정</el-dropdown-item></router-link>
+              <el-dropdown-item  @click="this.$store.dispatch('logout')">로그아웃</el-dropdown-item>
+             </el-dropdown-menu>
+            </template>
+         </el-dropdown>
         </div>
         <div v-else>
           <el-button class="m-1" round @click="openLoginDialog=true">로그인</el-button>

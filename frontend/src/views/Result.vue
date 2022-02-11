@@ -31,12 +31,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
+
 
 export default defineComponent({
   name: "Result",
-  setup() {
+   props: {
+    tableDatas: {
+      type: Array,
+      required: true
+    }
+  },
+  setup(props) {
     const route = useRoute()
 
     const meetingId = route.params.meetingId
@@ -60,32 +67,7 @@ export default defineComponent({
              + date.getHours() + ":" + date.getMinutes()
     }
 
-    const tableData = [
-      {
-        category: '직군',
-        content: meetingInfo.industry,
-      },
-      {
-        category: '회사',
-        content: meetingInfo.company,
-      },
-      {
-        category: '시작 시간',
-        content: meetingInfo.startTime,
-      },
-      {
-        category: '종료 시간',
-        content: meetingInfo.endTime,
-      },
-      {
-        category: '참가자',
-        content: meetingInfo.participants,
-      },
-      {
-        category: '다운로드 유효 기간',
-        content: getExpirationDate(),
-      },
-    ]
+    const tableData = ref<any>(props.tableDatas);
     return { meetingId, userName, meetingInfo, tableData }
   }
 })
@@ -105,3 +87,4 @@ export default defineComponent({
   }
 }
 </style>
+

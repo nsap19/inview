@@ -40,6 +40,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Video',
     component: () => import(/* webpackChunkName: "create" */ '@/components/Meeting/Video.vue')
   },
+  {
+    path: "/mypage",
+    name: 'mypage',
+    component: () => import(/* webpackChunkName: "create" */ '@/views/Mypage.vue')
+  },
+  {
+    path: "/myproject",
+    name: 'MyProjectList',
+    component: () => import(/* webpackChunkName: "create" */ '@/views/MyProjectList.vue')
+  },
 ]
 
 const router = createRouter({
