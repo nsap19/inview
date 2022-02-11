@@ -33,7 +33,7 @@ export default defineComponent({
 
     const loadIndustries = () => {
       axios({
-        url: "http://localhost:8080/meeting/industry/",
+        url: "/meeting/industry/",
         method: 'GET',
       })
       .then(res => {

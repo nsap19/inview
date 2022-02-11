@@ -20,7 +20,7 @@ var participants = {};
 var userId;
 
 
-const serverURL = "http://localhost:8080/groupcall";
+const serverURL = "http://localhost:8080/api/groupcall";
 let ws = new SockJS(serverURL);
   
 window.onbeforeunload = function() {

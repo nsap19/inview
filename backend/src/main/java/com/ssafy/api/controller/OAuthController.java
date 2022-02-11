@@ -63,7 +63,7 @@ public class OAuthController {
 	}
 
 	@PostMapping("/google")
-	@ApiOperation(value = "구글 회원가입/로그인 callback 함수", notes = "<strong>구글 로그인</strong>을 통해 회원가입 한다.")
+	@ApiOperation(value = "구글 회원가입/로그인 callback 함수", notes = "미구현 \n <strong>구글 로그인</strong>을 통해 회원가입 한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "회원가입/ 로그인 성공"), @ApiResponse(code = 400, message = "로그인 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> googleCallback(@RequestBody VerifyCodePostReq verifyCodeInfo) {
@@ -72,7 +72,7 @@ public class OAuthController {
 	}
 
 	@PostMapping("/kakao/logout")
-	@ApiOperation(value = "로그아웃")
+	@ApiOperation(value = "로그아웃", notes = "미구현 \n")
 	@ApiResponses({ @ApiResponse(code = 200, message = "로그아웃 성공"), @ApiResponse(code = 400, message = "로그아웃 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> kakaoLogout(@RequestBody UserLogoutGetReq logoutInfo) throws Exception {
@@ -81,7 +81,7 @@ public class OAuthController {
 	}
 
 	@GetMapping("/google/logout")
-	@ApiOperation(value = "로그아웃")
+	@ApiOperation(value = "로그아웃", notes = "미구현 \n")
 	@ApiResponses({ @ApiResponse(code = 200, message = "로그아웃 성공"), @ApiResponse(code = 400, message = "로그아웃 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> googlelogout(@RequestBody UserLogoutGetReq logoutInfo) {

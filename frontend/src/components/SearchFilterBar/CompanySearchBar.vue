@@ -54,7 +54,7 @@ export default defineComponent({
     // DB에 저장된전체 회사 목록 조회
     const loadAll = () => {
       axios({
-        url: "http://localhost:8080/meeting/company/",
+        url: "/meeting/company/",
         method: 'GET',
       })
       .then(res => {

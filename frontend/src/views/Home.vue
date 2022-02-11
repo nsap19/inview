@@ -42,7 +42,7 @@ export default defineComponent({
 
 <style scoped>
 .home {
-  margin: 20vw auto;
+  margin: 15vw auto;
 }
 
 .logo {
