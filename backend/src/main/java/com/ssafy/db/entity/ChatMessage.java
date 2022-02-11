@@ -1,5 +1,7 @@
 package com.ssafy.db.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class ChatMessage {
 	private String meetingId;
+	private String sessionId;
 	private String date;
 	private String time;
 	private String message;
@@ -30,6 +33,6 @@ public class ChatMessage {
 	}
 
 	public enum CommandType {
-		READY, START, END, CONNECT, DISCONNECT, PARTICIPANT
+		READY, UNREADY, START, END, CONNECT, DISCONNECT, PARTICIPANT
 	}
 }

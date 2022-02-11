@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.util.ArchiveUtil;
 import com.ssafy.common.util.MeetingParticipant;
+import com.ssafy.common.util.bean.ChattingParticipant;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.ChatMessage;
 import com.ssafy.db.entity.ChatMessage.CommandType;
@@ -110,15 +111,20 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	}
 
 	@Override
-	public void sendCommandMessage(ChatMessage message) {
+	public void sendCommandMessage(ChatMessage message, String sessionId) {
 		System.out.println(message.toString());
 		CommandType command = message.getCommand();
+		String meetingId = message.getMeetingId();
 		switch (command) {
 		case READY:
-			message.setMessage(message.getSender() + "님이 준비하였습니다.");
+			System.out.println(setReadyMessage(meetingId, sessionId, "T"));
+			message.setMessage(setReadyMessage(meetingId, sessionId, "T"));
+			break;
+		case UNREADY:
+			message.setMessage(setReadyMessage(meetingId, sessionId, "F"));
 			break;
 		case START:
-			message.setMessage("회의가 시작되었습니다.");
+			message.setMessage("회의가 시작하였습니다.");
 			break;
 		case END:
 			message.setMessage("회의가 종료되었습니다.");
@@ -130,7 +136,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			message.setMessage(message.getSender() + "님이 퇴장하였습니다.");
 			break;
 		case PARTICIPANT:
-			List<User> participantList = meetingParticipant.getParticipantByMeetingId(message.getMeetingId());
+			List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
 			StringBuilder sb = new StringBuilder();
 			for (User user : participantList) {
 				sb.append(user.getNickname()).append(" ");
@@ -142,5 +148,15 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			break;
 		}
 		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId(), message);
+	}
+
+	private String setReadyMessage(String meetingId, String sessionId, String ready) {
+		meetingParticipant.setReadyParticipantByMeetingId(meetingId, sessionId, ready);
+		List<ChattingParticipant> readyParticipantList = meetingParticipant.getReadyParticipantByMeetingId(meetingId);
+		StringBuilder sb = new StringBuilder();
+		for (ChattingParticipant participant : readyParticipantList) {
+			sb.append(participant.getReady() + participant.getUser().getNickname()).append(" ");
+		}
+		return String.valueOf(sb);
 	}
 }

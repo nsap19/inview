@@ -6,5 +6,5 @@ import com.ssafy.db.entity.ChatMessage;
 
 public interface ChatMessageService {
 	void saveChatMessage(ChatMessage message, String ope);
-	void sendCommandMessage(ChatMessage message);
+	void sendCommandMessage(ChatMessage message, String sessionId);
 }
