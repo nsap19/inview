@@ -1,7 +1,6 @@
 <template>
-  <div id="nav" class="container" v-if="this.$route.path !== '/' && !this.$route.path.startsWith('/meeting')">
+  <div id="nav" :class="['container', this.$route.path === '/' ? 'nav-home' : 'nav']" v-if="!this.$route.path.startsWith('/meeting')">
     <div class="d-flex flex-row justify-content-between align-items-center">
-      <!-- 메인 페이지에서 네비바가 어떻게 보일지 미정이라 :style 삭제 안함 -->
       <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="w-25 p-3">
         <router-link to="/">
           <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100">
@@ -57,7 +56,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#nav {
+.nav {
 	border-radius: 10px;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	margin: 20px auto;
@@ -65,7 +64,20 @@ export default defineComponent({
 }
 
 @media screen and (min-width: 1200px) {
-  #nav {
+  .nav {
+    max-width: 1000px;
+  }
+}
+
+.nav-home {
+	/* border-radius: 10px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+	margin: 20px auto;
+  padding: 10px;
+}
+
+@media screen and (min-width: 1200px) {
+  .nav-home {
     max-width: 1000px;
   }
 }

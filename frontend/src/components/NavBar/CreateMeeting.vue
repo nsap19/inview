@@ -201,6 +201,7 @@ export default defineComponent({
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         }).then(res => {
           console.log(res.data)
+          openDialog.value = false
           store.dispatch('setMeeting', res.data.data.id)
           // joinMeeting(res.data.data.id)
           router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })

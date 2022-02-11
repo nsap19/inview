@@ -119,9 +119,9 @@ import Chat from '@/components/Meeting/Chat.vue';
 import Memo from '@/components/Meeting/Memo.vue';
 import File from '@/components/Meeting/File.vue';
 import MeetingNavBar from '@/components/Meeting/MeetingNavBar.vue'
+import Video from '@/components/Meeting/Video.vue'
 import { ChatDotSquare, CloseBold, MoreFilled, List, VideoCamera } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import Video from '@/components/Meeting/Video.vue'
 
 
 export default defineComponent({
@@ -144,7 +144,7 @@ export default defineComponent({
 		let windowWidth = ref(0)
 
 		onMounted(() => {
-			document.getElementById('joinButton').onclick=function(){register(1, 1); return false;};
+			document.getElementById('joinButton').onclick=function(){register(); return false;};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
@@ -246,12 +246,6 @@ export default defineComponent({
 		}
 		const dialogVisible = ref(false)
 
-		// watch(windowWidth, (oldVal, newVal) => {
-		// 	if (newVal <= 600) {
-		// 		console.log('ohoho')
-		// 	}
-		// })
-
 		watch(openAside, (oldVal) => {
 			let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
 			let height = document.getElementById('container').offsetHeight
@@ -259,7 +253,6 @@ export default defineComponent({
 				width = window.innerWidth
 				height = oldVal ? (window.innerHeight - 150) / 2 : window.innerHeight - 150
 			}
-			// console.log(width)
 			resize(width, height)
 		})
 

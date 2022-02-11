@@ -10,7 +10,7 @@
 
     <!-- 디버그용 서버 업로드 버튼 -->
     <!-- 이후 div와 함께 삭제할 것 -->
-    <button @click="createHtmlFile">sda</button>
+    <!-- <button @click="createHtmlFile">sda</button> -->
   </div>
 </template>
 
@@ -28,31 +28,33 @@ export default defineComponent({
     const textarea = ref('')
 
     const store = useStore()
+    const userId = store.state.user.id
+    const userNickname = store.state.user.nickname
+    let meetingId = store.state.meeting.id
+    watch(() => store.state.meeting, (newValue, oldValue) => {
+      meetingId = newValue.id || oldValue.id
+    })
     const makeHtml = function () {
       let htmlCode = "<!DOCTYPE html><html><head><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css' /><style type='text/css' media='screen, print'>body { font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; }div { padding: 20px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; margin: 10px }h3 { padding: 0 5px; }p { padding: 0 10px; }</style></head><body><div><h1>"
-      htmlCode += `${ store.state.user.nickname }님의 메모</h1></div>`
+      htmlCode += `${ userNickname }님의 메모</h1></div>`
       htmlCode += `<div><p>${ textarea.value }</p></div>`
       htmlCode += "</body></html>"
       return [htmlCode]
     }
 
-    const createHtmlFile = function () {
+    const createHtmlFile = function (urlMeetingId: number) {
       var htmlCode = null;
       var data = new Blob(makeHtml(), {type: 'text/html'}); 
       if (htmlCode !== null) {  
         window.URL.revokeObjectURL(htmlCode);  
       }  
       htmlCode = window.URL.createObjectURL(data);  
-      console.log(htmlCode)
-      console.log(data)
-
-
       let formData = new FormData();
       formData.append('file', data, 'memo.html');
       for (let value of formData.values()) {
         console.log(value);
       }
-      axios.post( `/meeting/${store.state.meeting.id}/upload?archiveType=memo`,
+      axios.post( `/meeting/${urlMeetingId}/upload?archive-type=memo&user-id=${userId}`,
         formData,
         {
           headers: 
@@ -72,18 +74,16 @@ export default defineComponent({
       });
       
       // 디버그용 파일 다운로드
-      var a = document.createElement('a');
-      a.download = 'fileName';
-      a.href = htmlCode;
-      a.click();
+      // var a = document.createElement('a');
+      // a.download = 'fileName';
+      // a.href = htmlCode;
+      // a.click();
     }
 
     watch(()=>props.endSignal, () => {
-      // console.log(props.userId)
-      // console.log(evaluations)
       if (props.endSignal == true) {
-        // createHtmlFile()
-        console.log('평가에서 종료신호 받음')
+        console.log('메모에서 종료신호 받음')
+        createHtmlFile(meetingId)
       }
     })
     return { textarea, createHtmlFile }
