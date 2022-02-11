@@ -72,6 +72,8 @@
 
 		<!-- meeting footer -->
 		<div class="d-flex flex-row justify-content-end p-3 meeting-footer">
+			<button id="mute">mute</button>
+			<button id="camera off">camera off</button>
 			<el-button :icon="VideoCamera" size="large" circle name="commit" id="joinButton"></el-button>
 			<!-- <input type="button" name="commit" value="비디오 참가" id="joinButton" /> -->
 			<input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
