@@ -15,7 +15,7 @@ import com.ssafy.db.entity.User;
 @Component
 public class MeetingParticipant {
 	ChattingUser chattingUser;
-	
+
 	public MeetingParticipant(ChattingUser chattingUser) {
 		this.chattingUser = chattingUser;
 	}
@@ -52,10 +52,15 @@ public class MeetingParticipant {
 		chattingUser.getParticipantBySessionId().put(sessionId, participant);
 	}
 
-	public void deleteParticipantBySessionId(String sessionId) {
+	public ChattingParticipant getParticipantBySessionId(String sessionId) {
 		ChattingParticipant participant = chattingUser.getParticipantBySessionId().get(sessionId);
+		return participant;
+	}
+
+	public ChattingParticipant deleteParticipantBySessionId(String sessionId) {
+		ChattingParticipant participant = getParticipantBySessionId(sessionId);
 		if (participant == null) {
-			return;
+			return null;
 		}
 		String meetingId = participant.getMeetingId();
 		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().getOrDefault(meetingId,
@@ -64,6 +69,7 @@ public class MeetingParticipant {
 		if (hashMap.isEmpty())
 			chattingUser.getParticipantByMeetingId().remove(meetingId);
 		chattingUser.getParticipantBySessionId().remove(sessionId);
+		return participant;
 	}
 
 }
