@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -20,12 +21,12 @@ import com.ssafy.db.entity.ChatMessage.CommandType;
 public class ChatMessageController {
 	@Autowired
 	private ChatMessageService chatMessageService;
-	
+
 	@MessageMapping("/chat/join")
 	public void join(@Payload ChatMessage message, @Header("Authorization") String token) {
 		message.setMessage(message.getSender() + "님이 입장하셨습니다.");
 		chatMessageService.saveChatMessage(message, "subscribe");
-		
+
 	}
 
 	@MessageMapping("/chat/message")
@@ -38,17 +39,21 @@ public class ChatMessageController {
 		message.setMessage(message.getSender() + "님이 퇴장하셨습니다.");
 		chatMessageService.saveChatMessage(message, "unsubscribe");
 	}
-	
+
 	@MessageMapping("/chat/command")
-	public void command(@Payload ChatMessage message, @Header("Authorization") String token) {
+	public void command(@Payload ChatMessage message, @Header("Authorization") String token,
+			StompHeaderAccessor headerAccessor) {
+		String sessionId = headerAccessor.getSessionId();
 		CommandType commandType = message.getCommand();
-		if(commandType == null) {
+		if (commandType == null) {
+			System.out.println("null!!!!!!!!!");
 			return;
- 		}
+		}
 		switch (commandType) {
 		case READY:
+		case UNREADY:
 		case START:
-			chatMessageService.sendCommandMessage(message);
+			chatMessageService.sendCommandMessage(message, sessionId);
 			break;
 		default:
 			break;
