@@ -77,28 +77,14 @@ export default {
   },
   data() {
     return {
-      // meetingId: "",
-      // userName: "",
       message: "",
-      recvList: [
-        // {"meetingId":"1","sender":"익명","time": "23:11","date":"2021년01월23일 일요일","message":"익명님이 입장하셨습니다.","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "23:12","date":"2021년01월23일 일요일","message":"일이삼사오육칠팔구십님이 입장하셨습니다.","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"익명","time": "23:13","date":"2021년01월23일 일요일","message":"2321","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "23:14","date":"2021년01월23일 일요일","message":"456133","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"익명","time": "23:15","date":"2021년01월23일 일요일","message":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "00:01","date":"2021년01월24일 월요일","message":"월요일 시작","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"익명","time": "01:11","date":"2021년01월24일 월요일","message":"111111111sfdddddddddddd","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "02:11","date":"2021년01월24일 월요일","message":"s","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "03:11","date":"2021년01월24일 월요일","message":"대통령·국무총리·국무위원·행정각부의 장·헌법재판소 재판관·법관·중앙선거관리위원회 위원·감사원장·감사위원 기타 법률이 정한 공무원이 그 직무집행에 있어서 헌법이나 법률을 위배한 때에는 국회는 탄핵의 소추를 의결할 수 있다. 헌법재판소에서 법률의 위헌결정, 탄핵의 결정, 정당해산의 결정 또는 헌법소원에 관한 인용결정을 할 때에는 재판관 6인 이상의 찬성이 있어야 한다. 이 헌법시행 당시에 이 헌법에 의하여 새로 설치될 기관의 권한에 속하는 직무를 행하고 있는 기관은 이 헌법에 의하여 새로운 기관이 설치될 때까지 존속하며 그 직무를 행한다. 국가는 농·어민과 중소기업의 자조조직을 육성하여야 하며, 그 자율적 활동과 발전을 보장한다.","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"일이삼사오육칠팔구십","time": "04:11","date":"2021년01월24일 월요일","message":"sssss","type":null, "receiver":""},
-        // {"meetingId":"1","sender":"헐","time": "05:11","date":"2021년01월24일 월요일","message":"sss","type":null, "receiver":""},
-      ],
+      recvList: [],
       subscribeId: "",
     }
   },
   watch: {
     endSignal: function(newVal, oldVal) {
-      console.log(newVal, oldVal)
+      console.log("채팅에서 종료신호 받음")
       this.disconnect()
     },
     recvList: () => {
@@ -154,7 +140,7 @@ export default {
       let socket = new SockJS(serverURL);
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()}
       this.stompClient = Stomp.over(socket, options);
-      let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`, meetingId : this.meetingId};
+      let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`, meetingId : this.meeting.id};
       console.log('headers' + headers)
       console.log(this.meeting.id)
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)

@@ -38,7 +38,6 @@ export default defineComponent({
     }
 
     const closeMeeting = function () {
-      console.log(localStorage.getItem("token"))
       axios.post(`/meeting/${meetingId.value}/close`, 
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {

@@ -1,14 +1,5 @@
 <template>
   <div style="overflow-y: auto;">
-    <!-- 다운로드 -->
-    <div>
-      <div v-for="(file, index) in files" :key="index" @click="downloadFile(file.id)" class="d-flex flex-row py-1 px-2">
-        <el-button class="w-100">
-          <span class="text-truncate">{{ index + 1 }} {{ file.archiveName.slice(33) }}</span>
-        </el-button>
-      </div>
-    </div>
-
     <!-- 업로드 -->
     <div class="p-2">
       <div class="d-flex flex-row justify-content-between align-items-center">
@@ -38,6 +29,16 @@
         </template>
       </el-upload> -->
     </div>
+    
+    <!-- 다운로드 -->
+    <div>
+      <div v-for="(file, index) in files" :key="index" @click="downloadFile(file.id)" class="d-flex flex-row py-1 px-2">
+        <el-button class="w-100">
+          <span class="text-truncate">{{ index + 1 }}. {{ file.archiveName.slice(10) }}</span>
+        </el-button>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -63,7 +64,7 @@ export default defineComponent({
     const getFiles = function () {      
       console.log('get Files')
       axios({
-        url: `/download/meeting/${meetingId.value}/user/${userId.value}`,
+        url: `/download/meeting/${meetingId.value}/users/${userId.value}`,
         method: 'GET',
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       }).then(res => {
@@ -83,7 +84,7 @@ export default defineComponent({
 
     const downloadFile = function (fileId: number) {
       axios({
-        url: `/download/meeting/${meetingId.value}/user/${userId.value}/${fileId}?archiveType=file`, // File URL Goes Here
+        url: `/download/meeting/${meetingId.value}/user/${userId.value}/${fileId}?archive-type=file`, // File URL Goes Here
         method: 'GET',
         responseType: 'blob',
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -124,7 +125,7 @@ export default defineComponent({
       for (let value of formData.values()) {
         console.log(value);
       }
-      axios.post( `/meeting/${meetingId.value}/upload?archiveType=file`,
+      axios.post( `/meeting/${meetingId.value}/upload?archive-type=file`,
         formData,
         {
           headers: 
