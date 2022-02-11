@@ -19,10 +19,37 @@
 var participants = {};
 var userId;
 
+// 음소거, 카메라 on/off 기능
+let myStream;
+let muted = false;
+let cameraOff = false;
+
+function handleMuteClick(){
+	myStream.getAudioTracks().forEach((track)=>(track.enabled = !track.enabled));
+	if(!muted){
+		document.getElementById("mute").innerText = "Unmute";
+		muted = true;
+	}else{
+		document.getElementById("mute").innerText = "Mute";
+		muted = false;
+	}
+}
+function handleCameraClick(){
+	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
+	if(cameraOff){
+		document.getElementById("camera").innerText = "Turn Camera Off";
+		cameraOff = false;
+	} else{
+		document.getElementById("camera").innerText = "Turn Camera On";
+		cameraOff = true;
+	}
+}
+// 음소거, 카메라 on/off 기능 end
+
 
 const serverURL = "http://localhost:8080/groupcall";
 let ws = new SockJS(serverURL);
-  
+
 window.onbeforeunload = function() {
 	ws.close();
 };
@@ -99,8 +126,6 @@ function register() {
 		meetingId : meetingId,
 	}
 
-	console.log(message)
-
 	sendMessage(message);
 }
 
@@ -127,7 +152,7 @@ function callResponse(message) {
 
 function onExistingParticipants(msg) {
 	var constraints = {
-		audio : true,
+		audio : false,
 		video : {
 			mandatory : {
 				maxWidth : 320,
@@ -144,8 +169,11 @@ function onExistingParticipants(msg) {
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
+	//음소거, 카메라 전환	
+	getMedia(userId);
+	
 	var options = {
-	      localVideo: video,
+	      localVideo: myStream,
 	      mediaConstraints: constraints,
 	      onicecandidate: participant.onIceCandidate.bind(participant)
 	    }
@@ -159,6 +187,19 @@ function onExistingParticipants(msg) {
 
 	msg.data.forEach(receiveVideo);
 }
+
+async function getMedia(userId) {
+	let myVideo = document.getElementById("video-" + userId);
+	try {
+	  myStream = await navigator.mediaDevices.getUserMedia({
+		audio: true,
+		video: true,
+	  });
+	  myVideo.srcObject = myStream;
+	} catch (e) {
+	  console.log(e);
+	}
+  }
 
 function leaveRoom() {
 	sendMessage({

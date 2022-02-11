@@ -15,8 +15,8 @@
  *
  */
 
-const PARTICIPANT_MAIN_CLASS = 'participant main';
-const PARTICIPANT_CLASS = 'participant';
+const PARTICIPANT_MAIN_CLASS = "participant main";
+const PARTICIPANT_CLASS = "participant";
 
 /**
  * Creates a video element for a new participant
@@ -27,139 +27,142 @@ const PARTICIPANT_CLASS = 'participant';
  * @return
  */
 function Participant(userId) {
-	this.userId = userId;
-	var container = document.createElement('div');
-	container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
-	container.id = userId;
-	var span = document.createElement('span');
-	var video = document.createElement('video');
-	var rtcPeer;
+  this.userId = userId;
+  var container = document.createElement("div");
+  container.className = isPresentMainParticipant()
+    ? PARTICIPANT_CLASS
+    : PARTICIPANT_MAIN_CLASS;
+  container.id = userId;
+  var span = document.createElement("span");
+  var video = document.createElement("video");
+  var rtcPeer;
 
-	video.setAttribute('style', 'width: 100%; height: 100%;')
-	container.setAttribute('style', 'position: relative; vertical-align: middle; align-self: center; border-radius: 10px; overflow: hidden; display: inline-block; box-shadow: var(--shadow-dark); background: #fff; animation: show 0.4s ease;')
-	const setMargin = 10
-	const ratio = 9/16
-	
-	// console.log(document.getElementById('container').offsetWidth)
-	// console.log(document.getElementById('container').offsetHeight)
-	
-	function getArea(increment) {
-		let i = 0;
-		let w = 0;
-		let h = increment * ratio + (setMargin * 2);
+  video.setAttribute("style", "width: 100%; height: 100%;");
+  container.setAttribute(
+    "style",
+    "position: relative; vertical-align: middle; align-self: center; border-radius: 10px; overflow: hidden; display: inline-block; box-shadow: var(--shadow-dark); background: #fff; animation: show 0.4s ease;"
+  );
+  const setMargin = 10;
+  const ratio = 9 / 16;
 
-		const width = document.getElementById('container').offsetWidth
-		const height = document.getElementById('container').offsetHeight
-		// console.log('getArea', width, height)
+  // console.log(document.getElementById('container').offsetWidth)
+  // console.log(document.getElementById('container').offsetHeight)
 
-		while (i < (document.getElementsByClassName('participant')).length) {
-				if ((w + increment) > width) {
-						w = 0;
-						h = h + (increment * ratio) + (setMargin * 2);
-				}
-				w = w + increment + (setMargin * 2);
-				i++;
-		}
-		if (h > height || increment > width) return false;
-		else return increment;
-	}
+  function getArea(increment) {
+    let i = 0;
+    let w = 0;
+    let h = increment * ratio + setMargin * 2;
 
-	function resize() {
-		let max = 0
-		let i = 1
-		while (i < 5000) {
-				let area = getArea(i);
-				if (area === false) {
-						max = i - 1;
-						break;
-				}
-				i++;
-		}
-		max = max - (setMargin * 2)  // remove margins
-		resizer(max)
-	}
+    const width = document.getElementById("container").offsetWidth;
+    const height = document.getElementById("container").offsetHeight;
+    // console.log('getArea', width, height)
 
-	function resizer(width) {
-		const participant = document.getElementsByClassName('participant')
-		for (var s = 0; s < participant.length; s++) {
-				let element = participant[s];
-				// custom margin
-				element.style.margin = setMargin + "px"
-				// calculate dimensions
-				element.style.width = width + "px"
-				element.style.height = (width * ratio) + "px"
-		}
-	}
+    while (i < document.getElementsByClassName("participant").length) {
+      if (w + increment > width) {
+        w = 0;
+        h = h + increment * ratio + setMargin * 2;
+      }
+      w = w + increment + setMargin * 2;
+      i++;
+    }
+    if (h > height || increment > width) return false;
+    else return increment;
+  }
 
-	// window.addEventListener('resize', function () {
-	// 	console.log(window.innerWidth)
-	// 	resize()
-	// })
+  function resize() {
+    let max = 0;
+    let i = 1;
+    while (i < 5000) {
+      let area = getArea(i);
+      if (area === false) {
+        max = i - 1;
+        break;
+      }
+      i++;
+    }
+    max = max - setMargin * 2; // remove margins
+    resizer(max);
+  }
 
-	container.appendChild(video);
-	// container.appendChild(span);
-	container.onclick = switchContainerClass;
-	document.getElementById('participants').appendChild(container);
+  function resizer(width) {
+    const participant = document.getElementsByClassName("participant");
+    for (var s = 0; s < participant.length; s++) {
+      let element = participant[s];
+      // custom margin
+      element.style.margin = setMargin + "px";
+      // calculate dimensions
+      element.style.width = width + "px";
+      element.style.height = width * ratio + "px";
+    }
+  }
 
-	span.appendChild(document.createTextNode(userId));
+  // window.addEventListener('resize', function () {
+  // 	console.log(window.innerWidth)
+  // 	resize()
+  // })
 
-	video.id = 'video-' + userId;
-	video.autoplay = true;
-	video.controls = false;
-	resize()
+  container.appendChild(video);
+  // container.appendChild(span);
+  container.onclick = switchContainerClass;
+  document.getElementById("participants").appendChild(container);
 
-	this.getElement = function() {
-		return container;
-	}
+  span.appendChild(document.createTextNode(userId));
 
-	this.getVideoElement = function() {
-		return video;
-	}
+  video.id = "video-" + userId;
+  video.autoplay = true;
+  video.controls = false;
+  resize();
 
-	function switchContainerClass() {
-		if (container.className === PARTICIPANT_CLASS) {
-			var elements = Array.prototype.slice.call(document.getElementsByClassName(PARTICIPANT_MAIN_CLASS));
-			elements.forEach(function(item) {
-					item.className = PARTICIPANT_CLASS;
-				});
+  this.getElement = function () {
+    return container;
+  };
 
-				container.className = PARTICIPANT_MAIN_CLASS;
-			} else {
-			container.className = PARTICIPANT_CLASS;
-		}
-	}
+  this.getVideoElement = function () {
+    return video;
+  };
 
-	function isPresentMainParticipant() {
-		return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length != 0);
-	}
+  function switchContainerClass() {
+    if (container.className === PARTICIPANT_CLASS) {
+      var elements = Array.prototype.slice.call(
+        document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)
+      );
+      elements.forEach(function (item) {
+        item.className = PARTICIPANT_CLASS;
+      });
 
-	this.offerToReceiveVideo = function(error, offerSdp, wp){
-		if (error) return console.error ("sdp offer error")
-		console.log('Invoking SDP offer callback function');
-		var msg =  { id : "receiveVideoFrom",
-				sender : userId,
-				sdpOffer : offerSdp
-			};
-		sendMessage(msg);
-	}
+      container.className = PARTICIPANT_MAIN_CLASS;
+    } else {
+      container.className = PARTICIPANT_CLASS;
+    }
+  }
 
+  function isPresentMainParticipant() {
+    return document.getElementsByClassName(PARTICIPANT_MAIN_CLASS).length != 0;
+  }
 
-	this.onIceCandidate = function (candidate, wp) {
-		  console.log("Local candidate" + JSON.stringify(candidate));
+  this.offerToReceiveVideo = function (error, offerSdp, wp) {
+    if (error) return console.error("sdp offer error");
+    console.log("Invoking SDP offer callback function");
+    var msg = { id: "receiveVideoFrom", sender: userId, sdpOffer: offerSdp };
+    sendMessage(msg);
+  };
 
-		  var message = {
-		    id: 'onIceCandidate',
-		    candidate: candidate,
-		    userId: userId
-		  };
-		  sendMessage(message);
-	}
+  this.onIceCandidate = function (candidate, wp) {
+    console.log("Local candidate" + JSON.stringify(candidate));
 
-	Object.defineProperty(this, 'rtcPeer', { writable: true});
+    var message = {
+      id: "onIceCandidate",
+      candidate: candidate,
+      userId: userId,
+    };
+    sendMessage(message);
+  };
 
-	this.dispose = function() {
-		console.log('Disposing participant ' + this.userId);
-		this.rtcPeer.dispose();
-		container.parentNode.removeChild(container);
-	};
+  Object.defineProperty(this, "rtcPeer", { writable: true });
+
+  this.dispose = function () {
+    console.log("Disposing participant " + this.userId);
+    this.rtcPeer.dispose();
+    container.parentNode.removeChild(container);
+  };
 }

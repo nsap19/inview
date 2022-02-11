@@ -73,6 +73,8 @@
 
 		<!-- meeting footer -->
 		<div class="d-flex flex-row justify-content-end p-3 meeting-footer">
+			<button id ="mute">Mute</button>
+			<button id ="camera">Turn Camera On</button>
 			<input type="button" name="commit" value="비디오 참가" id="joinButton" />
 			<input type="text" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
 			<input type="text" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" placeholder="meetingId" required />
@@ -137,6 +139,20 @@ export default defineComponent({
 		Video
 	},
 	setup() {
+		//카메라, 마이크 접근 권한을 받기 위한 처리
+		async function getMedia(){
+			try{
+				await navigator.mediaDevices.getUserMedia({
+					audio: true,
+					video: true,
+				})
+			} catch(e){
+				console.log(e);
+			}
+		}
+		getMedia();
+
+		
 		const wholeVideosWrapper = ref(null)
 
 		let width = ref(0)
@@ -145,6 +161,8 @@ export default defineComponent({
 
 		onMounted(() => {
 			document.getElementById('joinButton').onclick=function(){register(1, 1); return false;};
+			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
+			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
