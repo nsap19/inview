@@ -11,6 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 import com.ssafy.api.service.ChatMessageService;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.ChatMessage;
+import com.ssafy.db.entity.ChatMessage.CommandType;
 
 /**
  * 채팅 관련 stomp API 요청 처리를 위한 컨트롤러 정의.
@@ -18,38 +19,39 @@ import com.ssafy.db.entity.ChatMessage;
 @Controller
 public class ChatMessageController {
 	@Autowired
-	ChatMessageService chatMessageService;
-
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private ChatMessageService chatMessageService;
 	
-	private final SimpMessagingTemplate template;
-
-	@Autowired
-	public ChatMessageController(SimpMessagingTemplate template) {
-		this.template = template;
-	}
-
 	@MessageMapping("/chat/join")
 	public void join(@Payload ChatMessage message, @Header("Authorization") String token) {
-		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		message.setMessage(message.getSender() + "님이 입장하셨습니다.");
 		chatMessageService.saveChatMessage(message, "subscribe");
-		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
+		
 	}
 
 	@MessageMapping("/chat/message")
 	public void message(@Payload ChatMessage message, @Header("Authorization") String token) {
-		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		chatMessageService.saveChatMessage(message, "send");
-		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
 	}
 
 	@MessageMapping("/chat/leave")
 	public void leave(@Payload ChatMessage message, @Header("Authorization") String token) {
-		String receiver = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		message.setMessage(message.getSender() + "님이 퇴장하셨습니다.");
 		chatMessageService.saveChatMessage(message, "unsubscribe");
-		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + receiver, message);
+	}
+	
+	@MessageMapping("/chat/command")
+	public void command(@Payload ChatMessage message, @Header("Authorization") String token) {
+		CommandType commandType = message.getCommand();
+		if(commandType == null) {
+			return;
+ 		}
+		switch (commandType) {
+		case READY:
+		case START:
+			chatMessageService.sendCommandMessage(message);
+			break;
+		default:
+			break;
+		}
 	}
 }

@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.service.meeting.MeetingInsideService;
@@ -12,6 +13,7 @@ import com.ssafy.common.util.ArchiveUtil;
 import com.ssafy.common.util.MeetingParticipant;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.ChatMessage;
+import com.ssafy.db.entity.ChatMessage.CommandType;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepositorySupport;
 
@@ -33,8 +35,16 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	@Autowired
 	private MeetingParticipant meetingParticipant;
 
+	@Autowired
+	private SimpMessagingTemplate template;
+
+//	public ChatMessageServiceImple(SimpMessagingTemplate template) {
+//		this.template = template;
+//	}
+
 	@Override
 	public void saveChatMessage(ChatMessage message, String ope) {
+		String path = message.getReceiver() == "" ? message.getReceiver() : "/" + message.getReceiver();
 		String meetingId = message.getMeetingId();
 		String sender = message.getSender();
 		String receiver = message.getReceiver() == "" ? "모두" : message.getReceiver();
@@ -57,6 +67,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 				saveFile(meetingId, user, receiver, date + "\t" + time + "\t" + msg + "\n");
 			}
 		}
+		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId() + path, message);
 	}
 
 	// 파일를 저장하는 함수
@@ -96,5 +107,40 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void sendCommandMessage(ChatMessage message) {
+		System.out.println(message.toString());
+		CommandType command = message.getCommand();
+		switch (command) {
+		case READY:
+			message.setMessage(message.getSender() + "님이 준비하였습니다.");
+			break;
+		case START:
+			message.setMessage("회의가 시작되었습니다.");
+			break;
+		case END:
+			message.setMessage("회의가 종료되었습니다.");
+			break;
+		case CONNECT:
+			message.setMessage(message.getSender() + "님이 입장하였습니다.");
+			break;
+		case DISCONNECT:
+			message.setMessage(message.getSender() + "님이 퇴장하였습니다.");
+			break;
+		case PARTICIPANT:
+			List<User> participantList = meetingParticipant.getParticipantByMeetingId(message.getMeetingId());
+			StringBuilder sb = new StringBuilder();
+			for (User user : participantList) {
+				sb.append(user.getNickname()).append(" ");
+			}
+			message.setMessage(String.valueOf(sb));
+			break;
+		default:
+			message.setMessage("명령어 오류");
+			break;
+		}
+		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId(), message);
 	}
 }
