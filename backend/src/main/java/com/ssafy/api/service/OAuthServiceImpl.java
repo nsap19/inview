@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -18,6 +20,7 @@ import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.model.response.TokenResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
+import com.ssafy.common.util.MD5Generator;
 import com.ssafy.common.util.SaltGenerator;
 import com.ssafy.db.entity.KakaoProfile;
 import com.ssafy.db.entity.OAuthToken;
@@ -89,7 +92,21 @@ public class OAuthServiceImpl implements OAuthService {
 				registerInfo.setEmail(email);
 			}
 		} else {
-			registerInfo.setEmail("kakao_" + UUID.randomUUID().toString());
+			String tempEmail;
+			try {
+				tempEmail = "kakao_" + new MD5Generator(kakaoProfile.getProperties().getNickname());
+				User user = userService.getUserByEmail(tempEmail);
+				if (user != null) {
+					// 기존 유저인 경우, 로그인 처리
+					return ResponseEntity.status(200).body(TokenResponseBody.of(200, "로그인 성공", user.getUserId(),
+							user.getNickname(), JwtTokenUtil.getToken(tempEmail)));
+				} else {
+					// 이메일 정보 저장
+					registerInfo.setEmail(tempEmail);
+				}
+			} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
 		}
 
 		// 임시 유저 가입 & 로그인 처리
