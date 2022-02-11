@@ -1,0 +1,79 @@
+version: "3.8"
+services:
+  vue:
+    image: node:16.13.0
+    build: 
+      context: ./frontend
+    command: sh -c "npm install && npm start"
+    ports:
+      - 3000:3000
+    container_name: frontend_ssafy_app
+    depends_on:
+      - spring-boot
+    networks:
+      - frontend
+
+  db:
+    image: mysql:5.7
+    container_name: backend_db
+    restart: always
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_DATABASE: inview
+      MYSQL_ROOT_PASSWORD: ssafy
+      MYSQL_ROOT_HOST: '%' #외부  접근 가능
+      TZ: Asia/Seoul
+    privileged: true
+    volumes:
+      - ./db/initdb.d:/docker-entrypoint-initdb.d #: 앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
+      - ./db/conf.d:/etc/mysql/conf.d
+    networks:
+      - backend
+
+  kurento:
+    container_name: backend_kurento
+    image: kurento/kurento-media-server:latest
+    restart: always
+    ports:
+#        - "8888:8888"
+       - "8888:8888/tcp"
+       - "5000-5050:5000-5050/udp"
+    environment: 
+        TZ: "Asia/Seoul"
+        KMS_STUN_IP: "172-26-1-220"
+        KMS_STUN_PORT: "3478"
+        KMS_TURN_URL: "myuser:mypassword@172-26-1-220:3478?transport=udp"
+    networks: 
+      - backend
+    working_dir: /tmp # RUN, CMD, ADD, COPY등이 이루어질 기본 디렉토리를 설정합니다.
+    volumes: # 컨테이너 외부에 파일시스템을 마운트 할 때 사용합니다. 반드시 지정하지 않아도 마운트 할 수 있지만, 기본적으로 지정하는 것이 좋습니다.
+      - ./:/tmp
+
+  spring-boot: 
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend_ssafy_app
+    restart: always
+    ports: 
+      - "8080:8080"        
+      - "8443:8443"
+    environment: 
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/inview?&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ssafy
+      DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
+      TZ: "Asia/Seoul"
+      JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
+      server.address: 0.0.0.0
+    depends_on:
+      - db
+      - kurento
+    networks:
+      - backend
+      - frontend
+networks:
+  backend: 
+  frontend:
+        
