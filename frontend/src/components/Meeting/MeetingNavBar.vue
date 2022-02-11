@@ -3,9 +3,7 @@
     <div>
       <span>{{ this.$store.state.meeting.title }}</span>
     </div>
-    <div>
-      <el-button type="warning">준비</el-button>
-      <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickDeleteMeeting">삭제</el-button>
+    <div v-if="startSignal">
       <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickCloseMeeting">종료</el-button>
       <el-button type="danger" @click="clickLeaveMeeting">나가기</el-button>
     </div>
@@ -21,21 +19,14 @@ import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'MeetingNavBar',
+  props: {
+    startSignal: Boolean,
+  },
   setup(props, { emit }) {
+    const startSignal = computed(() => props.startSignal)
     const store = useStore()
     const router = useRouter()
     const meetingId = computed(() => store.state.meeting.id)
-
-    const deleteMeeting = function () {
-      axios.delete(`/meeting/${meetingId.value}`, 
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
-      ).then(res => {
-        console.log(res)
-        router.push({ name: 'Home'})
-      }).catch(err => {
-        console.log(err.response)
-      })
-    }
 
     const closeMeeting = function () {
       axios.post(`/meeting/${meetingId.value}/close`, 
@@ -48,31 +39,6 @@ export default defineComponent({
       })
     }
 
-    const clickDeleteMeeting = function () {
-      ElMessageBox.confirm(
-        '방을 삭제하시겠습니까? 방의 정보가 삭제됩니다.',
-        '방 삭제',
-        {
-          confirmButtonText: '삭제',
-          cancelButtonText: '취소',
-          type: 'warning',
-        }
-      )
-        .then(() => {
-          ElMessage({
-            type: 'success',
-            message: '삭제되었습니다.',
-          })
-          deleteMeeting()
-          store.dispatch('deleteMeeting')
-        })
-        .catch(() => {
-          ElMessage({
-            type: 'info',
-            message: '취소되었습니다.',
-          })
-        })
-    }
     const clickCloseMeeting = function () {
       ElMessageBox.confirm(
         '종료하시겠습니까?',
@@ -126,7 +92,7 @@ export default defineComponent({
           })
         })
     }
-    return { clickDeleteMeeting, clickCloseMeeting, clickLeaveMeeting }
+    return { clickCloseMeeting, clickLeaveMeeting, startSignal }
   }
 })
 </script>

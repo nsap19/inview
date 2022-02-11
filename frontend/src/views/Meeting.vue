@@ -24,26 +24,13 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<MeetingNavBar @leaveMeeting="endSignal=true" />
+		<MeetingNavBar :startSignal="startSignal"  @leaveMeeting="endSignal=true" />
 
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
-			<!-- <div class="meeting-content-main" ref="wholeVideosWrapper" >
-				<div 
-					class="video-wrapper"
-					v-for="participant in participants" 
-					:key="participant"
-					:style="{margin: setMargin + 'px', width: maxWidth + 'px', height: maxWidth * ratio + 'px'}"
-					> 
-					<div class="video">영상</div> 
-					<div class="video-info-wrapper">
-						<div class="video-info">
-							{{ participant }}
-						</div>
-					</div>
-				</div>
-			</div> -->
-			<Video/>
+			<!-- 미팅 대기실/비디오 -->
+			<Video v-if="startSignal" />
+			<Waiting v-else />
 
 			<!-- 우측 aside -->
 			<div 
@@ -71,42 +58,7 @@
 		</div>
 
 		<!-- meeting footer -->
-		<div class="d-flex flex-row justify-content-end p-3 meeting-footer">
-			<el-button :icon="VideoCamera" size="large" circle name="commit" id="joinButton"></el-button>
-			<!-- <input type="button" name="commit" value="비디오 참가" id="joinButton" /> -->
-			<input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
-			<input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" placeholder="meetingId" required />
-			<el-dropdown size='large' class="mx-3">
-				<el-button type="primary" size="large" circle :icon="List"></el-button>
-				<template #dropdown>
-					<el-dropdown-menu>
-						<el-dropdown-item 
-							@click="[
-								openAside=!(openAside && asideCategory==='evaluation' + participant.toString()), 
-								asideCategory=(openAside) ? 'evaluation' + participant.toString():''
-							]"
-							v-for="participant in participants"
-							:key="participant"
-						>{{ participant }}님의 평가지</el-dropdown-item>
-					</el-dropdown-menu>
-				</template>
-			</el-dropdown>
-
-			<el-button :icon="ChatDotSquare" size="large" class="me-3" circle @click="[openAside=!(openAside && asideCategory==='chat'), asideCategory=(openAside) ? 'chat':'']"></el-button>
-			
-			<el-dropdown trigger="click" size='large'>
-				<el-button type="primary" size="large" circle :icon="MoreFilled"></el-button>
-				<template #dropdown>
-					<el-dropdown-menu>
-						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='memo'), asideCategory=(openAside) ? 'memo':'']">메모</el-dropdown-item>
-						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='timer'), asideCategory=(openAside) ? 'timer':'']">타이머</el-dropdown-item>
-						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='file'), asideCategory=(openAside) ? 'file':'']">파일전송</el-dropdown-item>
-						<el-dropdown-item @click="[openAside=!(openAside && asideCategory==='participant'), asideCategory=(openAside) ? 'participant':'']">참가자</el-dropdown-item>
-					</el-dropdown-menu>
-				</template>
-			</el-dropdown>
-		</div>
-
+		<MeetingFooter v-model:openAside="openAside" v-model:asideCategory="asideCategory" />
 	</div>
 </template>
 
@@ -120,7 +72,9 @@ import Memo from '@/components/Meeting/Memo.vue';
 import File from '@/components/Meeting/File.vue';
 import MeetingNavBar from '@/components/Meeting/MeetingNavBar.vue'
 import Video from '@/components/Meeting/Video.vue'
-import { ChatDotSquare, CloseBold, MoreFilled, List, VideoCamera } from '@element-plus/icons-vue'
+import Waiting from '@/components/Meeting/Waiting.vue'
+import MeetingFooter from '@/components/Meeting/MeetingFooter.vue'
+import { CloseBold, } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 
 
@@ -134,7 +88,9 @@ export default defineComponent({
 		Chat,
 		Memo,
 		File,
-		Video
+		Video,
+		Waiting,
+		MeetingFooter
 	},
 	setup() {
 		const wholeVideosWrapper = ref(null)
@@ -235,8 +191,8 @@ export default defineComponent({
 			}
 		}
 
-		const openAside = ref(false)
-		const asideCategory = ref('')
+		const openAside = ref(true)
+		const asideCategory = ref('chat')
 		const categoryKorName = {
 			'chat': '채팅',
 			'memo': '메모',
@@ -280,12 +236,13 @@ export default defineComponent({
 		}
 
 		const endSignal = ref(false)  
+		const startSignal = ref(false)
 
 		const participants = [142, 123, 2354, 12354326423, 4234, 1]
 
 		return { 
-			ChatDotSquare, CloseBold, MoreFilled, List, VideoCamera,
-			openAside, asideCategory, dialogVisible, endSignal, participants, categoryKorName,
+			CloseBold,
+			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
 			handleClose,
 		}

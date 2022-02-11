@@ -86,6 +86,17 @@ export default defineComponent({
     }
 
     // eslint-disable-next-line
+    const validateNickname = (rule: any, value: any, callback: any) => {
+      if (ruleForm.nickname === '') {
+        callback(new Error('닉네임을 입력해주세요'))
+      } else if (ruleForm.nickname.indexOf(' ') > -1) {
+        callback(new Error('닉네임에 공백이 포함될 수 없습니다'))
+      } else {
+        callback()
+      }
+    }
+
+    // eslint-disable-next-line
     const validateEmail = (rule: any, value: any, callback: any) => {
       const emailPattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
       if (ruleForm.email === '') {
@@ -121,7 +132,7 @@ export default defineComponent({
     }
 
     const rules = {
-      nickname: [{ required: true, message: '닉네임을 입력해주세요', trigger: 'blur'}],
+      nickname: [{ validator: validateNickname, trigger: 'blur' }],
       email: [{ validator: validateEmail, trigger: 'blur' }],
       password: [{ validator: validatePassword, trigger: 'blur' }],
       passwordCheck: [{ validator: validatePasswordCheck, trigger: 'blur' }],

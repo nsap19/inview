@@ -83,7 +83,7 @@ export default {
     }
   },
   watch: {
-    endSignal: function(newVal, oldVal) {
+    endSignal: function() {
       console.log("채팅에서 종료신호 받음")
       this.disconnect()
     },
@@ -136,13 +136,13 @@ export default {
       }
     },    
     connect() {
-      const serverURL = "http://localhost:8080/stomp-chat"
+      const serverURL = `${process.env.VUE_APP_API_URL}/stomp-chat`
       let socket = new SockJS(serverURL);
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()}
       this.stompClient = Stomp.over(socket, options);
       let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`, meetingId : this.meeting.id};
-      console.log('headers' + headers)
-      console.log(this.meeting.id)
+      // console.log('headers' + headers)
+      // console.log(this.meeting.id)
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       this.stompClient.connect(
         headers,
