@@ -15,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.ssafy.api.request.UserRegisterPostReq;
-import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.model.response.TokenResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
@@ -28,7 +27,7 @@ import com.ssafy.db.repository.UserRepository;
 @Service
 public class OAuthServiceImpl implements OAuthService {
 	private static final String KAKAO_CLIENT_ID = "64d19023c74cf30131d34d087002a4dd";
-	private static final String KAKAO_REDIRECT_URI = "http://localhost:8080/oauth/kakao";
+	private static final String KAKAO_REDIRECT_URI = "http://localhost:8080/api/oauth/kakao";
 
 	@Autowired
 	private UserService userService;
