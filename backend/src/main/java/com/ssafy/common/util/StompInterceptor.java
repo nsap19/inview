@@ -5,25 +5,23 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.util.MultiValueMap;
 
-import com.ssafy.api.controller.ChatMessageController;
 import com.ssafy.api.service.ChatMessageService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.api.service.meeting.MeetingService;
 import com.ssafy.common.util.bean.ChattingParticipant;
 import com.ssafy.db.entity.ChatMessage;
-import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.ChatMessage.CommandType;
+import com.ssafy.db.entity.User;
 
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class StompInterceptor implements ChannelInterceptor {
@@ -36,6 +34,9 @@ public class StompInterceptor implements ChannelInterceptor {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private MeetingService meetingService;
+	
 	@Autowired
 	private ChatMessageService chatMessageService;
 
@@ -61,10 +62,6 @@ public class StompInterceptor implements ChannelInterceptor {
 			String email = Objects.requireNonNull(jwtTokenUtil.getUserEmailFromJwt(token));
 			String meetingId = Objects.requireNonNull(hashMap.get("meetingId"));
 
-			System.out.println("meetingId : " + meetingId);
-			System.out.println("StompInterceptor / meetingParticipant : " + meetingParticipant);
-			System.out.println("StompInterceptor / jwtTokenUtil : " + jwtTokenUtil);
-			System.out.println("StompInterceptor / userService : " + userService);
 			User user = userService.getUserByEmail(email);
 			if (!meetingParticipant.checkParticipant(meetingId, email)) {
 				System.out.println("중복입장 에러 발생!!!");
@@ -85,8 +82,7 @@ public class StompInterceptor implements ChannelInterceptor {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 		String sessionId = headerAccessor.getSessionId();
 		ChattingParticipant participant;
-		System.out.println(headerAccessor.getCommand());
-		System.out.println("seesiongId : " + headerAccessor.getSessionId());
+		System.out.println(headerAccessor.getCommand()+" seesiongId : " + headerAccessor.getSessionId());
 		System.out.println(headerAccessor.getDetailedLogMessage(message.getPayload()));
 
 		switch (headerAccessor.getCommand()) {
@@ -105,22 +101,19 @@ public class StompInterceptor implements ChannelInterceptor {
 			if (participant == null)
 				break;
 
+			User user = meetingService.getMeetingById(Integer.parseInt(participant.getMeetingId())).getUser();
 			// 유저가 Websocket으로 subscribe() 를 한 뒤 호출됨
-//			chatMessageService.sendCommandMessage(
-//					ChatMessage.builder().command(CommandType.PARTICIPANT).meetingId(participant.getMeetingId())
-//							.sender(participant.getUser().getNickname().toString()).message("").build());
+			CommandType commandType = participant.getUser().getUserId() == user.getUserId() ?  CommandType.READY : CommandType.UNREADY;
 			chatMessageService.sendCommandMessage(
-					ChatMessage.builder().command(CommandType.UNREADY).meetingId(participant.getMeetingId())
+					ChatMessage.builder().command(commandType).meetingId(participant.getMeetingId())
 							.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
 			break;
 		case UNSUBSCRIBE: // 유저가 Websocket으로 UNSUBSCRIBE() 를 한 뒤 호출됨
 		case DISCONNECT:
 			// 유저가 Websocket으로 disconnect() 를 한 뒤 호출됨 or 세션이 끊어졌을 때 발생함(페이지 이동~ 브라우저 닫기 등)
-			System.out.println("DisConnect!!!!!!!!");
 			participant = meetingParticipant.deleteParticipantBySessionId(sessionId);
 			if (participant == null)
 				break;
-
 			chatMessageService.sendCommandMessage(
 					ChatMessage.builder().command(CommandType.DISCONNECT).meetingId(participant.getMeetingId())
 							.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);

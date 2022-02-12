@@ -46,7 +46,6 @@ public class ChatMessageController {
 		String sessionId = headerAccessor.getSessionId();
 		CommandType commandType = message.getCommand();
 		if (commandType == null) {
-			System.out.println("null!!!!!!!!!");
 			return;
 		}
 		switch (commandType) {

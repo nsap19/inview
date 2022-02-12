@@ -117,7 +117,6 @@ public class ChatMessageServiceImple implements ChatMessageService {
 		String meetingId = message.getMeetingId();
 		switch (command) {
 		case READY:
-			System.out.println(setReadyMessage(meetingId, sessionId, "T"));
 			message.setMessage(setReadyMessage(meetingId, sessionId, "T"));
 			break;
 		case UNREADY:
@@ -136,12 +135,13 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			message.setMessage(message.getSender() + "님이 퇴장하였습니다.");
 			break;
 		case PARTICIPANT:
-			List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
-			StringBuilder sb = new StringBuilder();
-			for (User user : participantList) {
-				sb.append(user.getNickname()).append(" ");
-			}
-			message.setMessage(String.valueOf(sb));
+//			List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
+//			StringBuilder sb = new StringBuilder();
+//			for (User user : participantList) {
+//				sb.append(user.getNickname()).append(" ");
+//			}
+//			message.setMessage(String.valueOf(sb));
+			message.setMessage(setReadyMessage(meetingId, sessionId, ""));
 			break;
 		default:
 			message.setMessage("명령어 오류");
@@ -151,7 +151,8 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	}
 
 	private String setReadyMessage(String meetingId, String sessionId, String ready) {
-		meetingParticipant.setReadyParticipantByMeetingId(meetingId, sessionId, ready);
+		if(!ready.equals(""))
+			meetingParticipant.setReadyParticipantByMeetingId(meetingId, sessionId, ready);
 		List<ChattingParticipant> readyParticipantList = meetingParticipant.getReadyParticipantByMeetingId(meetingId);
 		StringBuilder sb = new StringBuilder();
 		for (ChattingParticipant participant : readyParticipantList) {
