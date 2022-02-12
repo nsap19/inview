@@ -15,20 +15,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { Mute } from '@element-plus/icons-vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Participant',
   setup() {
-    const participants = [
-      { pk: 1, nickname: '바나나알러지원숭이'},
-      { pk: 2, nickname: '파리바게뜨구름크림빵'},
-      { pk: 3, nickname: '히어로오브더스톰'},
-      { pk: 4, nickname: '남아일언중천금'},
-      { pk: 5, nickname: '크리스마스'},
-      { pk: 6, nickname: '어'},
-    ]
+    const store = useStore()
+    const participants = computed(() => store.state.participants)
 
     return { participants, Mute }
   }

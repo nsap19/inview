@@ -70,7 +70,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Chat',
   props: [ 
-    'endSignal'
+    'endSignal', 'readySignal', 'startSignal'
   ],
   computed: {
     ...mapState(['meeting', 'user'])
@@ -86,6 +86,14 @@ export default {
     endSignal: function() {
       console.log("채팅에서 종료신호 받음")
       this.disconnect()
+    },
+    readySignal: function(newValue, oldValue) {
+      console.log("ㄹㄷㄹㄷ", newValue, oldValue)
+      this.ready(newValue)
+    },
+    startSignal: function(newValue, oldValue) {
+      console.log("start!!!!!! in chat.vue", newValue, oldValue)
+      this.start()
     },
     recvList: () => {
       this.scrollToEnd()
@@ -171,10 +179,30 @@ export default {
           // subscribe(path, callback)로 메시지를 받을 수 있습니다. 
           // callback 첫번째 파라미터의 body로 메시지의 내용이 들어옵니다.
           this.subscribeId = this.stompClient.subscribe('/subscribe/chat/room/' + this.meeting.id, res => {
-            console.log('구독으로 받은 메시지 입니다.', res.body);
-
-            // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-            this.recvList.push(JSON.parse(res.body))
+            console.log('구독으로 받은 메시지 입니다.', res.body)
+            console.log(res.body.split(',').slice(-1)[0].slice(11, -2))
+            const command = res.body.split(',')[7].slice(11, -2)
+            if (command === "UNREADY" || command === "READY") {
+              const commandMessage = res.body.split(',')[4].slice(11, -2).split(' ')
+              let participants = []
+              commandMessage.forEach(element => {
+                participants.push({
+                  nickname: element.slice(1),
+                  ready: element.slice(0, 1) === "T" ? true : false
+                })
+              });
+              console.log(participants)
+              this.$store.dispatch('setParticipants', participants)
+            } else if (command === "PARTICIPANT") {
+              console.log('참가자처리처리')
+            } else if (command === "START") {
+              console.log('start!!!')
+              this.$emit('start')
+            } else if (command === "ul" || command === "DISCONNECT") {
+              // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
+              this.recvList.push(JSON.parse(res.body))
+            }
+            
           });
         },
         error => {
@@ -210,7 +238,47 @@ export default {
         this.stompClient.connected = false;
         console.log("구독 해지 완료");
       }
-    }
+    },
+    start(){
+      let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`};
+      if(this.subscribeId != ""){
+        const current_datetime = new Date()
+        const message = {
+          meetingId: this.meeting.id,
+          sender: this.user.nickname,
+          receiver: "",
+          date: current_datetime.getFullYear() + "년" 
+                + ("0" + (1 + current_datetime.getMonth())).slice(-2) + "월" 
+                + ("0" + current_datetime.getDate()).slice(-2) + "일" 
+                + " " + ['일','월','화','수','목','금','토','일'][current_datetime.getDay()]+"요일",
+          time: ("0" + current_datetime.getHours()).slice(-2) + ":" + ("0" + current_datetime.getMinutes()).slice(-2),
+          command: "START"
+        };
+        console.log("데이터", message);
+        this.stompClient.send("/publish/chat/command", JSON.stringify(message),headers);
+        console.log("미팅 시작!!");
+      }
+    },
+    ready(flag){
+      let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`};
+      if(this.subscribeId != ""){
+        const current_datetime = new Date()
+        const message = {
+          meetingId: this.meeting.id,
+          sender: this.user.nickname,
+          receiver: "",
+          date: current_datetime.getFullYear() + "년" 
+                + ("0" + (1 + current_datetime.getMonth())).slice(-2) + "월" 
+                + ("0" + current_datetime.getDate()).slice(-2) + "일" 
+                + " " + ['일','월','화','수','목','금','토','일'][current_datetime.getDay()]+"요일",
+          time: ("0" + current_datetime.getHours()).slice(-2) + ":" + ("0" + current_datetime.getMinutes()).slice(-2),
+          command: flag ? "READY" : "UNREADY"
+        };
+        console.log("데이터", message);
+        this.stompClient.send("/publish/chat/command", JSON.stringify(message),headers);
+        console.log("준비 완료");
+      }
+    },
   }
 }
 </script>

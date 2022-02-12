@@ -5,29 +5,15 @@ import axios from 'axios'
 export default createStore({
   plugins: [createPersistedState({
     // user라는 값만 새로고침해도 유지 할 수 있도록 
-    paths:['user', 'meeting']
+    paths:['user', 'meeting', 'participants']
   })],
   state: {
-    // modal: {
-    //   login: false,
-    //   register: false,
-    // },
     user: {},
-    // options:[],
-    // location:{},
-    // fileList: [],
     searchResult: [],
-    meeting: {}
+    meeting: {},
+    participants: []
   },
   mutations: {
-    // SET_LOGIN_MODAL(state, data) {
-    //   state.modal.register = false;
-    //   state.modal.login = data;
-    // },
-    // SET_REGISTER_MODAL(state, data) {
-    //   state.modal.login = false;
-    //   state.modal.register = data;
-    // },
     SET_USER(state, data) {
       state.user = data;
     },
@@ -35,15 +21,6 @@ export default createStore({
       state.user = {};
       localStorage.removeItem("token");
     },
-    // SET_OPTION(state, data){
-    //   state.options = data;
-    // },
-    // SET_FILE_LIST(state, data) {
-    //   state.fileList = data;
-    // },
-    // SET_LOCATION(state, data){
-    //   state.location = data;
-    // },
     SAVE_SEARCH_RESULT(state, data) {
       state.searchResult = data
     },
@@ -55,6 +32,10 @@ export default createStore({
     },
     DELETE_MEETING(state) {
       state.meeting = {}
+      state.participants = []
+    },
+    SET_PARTICIPANTS(state, data) {
+      state.participants = data
     }
   },
   actions: {
@@ -64,18 +45,18 @@ export default createStore({
     logout({ commit }) {
       commit('SET_LOGOUT')
     },
-    search( { commit }, payload ) {
+    search( { commit }, query ) {
       axios({
         url: "/meeting/",
         method: 'GET',
         params: {
-          title: payload.title,
-          industry: payload.industry,
-          company: payload.company,
-          page: payload.page ? payload.page : 1
+          title: query.title,
+          industry: query.industry,
+          company: query.company,
+          page: query.page
         }
       }).then(res => {
-          if (payload.page) {
+          if (1 < query.page) {
             commit('ADD_SEARCH_RESULT', res.data.data.content)
           } else {
             commit('SAVE_SEARCH_RESULT', res.data.data.content)
@@ -100,6 +81,9 @@ export default createStore({
     },
     deleteMeeting ({ commit }) {
       commit('DELETE_MEETING')
+    },
+    setParticipants({ commit }, participants) {
+      commit('SET_PARTICIPANTS', participants)
     }
   },
   modules: {},

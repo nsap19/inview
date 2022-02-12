@@ -2,21 +2,35 @@
   <div class="waiting">
     <div class="d-flex flex-column justify-content-between align-items-center h-100 w-100">
       <div class="w-100">
+        <!-- {{participants}} -->
         <div class="waiting-participant" v-for="(participant, index) in participants" :key="index">
-          <span class="">{{ participant }}</span>
-          <el-button round class="" type="text">준비</el-button>
+          <span class="fw-bold">{{ participant.nickname }}</span>
+          <div class="w-25 text-end">
+            <img v-if="participant.ready" alt="ready" src="@/assets/ready.png" class="w-100 ready">
+            <img v-else alt="unready" src="@/assets/unready.png" class="w-100 ready">
+          </div>
+          <!-- <el-button round class="" type="text">
+          </el-button> -->
         </div>  
       </div>
       <div class="w-100 d-flex flex-row">
         <div class="col waiting-participant">
           <el-button round style="margin: 0 auto;" type="text"
-            v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="clickDeleteMeeting">방 삭제</el-button>
-          <el-button round style="margin: 0 auto;" type="text" v-else>나가기</el-button>
+            v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="clickDeleteMeeting">
+            <span class="fs-5 fw-bold">방 삭제</span>
+          </el-button>
+          <el-button round style="margin: 0 auto;" type="text" v-else @click="clickLeaveMeeting">
+            <span class="fs-5 fw-bold">나가기</span>
+          </el-button>
         </div>
         <div class="col waiting-participant">
           <el-button round style="margin: 0 auto;" type="text" 
-            v-if="this.$store.state.meeting.hostId === this.$store.state.user.id">시작</el-button>
-          <el-button round style="margin: 0 auto;" type="text" v-else>준비</el-button>
+            v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="startMeeting">
+            <span class="fs-5 fw-bold">시작</span>
+          </el-button>
+          <el-button round style="margin: 0 auto;" type="text" v-else @click="$emit('ready')">
+            <span class="fs-5 fw-bold">준비</span>
+          </el-button>
         </div>
       </div>
     </div>
@@ -32,10 +46,10 @@ import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Waiting',
-  setup() {
-    const participants = ['일이삼사오육칠팔구십', '일이삼사오육칠팔구', '일이삼사오육칠팔', '일이삼사오육칠', '일', '일이']
+  setup(props, { emit }) {
     const store = useStore()
     const router = useRouter()
+    const participants = computed(() => store.state.participants)
     const meetingId = computed(() => store.state.meeting.id)
 
     const deleteMeeting = function () {
@@ -100,7 +114,27 @@ export default defineComponent({
           })
         })
     }
-    return { participants, clickDeleteMeeting, clickLeaveMeeting }
+
+    const emitReadySignal = function () {
+      emit('ready')
+    }
+
+    const startMeeting = function () {
+      const numOfParticipants = participants.value.length
+      const numOfReady = participants.value.filter((participant: { ready: boolean }) => participant.ready)
+      // if (numOfParticipants === numOfReady) {
+      if (true) {
+        emit('start')
+      } else {
+        ElMessage({
+          message: '모든 참가자가 준비해야 합니다.',
+          type: 'warning',
+        })
+      }
+    }
+
+
+    return { participants, clickDeleteMeeting, clickLeaveMeeting, emitReadySignal, startMeeting }
   }
 })
 </script>
@@ -127,12 +161,16 @@ export default defineComponent({
   /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
   border-radius: 10px;
   margin: 10px;
-  padding: 20px;
+  padding: 18px;
   /* width: 100%; */
   /* height: 100%; */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   line-height: 2;
+}
+
+.ready {
+  max-width: 120px;
 }
 </style>

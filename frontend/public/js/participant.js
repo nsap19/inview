@@ -40,9 +40,6 @@ function Participant(userId) {
 	const setMargin = 10
 	const ratio = 9/16
 	
-	// console.log(document.getElementById('container').offsetWidth)
-	// console.log(document.getElementById('container').offsetHeight)
-	
 	function getArea(increment) {
 		let i = 0;
 		let w = 0;
@@ -50,7 +47,6 @@ function Participant(userId) {
 
 		const width = document.getElementById('container').offsetWidth
 		const height = document.getElementById('container').offsetHeight
-		// console.log('getArea', width, height)
 
 		while (i < (document.getElementsByClassName('participant')).length) {
 				if ((w + increment) > width) {
@@ -91,12 +87,16 @@ function Participant(userId) {
 		}
 	}
 
-	// window.addEventListener('resize', function () {
-	// 	console.log(window.innerWidth)
-	// 	resize()
-	// })
 
 	container.appendChild(video);
+	const nicknameWrapper = document.createElement('div')
+	nicknameWrapper.className = 'nickname-wrapper'
+	const nickname = document.createElement('div')
+	nickname.className = 'nickname'
+	nickname.textContent = document.getElementById('userNickname').value
+	nicknameWrapper.appendChild(nickname)
+	container.appendChild(nicknameWrapper)
+
 	// container.appendChild(span);
 	container.onclick = switchContainerClass;
 	document.getElementById('participants').appendChild(container);
