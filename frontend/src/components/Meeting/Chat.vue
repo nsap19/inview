@@ -2,7 +2,6 @@
   <div id="container" ref="container" style="height: 90%; margin: auto 0;">
     <div class="d-flex flex-column justify-content-between h-100">
       <div class="px-2" id="chat1" style="overflow-y: auto;" ref="chatArea">
-
         <div v-for="(item, idx) in recvList" :key="idx">
 
           <!-- 날짜 경계선 -->
@@ -43,9 +42,8 @@
             </div>
           </div>
         </div>
-
-    
       </div>
+
       <div class="form-outline message-input">
         <el-input
           v-model="message"
