@@ -25,26 +25,33 @@ let muted = false;
 let cameraOff = false;
 
 function handleMuteClick(){
+	var participant = participants[userId];
+
 	myStream.getAudioTracks().forEach((track)=>(track.enabled = !track.enabled));
-	if(!muted){
+	if(!muted){ //마이크 끄기
 		document.getElementById("mute").innerText = "Unmute";
 		muted = true;
-	}else{
+		participant.rtcPeer.audioEnabled = false;
+	}else{ //마이크 켜기
 		document.getElementById("mute").innerText = "Mute";
 		muted = false;
+		participant.rtcPeer.audioEnabled = true;
 	}
 }
 function handleCameraClick(){
+	var participant = participants[userId];
+
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
-	if(cameraOff){
+	if(cameraOff){//카메라 켜기
 		document.getElementById("camera").innerText = "Turn Camera Off";
 		cameraOff = false;
-	} else{
+		participant.rtcPeer.videoEnabled = true;
+	} else{//카메라 끄기
 		document.getElementById("camera").innerText = "Turn Camera On";
 		cameraOff = true;
+		participant.rtcPeer.videoEnabled = false;
 	}
 }
-// 음소거, 카메라 on/off 기능 end
 
 
 const serverURL = "http://localhost:8080/groupcall";
