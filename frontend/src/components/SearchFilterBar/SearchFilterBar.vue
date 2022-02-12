@@ -65,11 +65,13 @@ export default defineComponent({
           industry: industry.value,
           company: company.value
         }
+        console.log(wholeQuery)
         router.push({ name: 'Search', query: wholeQuery})
         store.dispatch('search', {
-          title: route.query.title,
-          industry: route.query.industry,
-          company: route.query.company
+          title: title.value,
+          industry: industry.value,
+          company: company.value,
+          page: 1
         })
       } 
     }

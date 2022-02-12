@@ -55,9 +55,9 @@ export default defineComponent({
     const meetings = computed(() => store.state.searchResult)
 
     const loading = ref(false)
-    watch(meetings, (oldValue, newValue) => {
-      // console.log(oldValue, newValue)
-      if (oldValue.length === newValue.length) {
+    watch(meetings, (newValue, oldValue) => {
+      console.log('old', oldValue, 'new', newValue)
+      if (!oldValue.length || oldValue.length === newValue.length) {
         loading.value = false
       } else {
         loading.value = true

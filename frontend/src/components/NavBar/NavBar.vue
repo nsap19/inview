@@ -12,15 +12,15 @@
       <div class="d-flex flex-row justify-content-end">
         <CreateMeeting v-model="openCreateMeetingDialog" />
         <div v-if="Object.keys(user).length">
-          <el-button class="m-1" :icon="Plus" round @click="openCreateMeetingDialog = true">방 만들기</el-button>   
+          <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" type="primary">방 만들기</el-button>   
            <el-dropdown>
-            <el-button type="primary">
+            <el-button type="primary" round plain class="m-1">
               회원정보
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <router-link to="/myproject"><el-dropdown-item>회의 목록 조회</el-dropdown-item></router-link>
-                <router-link to="/mypage"><el-dropdown-item>회원 정보 수정</el-dropdown-item></router-link>
+                <router-link to="/myproject" class="text-decoration-none"><el-dropdown-item>회의 목록 조회</el-dropdown-item></router-link>
+                <router-link to="/mypage" class="text-decoration-none"><el-dropdown-item>회원 정보 수정</el-dropdown-item></router-link>
               <el-dropdown-item  @click="this.$store.dispatch('logout')">로그아웃</el-dropdown-item>
              </el-dropdown-menu>
             </template>
@@ -55,13 +55,11 @@ export default defineComponent({
     const openCreateMeetingDialog = ref(false)
     const openLoginDialog = ref(false)
     const openSignupDialog = ref(false)
-    const dosomething = function () {
-      alert('!!!')
-    }
+
     const store = useStore()
     const user = computed(() => store.state.user)
 
-    return { Plus, openCreateMeetingDialog, openLoginDialog, openSignupDialog, dosomething, user }
+    return { Plus, openCreateMeetingDialog, openLoginDialog, openSignupDialog, user }
   }
 })
 </script>

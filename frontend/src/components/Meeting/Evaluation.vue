@@ -49,7 +49,7 @@ export default defineComponent({
   name: 'Evaluation',
   props: {
     endSignal: Boolean,
-    userId: Number
+    participantNickname: String
   },
   setup(props) {
     const currentPage = ref(1)
@@ -156,7 +156,7 @@ export default defineComponent({
       }  
       htmlCode = window.URL.createObjectURL(data);  
       let formData = new FormData();
-      formData.append('file', data, `from_${userNickname}_to_${props.userId}_evaluation.html`);
+      formData.append('file', data, `from_${userNickname}_to_${props.participantNickname}_evaluation.html`);
       axios.post( `/meeting/${urlMeetingId}/upload?archive-type=evaluation`,
         formData,
         {

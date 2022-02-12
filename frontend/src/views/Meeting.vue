@@ -24,13 +24,13 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<MeetingNavBar :startSignal="startSignal"  @leaveMeeting="endSignal=true" />
+		<MeetingNavBar :startSignal="startSignal" @leaveMeeting="endSignal=true" />
 
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
 			<!-- 미팅 대기실/비디오 -->
 			<Video v-if="startSignal" />
-			<Waiting v-else />
+			<Waiting v-else @ready="readySignal=!readySignal" @start="startSignal=true" />
 
 			<!-- 우측 aside -->
 			<div 
@@ -39,19 +39,19 @@
 				:style="600 < windowWidth ? {'width': '420px'} : {'width': windowWidth - 10 + 'px'}"
 			>
 				<div class="d-flex flex-row justify-content-between p-2 align-items-center">
-					<span v-if="asideCategory.slice(0, 10) === 'evaluation'">{{ asideCategory.slice(10) }}님의 면접 평가</span>
-					<span v-else>{{ categoryKorName[asideCategory] }}</span>
+					<span v-if="asideCategory.slice(0, 10) === 'evaluation'"><span class="fw-bold ps-2">{{ asideCategory.slice(10) }}</span>님의 면접 평가</span>
+					<span v-else class="ps-2">{{ categoryKorName[asideCategory] }}</span>
 					<el-button :icon="CloseBold" circle @click="[openAside=!openAside, asideCategory='']" type="text" ></el-button>
 				</div>
 				
 				<Participant v-show="asideCategory === 'participant'" />
 				<div v-for="participant in participants" :key="participant">
 					<Evaluation 
-						:userId="participant" 
+						:participantNickname="participant.nickname" 
 						:endSignal="endSignal" 
-						v-show="asideCategory === 'evaluation' + participant.toString()" />
+						v-show="asideCategory === 'evaluation' + participant.nickname" />
 				</div>
-				<Chat :endSignal="endSignal" v-show="asideCategory === 'chat'" />
+				<Chat :readySignal="readySignal" :endSignal="endSignal" :startSignal="startSignal" @start="startSignal=true" v-show="asideCategory === 'chat'" />
 				<Memo :endSignal="endSignal" v-show="asideCategory === 'memo'" />
 				<File v-if="asideCategory === 'file'" />
 			</div>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, watch } from 'vue'
+import { defineComponent, ref, onMounted, watch, computed } from 'vue'
 import ChooseQuestion from '@/components/Meeting/ChooseQuestion.vue';
 import Participant from '@/components/Meeting/Participant.vue';
 import Evaluation from '@/components/Meeting/Evaluation.vue';
@@ -76,7 +76,7 @@ import Waiting from '@/components/Meeting/Waiting.vue'
 import MeetingFooter from '@/components/Meeting/MeetingFooter.vue'
 import { CloseBold, } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-
+import { useStore } from 'vuex'
 
 export default defineComponent({
 	name: 'Meeting',
@@ -237,11 +237,19 @@ export default defineComponent({
 
 		const endSignal = ref(false)  
 		const startSignal = ref(false)
+		const readySignal = ref(false)
+		watch(startSignal, (oldVal) => {
+			register()
+		})
+		watch(endSignal, (oldVal) => {
+			leaveRoom()
+		})
 
-		const participants = [142, 123, 2354, 12354326423, 4234, 1]
+		const store = useStore()
+		const participants = computed(() => store.state.participants)
 
 		return { 
-			CloseBold,
+			CloseBold, readySignal,
 			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
 			handleClose,
@@ -348,57 +356,4 @@ export default defineComponent({
 		height: 33%;
   }
 } */
-
-.video {
-	/* background: lightsteelblue;
-	aspect-ratio: 16/9;
-	width: 100%;
-	margin: auto 0; */
-
-	position: absolute;
-	right: 0;
-	object-fit: cover;
-	bottom: 0;
-	width: 100%;
-	height: 100%;
-	background: #000;
-	border-radius: 10px;
-	overflow: hidden;
-	left: 0;
-	top: 0;
-	background-size: cover;
-	overflow: hidden;
-	-webkit-transition: margin-top 1s ease-in-out;
-	-moz-transition: margin-top 1s ease-in-out;
-	-o-transition: margin-top 1s ease-in-out;
-	transition: margin-top 1s ease-in-out;
-}
-
-.video-info-wrapper {
-	position: absolute;
-	display: none;
-	/* background: black; */
-	aspect-ratio: 16/9;
-	width: 100%;
-	margin: auto 0;
-	background-clip: content-box;
-	padding: 1px;
-}
-
-.video:hover + .video-info-wrapper, .video-info-wrapper:hover {
-	display: block;
-}
-
-.video-info {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	text-align: center;
-	background: #667267;
-	/* background-clip: content-box; */
-	/* margin: 1px; */
-	padding: 5px;
-	color: #FEFEFE;
-}
 </style>

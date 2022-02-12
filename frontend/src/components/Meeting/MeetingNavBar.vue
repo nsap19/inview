@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex flex-row justify-content-between p-3 meeting-nav">
+  <div class="d-flex flex-row justify-content-between p-3 meeting-nav align-items-center">
     <div>
-      <span>{{ this.$store.state.meeting.title }}</span>
+      <span class="fw-bold fs-4 ps-2">{{ this.$store.state.meeting.title }}</span>
     </div>
     <div v-if="startSignal">
       <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickCloseMeeting">종료</el-button>

@@ -2,20 +2,24 @@
   <div class="d-flex flex-row justify-content-end p-3 meeting-footer">
     <el-button :icon="VideoCamera" size="large" circle name="commit" id="joinButton"></el-button>
     <!-- <input type="button" name="commit" value="비디오 참가" id="joinButton" /> -->
-    <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" placeholder="userId" required />
-    <input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" placeholder="meetingId" required />
+    <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" />
+    <input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" />
+    <input type="text" style="display: none;" name="userNickname" :value="this.$store.state.user.nickname" id="userNickname" />
     <el-dropdown size='large' class="mx-3">
       <el-button type="primary" size="large" circle :icon="List"></el-button>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item 
+            v-for="(participant, index) in participants"
+            :key="index"
             @click="[
-              openAside=!(openAside && asideCategory==='evaluation' + participant.toString()), 
-              asideCategory=(!openAside || (openAside && asideCategory !=='evaluation')) ? 'evaluation' + participant.toString():''
+              openAside=!(openAside && asideCategory==='evaluation' + participant.nickname), 
+              asideCategory=(!openAside || (openAside && asideCategory !=='evaluation')) ? 'evaluation' + participant.nickname:''
             ]"
-            v-for="participant in participants"
-            :key="participant"
-          >{{ participant }}님의 평가지</el-dropdown-item>
+          >
+            <span class="fw-bold">{{ participant.nickname }}</span>
+            님의 평가지
+          </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -39,6 +43,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { ChatDotSquare, MoreFilled, List, VideoCamera } from '@element-plus/icons-vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'MeetingFooter',
@@ -52,7 +57,9 @@ export default defineComponent({
       get: () => props.asideCategory,
       set: (value) => emit("update:asideCategory", value),
     });
-    const participants = [142, 123, 2354, 12354326423, 4234, 1]
+
+    const store = useStore()
+    const participants = computed(() => store.state.participants)
     return { 
       openAside, asideCategory, participants,
       ChatDotSquare, MoreFilled, List, VideoCamera, 
