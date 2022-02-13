@@ -2,13 +2,13 @@
   <el-card class="meeting-card">
     <template #header>
       <div class="card-header">
-        <span>
+        <span class="fw-bold">
           {{ meeting.title }}
         </span>
       </div>
     </template>
     <div v-for="(data, index) in meetingData" :key="index" class="text item">
-      <div class="row" v-if="data.content">
+      <div class="row px-3">
         <div class="col-4">
           {{ data.category }}
         </div>
@@ -18,11 +18,11 @@
       </div>
     </div>
     <div v-if="props.meeting.participantNicknameList" class="d-flex flex-row justify-content-between align-items-center">
-      <p class="m-0"><i class="bi bi-person"></i> {{ props.meeting.participantNicknameList.length }} / {{ props.meeting.userLimit }}</p>
+      <p class="m-0 capacity"><i class="bi bi-person"></i> {{ props.meeting.participantNicknameList.length }} / {{ props.meeting.userLimit }}</p>
       <el-button 
         class="button" 
         type="primary" 
-        plain 
+        plain round
         :disabled="props.meeting.participantNicknameList.length < props.meeting.userLimit ? false: true"
         @click="clickJoin"
       >
@@ -63,6 +63,29 @@ export default defineComponent({
   props: ['meeting'],
   components: { Lock },
   setup (props) {
+    const makePrettyTime = function (time: string) {
+      let prettyTime = ''
+      const today = new Date(+new Date() + 3240 * 10000).toISOString().split("T")[0]
+      const tomorrow = new Date(+new Date() + 11880 * 10000).toISOString().replace("T", " ").replace(/\..*/, '')
+      const twoDaysAfter = new Date(+new Date() + 20520 * 10000).toISOString().replace("T", " ").replace(/\..*/, '')
+      if (time.slice(0, 10) === today) {
+        prettyTime += '오늘'
+      } else if (time.slice(0, 10) === tomorrow) {
+        prettyTime += '내일'
+      } else if (time.slice(0, 10) === twoDaysAfter) {
+        prettyTime += '모레'
+      } else {
+        if (time.slice(0, 4) !== new Date().getFullYear().toString()) {
+          prettyTime += time.slice(2, 4) + "년 "
+        }
+      }
+      prettyTime += time.slice(5, 6) === "0" ? time.slice(6, 7) + "월 " : time.slice(5, 7) + "월 "
+      prettyTime += time.slice(8, 9) === "0" ? time.slice(9, 10) + "일 " : time.slice(8, 10) + "일 "
+      prettyTime += time.slice(11, 12) === "0" ? time.slice(12, 13) + "시 " : time.slice(11, 13) + "시 "
+      prettyTime += time.slice(14, 15) === "0" ? time.slice(15, 16) + "분" : time.slice(14, 16) + "분"
+      return prettyTime
+    }
+
     const meetingData = [
       {
         category: '직군',
@@ -70,15 +93,15 @@ export default defineComponent({
       },
       {
         category: '회사',
-        content: props.meeting.companyNameList,
+        content: props.meeting.companyNameList.length ? props.meeting.companyNameList[0] : "상관 없음!",
       },
       {
         category: '시작 시간',
-        content: props.meeting.startTime,
+        content: props.meeting.startTime === null ? "아무 때나!" : makePrettyTime(props.meeting.startTime),
       },
       {
         category: '종료 시간',
-        content: props.meeting.endTime,
+        content: props.meeting.endTime === null ? "미정!" : makePrettyTime(props.meeting.endTime),
       },
     ]
 
@@ -177,5 +200,12 @@ export default defineComponent({
 .meeting-card {
 	border-radius: 10px;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.capacity {
+  background-color: rgb(237, 241, 238);
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 20px;
 }
 </style>
