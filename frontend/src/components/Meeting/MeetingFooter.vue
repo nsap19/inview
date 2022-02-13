@@ -1,52 +1,58 @@
 <template>
   <div class="d-flex flex-row justify-content-end p-3 meeting-footer">
-    <button id ="mute">Mute</button>
-		<button id ="camera">Turn Camera On</button>
-		<input type="button" name="commit" value="비디오 참가" id="joinButton" />
-			
-    <el-button :icon="VideoCamera" size="large" circle name="commit" id="joinButton"></el-button>
-    <!-- <input type="button" name="commit" value="비디오 참가" id="joinButton" /> -->
-    <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" />
-    <input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" />
-    <input type="text" style="display: none;" name="userNickname" :value="this.$store.state.user.nickname" id="userNickname" />
-    <el-dropdown size='large' class="mx-3">
-      <el-button type="primary" size="large" circle :icon="List"></el-button>
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item 
-            v-for="(participant, index) in participants"
-            :key="index"
-            @click="[
-              openAside=!(openAside && asideCategory==='evaluation' + participant.nickname), 
-              asideCategory=(!openAside || (openAside && asideCategory !=='evaluation')) ? 'evaluation' + participant.nickname:''
-            ]"
-          >
-            <span class="fw-bold">{{ participant.nickname }}</span>
-            님의 평가지
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-
-    <el-button :icon="ChatDotSquare" size="large" class="me-3" circle @click="[openAside=!(openAside && asideCategory==='chat'), asideCategory=(!openAside || (openAside && asideCategory !=='chat')) ? 'chat':'']"></el-button>
+    <div class="col-4 col-md-4 text-center">
+      <el-button type="primary" size="large" circle id="micOn"><i class="bi bi-mic"></i></el-button>
+      <el-button type="primary" size="large" circle id="micOff" style="display: none"><i class="bi bi-mic-mute"></i></el-button>
+      <el-button type="primary" id ="cameraOn" size="large" circle><i class="bi bi-camera-video"></i></el-button>
+      <el-button type="primary" id ="cameraOff" size="large" circle style="display: none"><i class="bi bi-camera-video-off"></i></el-button>
+      <input type="button" name="commit" value="비디오 참가" id="joinButton" style="display: none" />
+      <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" />
+      <input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" />
+      <input type="text" style="display: none;" name="userNickname" :value="this.$store.state.user.nickname" id="userNickname" />
+    </div>
     
-    <el-dropdown trigger="click" size='large'>
-      <el-button type="primary" size="large" circle :icon="MoreFilled"></el-button>
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='memo'), asideCategory=(!openAside || (openAside && asideCategory !=='memo')) ? 'memo':'']">메모</el-dropdown-item>
-          <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='timer'), asideCategory=(!openAside || (openAside && asideCategory !=='timer')) ? 'timer':'']">타이머</el-dropdown-item>
-          <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='file'), asideCategory=(!openAside || (openAside && asideCategory !=='file')) ? 'file':'']">파일전송</el-dropdown-item>
-          <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='participant'), asideCategory=(!openAside || (openAside && asideCategory !=='participant')) ? 'participant':'']">참가자</el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
+    <div class="col-8 col-md-4 text-end">
+      <el-dropdown size='large' class="mx-3">
+        <el-button type="primary" size="large" circle :icon="List"></el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item 
+              v-for="(participant, index) in participants"
+              :key="index"
+              @click="[
+                openAside=!(openAside && asideCategory==='evaluation' + participant.nickname), 
+                asideCategory=(!openAside || (openAside && asideCategory !=='evaluation')) ? 'evaluation' + participant.nickname:''
+              ]"
+            >
+              <span class="fw-bold">{{ participant.nickname }}</span>
+              님의 평가지
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <el-button size="large" class="me-3" type="primary" circle 
+        @click="[openAside=!(openAside && asideCategory==='chat'), asideCategory=(!openAside || (openAside && asideCategory !=='chat')) ? 'chat':'']"
+      ><i class="bi bi-chat-dots"></i></el-button>
+      
+      <el-dropdown trigger="click" size='large'>
+        <el-button type="primary" size="large" circle :icon="MoreFilled"></el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='memo'), asideCategory=(!openAside || (openAside && asideCategory !=='memo')) ? 'memo':'']">메모</el-dropdown-item>
+            <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='timer'), asideCategory=(!openAside || (openAside && asideCategory !=='timer')) ? 'timer':'']">타이머</el-dropdown-item>
+            <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='file'), asideCategory=(!openAside || (openAside && asideCategory !=='file')) ? 'file':'']">파일전송</el-dropdown-item>
+            <el-dropdown-item @click="[openAside=!(openAside && asideCategory==='participant'), asideCategory=(!openAside || (openAside && asideCategory !=='participant')) ? 'participant':'']">참가자</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { ChatDotSquare, MoreFilled, List, VideoCamera } from '@element-plus/icons-vue'
+import { ChatDotSquare, MoreFilled, List, VideoCamera, Microphone, Mute } from '@element-plus/icons-vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -66,7 +72,7 @@ export default defineComponent({
     const participants = computed(() => store.state.participants)
     return { 
       openAside, asideCategory, participants,
-      ChatDotSquare, MoreFilled, List, VideoCamera, 
+      ChatDotSquare, MoreFilled, List, VideoCamera, Microphone, Mute,
     }
   }
 })
