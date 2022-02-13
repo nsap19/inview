@@ -2,7 +2,6 @@
   <div id="container" ref="container" style="height: 90%; margin: auto 0;">
     <div class="d-flex flex-column justify-content-between h-100">
       <div class="px-2" id="chat1" style="overflow-y: auto;" ref="chatArea">
-
         <div v-for="(item, idx) in recvList" :key="idx">
 
           <!-- 날짜 경계선 -->
@@ -43,9 +42,8 @@
             </div>
           </div>
         </div>
-
-    
       </div>
+
       <div class="form-outline message-input">
         <el-input
           v-model="message"
@@ -180,9 +178,9 @@ export default {
           // callback 첫번째 파라미터의 body로 메시지의 내용이 들어옵니다.
           this.subscribeId = this.stompClient.subscribe('/subscribe/chat/room/' + this.meeting.id, res => {
             console.log('구독으로 받은 메시지 입니다.', res.body)
-            console.log(res.body.split(',').slice(-1)[0].slice(11, -2))
+            // console.log(res.body.split(',').slice(-1)[0].slice(11, -2))
             const command = res.body.split(',')[7].slice(11, -2)
-            if (command === "UNREADY" || command === "READY") {
+            if (command === "UNREADY" || command === "READY" || command === "PARTICIPANT") {
               const commandMessage = res.body.split(',')[4].slice(11, -2).split(' ')
               let participants = []
               commandMessage.forEach(element => {
@@ -192,9 +190,9 @@ export default {
                 })
               });
               console.log(participants)
-              this.$store.dispatch('setParticipants', participants)
-            } else if (command === "PARTICIPANT") {
-              console.log('참가자처리처리')
+              if (command === "UNREADY" || command === "READY") {
+                this.$store.dispatch('setParticipants', participants)
+              }
             } else if (command === "START") {
               console.log('start!!!')
               this.$emit('start')

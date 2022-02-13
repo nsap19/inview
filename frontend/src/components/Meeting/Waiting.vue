@@ -121,9 +121,9 @@ export default defineComponent({
 
     const startMeeting = function () {
       const numOfParticipants = participants.value.length
-      const numOfReady = participants.value.filter((participant: { ready: boolean }) => participant.ready)
-      // if (numOfParticipants === numOfReady) {
-      if (true) {
+      const numOfReady = participants.value.filter((participant: { ready: boolean }) => participant.ready).length
+      // console.log(numOfParticipants, numOfReady)
+      if (numOfParticipants === numOfReady) {
         emit('start')
       } else {
         ElMessage({
