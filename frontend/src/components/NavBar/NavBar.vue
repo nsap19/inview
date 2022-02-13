@@ -11,7 +11,7 @@
 
       <!-- 검색바 -->
       <!-- <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col text-center"> -->
-      <div class="col text-center d-none d-sm-block">
+      <div :style="{visibility: !this.$route.path.startsWith('/search') ? 'visible' : 'hidden'}" class="col text-center d-none d-sm-block">
         <Search/>
       </div>
 

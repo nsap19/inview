@@ -23,8 +23,19 @@
         class="button" 
         type="primary" 
         plain round
+        @click="clickEnter"
+        v-if="props.meeting.participantNicknameList.includes(this.$store.state.user.nickname)"
+      >
+        <el-icon v-if="props.meeting.isLock"><lock /></el-icon>
+        <span>참가중</span>
+      </el-button>
+      <el-button 
+        class="button" 
+        type="primary" 
+        plain round
         :disabled="props.meeting.participantNicknameList.length < props.meeting.userLimit ? false: true"
         @click="clickJoin"
+        v-else
       >
         <el-icon v-if="props.meeting.isLock"><lock /></el-icon>
         <span>참가</span>
@@ -136,6 +147,10 @@ export default defineComponent({
         joinMeeting(props.meeting.id)
       }
     }
+
+    const clickEnter = function () {
+      router.push({ name: 'Meeting', params: { meetingUrl: props.meeting.url } })
+    }
     
     const router = useRouter()
     const store = useStore()
@@ -174,7 +189,7 @@ export default defineComponent({
     return { 
       props, meetingData, passwordFormVisible, passwordForm, rules, ruleFormRef, passwordError,
       Lock, 
-      clickJoin, submitForm, joinMeeting
+      clickJoin, submitForm, joinMeeting, clickEnter
     }
   },
 })
