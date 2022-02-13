@@ -47,7 +47,8 @@ img {
 }
 
 .center {
-  font-size: 2.5rem;
+  font-size: calc(6vmin);
+  // font-size: 2.5rem;
   font-weight: bold;
   line-height: 1.35;
   letter-spacing: -1.5px;
@@ -60,7 +61,8 @@ img {
 
 .slide-big-text p {
   margin: 0;
-  font-size: 2.5rem;
+  font-size: calc(6vmin);
+  // font-size: 2.5rem;
   font-weight: bold;
   line-height: 1.35;
   letter-spacing: -1.5px;
@@ -74,13 +76,13 @@ img {
 }
 
 .slide-small-text p {
-  font-size: 1.2rem;
+  font-size: calc(3vmin);
   margin: 0;
 }
 
 .slide-big-text-left p {
   margin-left: 10%;
-  font-size: 2.5rem;
+  font-size: calc(3vmin);
   font-weight: bold;
   line-height: 1.35;
   letter-spacing: -1.5px;
@@ -90,7 +92,7 @@ img {
 
 .slide-small-text-left p {
   text-align: left;
-  font-size: 1.2rem;
+  font-size: calc(3vmin);
 }
 
 .wave {
@@ -114,7 +116,7 @@ a {
 .button1 {
   background-color: #cee5d0;
   color: white;
-  font-size: 1.2rem;
+  font-size: calc(3vmin);
   border-radius: 8px;
   padding: 14px 40px;
 }
@@ -122,7 +124,7 @@ a {
 .button2 {
   background-color: #f3f0d7;
   color: gray;
-  font-size: 1.2rem;
+  font-size: calc(3vmin);
   border-radius: 8px;
   padding: 14px 40px;
 }
@@ -130,7 +132,7 @@ a {
 .button3 {
   background-color: #e0c097;
   color: white;
-  font-size: 1.2rem;
+  font-size: calc(3vmin);
   border-radius: 8px;
   padding: 14px 40px;
 }
@@ -138,7 +140,7 @@ a {
 .button4 {
   background-color: #ff7878;
   color: white;
-  font-size: 1.2rem;
+  font-size: calc(3vmin);
   border-radius: 8px;
   padding: 14px 40px;
 }

@@ -1,7 +1,10 @@
 <template>
   <div class="header">
     <header class="p-3 mb-3 border-bottom">
-      <div class="container">
+      <div class="container d-block d-sm-block d-md-none">
+          <br><br><br><br>
+      </div>
+      <div class="container d-none d-sm-block">
         <div
         >
           <div class="row">
@@ -10,7 +13,7 @@
                 href="/"
                 class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none"
               >
-                <img src="./../assets/logo.png" width="200px" alt="Inview" />
+                <img src="./../assets/logo.png" width="180px" alt="Inview" />
               </a>
             </div>
             <div class="col">

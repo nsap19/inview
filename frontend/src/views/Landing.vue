@@ -24,11 +24,25 @@
                 </div>
                 <div class="col-md-5 mb-4 me-1">
                   <div
-                    class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg"
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
                     style="background-color: #cee5d0"
                   >
                     <div
-                      class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
                     >
                       <img
                         class="img-fluid"
@@ -65,11 +79,25 @@
                 </div>
                 <div class="col-md-5 mb-4 me-1">
                   <div
-                    class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg"
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
                     style="background-color: #f3f0d7"
                   >
                     <div
-                      class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
                     >
                       <img
                         class="img-fluid"
@@ -107,11 +135,25 @@
                 </div>
                 <div class="col-md-5 mb-4 me-1">
                   <div
-                    class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg"
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
                     style="background-color: #cee5d0"
                   >
                     <div
-                      class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
                     >
                       <img
                         class="img-fluid"
@@ -149,11 +191,25 @@
                 </div>
                 <div class="col-md-5 mb-4 me-1">
                   <div
-                    class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg"
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
                     style="background-color: #ff7878"
                   >
                     <div
-                      class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
                     >
                       <img
                         class="img-fluid"
@@ -183,22 +239,21 @@
           <div class="wave" ref="wave">
             <img class="img-fluid" src="./../assets/temp_img.png" />
           </div>
-
-          <div
-            class="slide slide-left sl5"
-            ref="sl5"
-            style="background-color: white"
-          >
-            <div class="container md-6 mb-4 center"></div>
-            <div class="slide-big-text">
-              <p>당신의 꿈을</p>
-              <p>Inview와 함께 준비하세요.</p>
-            </div>
-            <div class="slide-small-text">
-              <p>Inview가 당신을 응원합니다.</p>
-              <br />
-              <br />
-              <a href="#" class="button1">Try it free</a>
+          <div class="slide slide-left sl5" ref="sl5">
+            <div class="container md-6 mb-4" style="background-color: #f3f0d7; border-radius: 15px 50px;">
+              <div class="slide-big-text">
+                <br><br>
+                <p><I>당신의 꿈을</I></p>
+                <p><I>Inview와 함께 준비하세요.</I></p>
+              </div>
+              <div class="slide-small-text">
+                <p>Inview가 당신을 응원합니다.</p>
+                <br>
+                <a href="#" class="button4">Try it free</a>
+                <br>
+                <br>
+                <br>
+              </div>
             </div>
           </div>
         </div>
