@@ -29,11 +29,13 @@ function handleMuteClick(){
 
 	myStream.getAudioTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(!muted){ //마이크 끄기
-		document.getElementById("mute").innerText = "Unmute";
+		document.getElementById("micOn").style.display = 'none'
+		document.getElementById("micOff").style.display = 'block'
 		muted = true;
 		participant.rtcPeer.audioEnabled = false;
 	}else{ //마이크 켜기
-		document.getElementById("mute").innerText = "Mute";
+		document.getElementById("micOn").style.display = 'block'
+		document.getElementById("micOff").style.display = 'none'
 		muted = false;
 		participant.rtcPeer.audioEnabled = true;
 	}
@@ -43,11 +45,13 @@ function handleCameraClick(){
 
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
-		document.getElementById("camera").innerText = "Turn Camera Off";
+		document.getElementById("cameraOn").style.display = 'block'
+		document.getElementById("cameraOff").style.display = 'none'
 		cameraOff = false;
 		participant.rtcPeer.videoEnabled = true;
 	} else{//카메라 끄기
-		document.getElementById("camera").innerText = "Turn Camera On";
+		document.getElementById("cameraOn").style.display = 'none'
+		document.getElementById("cameraOff").style.display = 'block'
 		cameraOff = true;
 		participant.rtcPeer.videoEnabled = false;
 	}

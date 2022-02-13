@@ -4,58 +4,107 @@
       <div class="sticky">
         <div class="slide-container">
           <div class="slide" ref="sl0">
-            <div class="row">
-              <div class="col-md-6 mb-4">
-                <div class="slide-big-text">
-                  <br />
-                  <br />
-                  <br />
-                  <p>Inview :</p>
-                  <p>모두를 위한 면접 공간</p>
+            <div class="overflow-hidden">
+              <LandingHeader></LandingHeader>
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="slide-big-text">
+                    <br />
+                    <br />
+                    <br />
+                    <p>Inview :</p>
+                    <p>모두를 위한 면접 공간</p>
+                  </div>
+                  <div class="slide-small-text">
+                    <p>Inview를 통해 서로를 만나보세요.</p>
+                    <br />
+                    <a href="#" class="button1">Try it free</a>
+                    <br />
+                  </div>
                 </div>
-                <div class="slide-small-text">
-                  <p>Inview를 통해 서로를 만나보세요.</p>
-                  <br />
-                  <a href="#" class="button1">Try it free</a>
-                  <br />
+                <div class="col-md-5 mb-4 me-1">
+                  <div
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
+                    style="background-color: #cee5d0"
+                  >
+                    <div
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
+                    >
+                      <img
+                        class="img-fluid"
+                        src="./../assets/pablita_online_meeting_transparent.gif"
+                        alt=""
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-6 mb-4">
-                <img class="img-fluid" src="./../assets/video-conference.jpg" />
               </div>
             </div>
           </div>
           <div class="slide" ref="sl1">
-            <div class="row">
-              <div class="col-md-6 mb-4">
-                <div class="slide-big-text">
-                  <p></p>
-                  <p></p>
-                  <p>실시간 모의 면접</p>
+            <div class="overflow-hidden">
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="slide-big-text">
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <p>실시간 모의 면접</p>
+                  </div>
+                  <div class="slide-small-text">
+                    <p>
+                      직군, 회사 별로 개설된 면접을 검색하고 참여할 수 있습니다.
+                    </p>
+                    <p>같은 목표를 가진 사람들끼리</p>
+                    <p>효율적으로 면접 스터디가 가능합니다.</p>
+                    <br />
+                    <a href="#" class="button2">Try it free</a>
+                    <br />
+                  </div>
                 </div>
-                <div class="slide-small-text">
-                  <p>
-                    직군, 회사 별로 개설된 면접을 검색하고 참여할 수 있습니다.
-                  </p>
-                  <p>같은 목표를 가진 사람들끼리</p>
-                  <p>효율적으로 면접 스터디가 가능합니다.</p>
-                  <br />
-                  <a href="#" class="button2">Try it free</a>
-                  <br />
-                </div>
-              </div>
-              <div class="col-md-6 mb-4">
-                <div
-                  class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg"
-                  style="background-color: #f3f0d7"
-                >
+                <div class="col-md-5 mb-4 me-1">
                   <div
-                    class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
+                    style="background-color: #f3f0d7"
                   >
-                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
-                      Short title, long jacket
-                    </h2>
-                    <ul class="d-flex list-unstyled mt-auto"></ul>
+                    <div
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
+                    >
+                      <img
+                        class="img-fluid"
+                        src="./../assets/Clip_recruting_ad_transparent_by_Icons8.gif"
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -65,80 +114,117 @@
             <div class="scdown-text">아래로 스크롤하세요.</div>
           </div>
           <div class="slide" ref="sl2">
-            <div class="row">
-              <div class="col-md-6 mb-4">
-                <div class="slide-big-text">
-                  <p></p>
-                  <p></p>
-                  <p>추가적인 SNS와 Note는 No!</p>
+            <div class="overflow-hidden">
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="slide-big-text">
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <p>추가적인 SNS와 Note는 No!</p>
+                  </div>
+                  <div class="slide-small-text">
+                    <p>면접에 집중할 수 있도록 Inview 내에서</p>
+                    <p>그룹 채팅, 파일 공유, 개인 메모장 기능을 제공합니다.</p>
+                    <p>면접 종료 후 파일로 다운받을 수 있습니다.</p>
+                    <br />
+                    <a href="#" class="button1">Try it free</a>
+                    <br />
+                  </div>
                 </div>
-                <div class="slide-small-text">
-                  <p>면접에 집중할 수 있도록 Inview 내에서</p>
-                  <p>그룹 채팅, 파일 공유, 개인 메모장 기능을 제공합니다.</p>
-                  <p>면접 종료 후 파일로 다운받을 수 있습니다.</p>
-                  <br />
-                  <a href="#" class="button1">Try it free</a>
-                  <br />
-                </div>
-              </div>
-              <div class="col-md-6 mb-4">
-                <div
-                  class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg"
-                  style="background-color: #cee5d0"
-                >
+                <div class="col-md-5 mb-4 me-1">
                   <div
-                    class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
+                    style="background-color: #cee5d0"
                   >
-                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
-                      Short title, long jacket
-                    </h2>
-                    <ul class="d-flex list-unstyled mt-auto"></ul>
+                    <div
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
+                    >
+                      <img
+                        class="img-fluid"
+                        src="./../assets/pablita_page_is_under_construction_transparent.gif"
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="slide sl3" ref="sl3">
-            <div class="row">
-              <div class="col-md-6 mb-4">
-                <div class="slide-big-text">
-                  <p></p>
-                  <p></p>
-                  <p>평가 시트 제공</p>
+            <div class="overflow-hidden">
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="slide-big-text">
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <p>평가 시트 제공</p>
+                  </div>
+                  <div class="slide-small-text">
+                    <p>스터디엔 결과 보고서가 있어야 겠죠?</p>
+                    <p>Inview가 평가 시트를 제공합니다.</p>
+                    <p>그룹원끼리 평가 시트를 통해 피드백 제공이 가능합니다.</p>
+                    <p style="color: #ff7878">
+                      * 평가시트는 면접 종료 후 html 파일로 제공됩니다.
+                    </p>
+                    <br />
+                    <a href="#" class="button4">Try it free</a>
+                    <br />
+                  </div>
                 </div>
-                <div class="slide-small-text">
-                  <p>스터디엔 결과 보고서가 있어야 겠죠?</p>
-                  <p>Inview가 평가 시트를 제공합니다.</p>
-                  <p>그룹원끼리 평가 시트를 통해 피드백 제공이 가능합니다.</p>
-                  <p style="color:#ff7878;">* 평가시트는 면접 종료 후 html 파일로 제공됩니다.</p>
-                  <br />
-                  <a href="#" class="button3">Try it free</a>
-                  <br />
-                </div>
-              </div>
-              <div class="col-md-6 mb-4">
-                <div
-                  class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg"
-                  style="background-color: #e0c097"
-                >
+                <div class="col-md-5 mb-4 me-1">
                   <div
-                    class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+                    class="
+                      card card-cover
+                      h-100
+                      overflow-hidden
+                      text-white
+                      rounded-5
+                      shadow-lg
+                    "
+                    style="background-color: #ff7878"
                   >
-                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
-                      Short title, long jacket
-                    </h2>
-                    <ul class="d-flex list-unstyled mt-auto"></ul>
+                    <div
+                      class="
+                        d-flex
+                        flex-column
+                        h-100
+                        p-5
+                        pb-3
+                        text-white text-shadow-1
+                      "
+                    >
+                      <img
+                        class="img-fluid"
+                        src="./../assets/Abstract_upgrade_transparent_by_Icons8.gif"
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div
-            class="slide slide-left sl4"
-            ref="sl4"
-          >
+          <div class="slide slide-left sl4" ref="sl4">
             <div class="sl4-content">
-              <div class="slide-big-text" ref="sl4-big">
+              <!-- <div class="slide-big-text" ref="sl4-big">
                 <p ref="sl4-big-1">자세한</p>
                 <p ref="sl4-big-2">설명이</p>
                 <p ref="sl4-big-3">있을 수도 있어요</p>
@@ -147,29 +233,27 @@
                 <p>실제 동작 사진을 넣는건</p>
                 <p>어떠신가요??</p>
                 <p>ㅜㅜ</p>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="wave" ref="wave">
-            <img class="img-fluid" src="./../assets/background.png" />
+            <img class="img-fluid" src="./../assets/temp_img.png" />
           </div>
-
-          <div
-            class="slide slide-left sl5"
-            ref="sl5"
-            style="background-color: white"
-          >
-            <div class="container md-6 mb-4 center"></div>
-            <div class="slide-big-text">
-              <p>Inview가</p>
-              <p>당신을 응원합니다.</p>
-            </div>
-            <div class="slide-small-text">
-              <p>당신의 꿈을 Inview와 함께 준비하세요.</p>
-              <br />
-              <br />
-              <a href="#" class="button1">Try it free</a>
-              <br />
+          <div class="slide slide-left sl5" ref="sl5">
+            <div class="container md-6 mb-4" style="background-color: #f3f0d7; border-radius: 15px 50px;">
+              <div class="slide-big-text">
+                <br><br>
+                <p><I>당신의 꿈을</I></p>
+                <p><I>Inview와 함께 준비하세요.</I></p>
+              </div>
+              <div class="slide-small-text">
+                <p>Inview가 당신을 응원합니다.</p>
+                <br>
+                <a href="#" class="button4">Try it free</a>
+                <br>
+                <br>
+                <br>
+              </div>
             </div>
           </div>
         </div>
@@ -180,13 +264,15 @@
 
 <script>
 import bezierEasing from "bezier-easing";
+import Footer from "../components/Footer.vue";
+import LandingHeader from "../components/LandingHeader.vue";
 
 const ease = bezierEasing(0.25, 0.1, 0.25, 1.0);
 const easeIn = bezierEasing(0.38, 0.01, 0.78, 0.13);
 const midSlow = bezierEasing(0, 0.7, 1, 0.3);
 
 const def = {
-  height: 7100,
+  height: 7200,
   elements: {
     sl0: {
       top: 0,
@@ -283,7 +369,7 @@ const def = {
         easing: midSlow,
         styles: {
           translateY: {
-            topValue: -300,
+            topValue: -60,
             bottomValue: -60,
           },
           opacity: {
@@ -434,7 +520,7 @@ const def = {
           },
           opacity: {
             topValue: 0,
-            bottomValue: 0.4,
+            bottomValue: 1,
           },
         },
       },
@@ -444,7 +530,7 @@ const def = {
         easing: easeIn,
         styles: {
           opacity: {
-            topValue: 0.4,
+            topValue: 1,
             bottomValue: 0,
           },
         },
@@ -488,7 +574,7 @@ const def = {
     sl5: [
       {
         top: 6100,
-        bottom: 7100,
+        bottom: 9000,
         easing: midSlow,
         styles: {
           translateY: {
@@ -534,6 +620,10 @@ const applyStyle = (element, styleName, value, unit = "px") => {
 
 export default {
   el: "#app",
+  components: {
+    LandingHeader,
+    Footer,
+  },
   data() {
     return {
       message: "Welcome to Vue!",

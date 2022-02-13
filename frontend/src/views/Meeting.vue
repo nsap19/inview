@@ -115,8 +115,10 @@ export default defineComponent({
 
 		onMounted(() => {
 			document.getElementById('joinButton').onclick=function(){register(); return false;};
-			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
-			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
+			document.getElementById('micOn').onclick = function(){handleMuteClick(); return false};
+			document.getElementById('micOff').onclick = function(){handleMuteClick(); return false};
+			document.getElementById('cameraOn').onclick = function(){handleCameraClick(); return false};
+			document.getElementById('cameraOff').onclick = function(){handleCameraClick(); return false};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
