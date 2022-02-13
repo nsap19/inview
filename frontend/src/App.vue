@@ -1,16 +1,17 @@
 <template>
   <NavBar/>
   <router-view/>
+  <Footer/>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import NavBar from "./components/NavBar/NavBar.vue"
-
+import Footer from "./components/Footer.vue"
 export default defineComponent({
   name: 'App',
   components: {
-    NavBar
+    NavBar, Footer,
   },
   setup() {
     const openCreateMeetingDialog = ref(false)
