@@ -161,7 +161,7 @@ export default defineComponent({
 
 		// 비디오의 너비 계산
 		const resize = function (width, height) {
-			console.log('resize한다', width, height)
+			// console.log('resize한다', width, height)
 			let max = 0
 			let i = 1
 			while (i < 5000) {
@@ -174,7 +174,7 @@ export default defineComponent({
 			}
 			max = max - (setMargin * 2)  // remove margins
 			maxWidth.value = max
-			console.log("max", max)
+			// console.log("max", max)
 			resizer(max)
 		}
 

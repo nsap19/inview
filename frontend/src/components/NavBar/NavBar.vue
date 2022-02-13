@@ -1,15 +1,15 @@
 <template>
   <div id="nav" :class="['container', this.$route.path === '/' ? 'nav-home' : 'nav']" v-if="!this.$route.path.startsWith('/meeting')">
-    <div class="d-flex flex-row justify-content-between align-items-center">
-      <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="w-25 p-3">
+    <div class="row align-items-center">
+      <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col-3">
         <router-link to="/">
           <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100">
         </router-link>
       </div>
-      <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="">
+      <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col">
         <Search/>
       </div>
-      <div class="d-flex flex-row justify-content-end">
+      <div class="d-flex flex-row justify-content-end col-3">
         <CreateMeeting v-model="openCreateMeetingDialog" />
         <div v-if="Object.keys(user).length">
           <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" type="primary">방 만들기</el-button>   
@@ -27,7 +27,7 @@
          </el-dropdown>
         </div>
         <div v-else>
-          <el-button class="m-1" round @click="openLoginDialog=true">로그인</el-button>
+          <el-button class="m-1" round @click="openLoginDialog=true" plain type="primary">로그인</el-button>
         </div>
         <Login v-model="openLoginDialog" v-on:signup="[openSignupDialog=true, openLoginDialog=false]" />
         <Register v-model="openSignupDialog" v-on:login="[openSignupDialog=false, openLoginDialog=true]" />
@@ -69,7 +69,8 @@ export default defineComponent({
 	border-radius: 10px;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	margin: 20px auto;
-  padding: 10px;
+  padding: 20px;
+  height: 90px;
 }
 
 @media screen and (min-width: 1200px) {
@@ -89,5 +90,9 @@ export default defineComponent({
   .nav-home {
     max-width: 1000px;
   }
+}
+
+.logo {
+  width: 200px;
 }
 </style>
