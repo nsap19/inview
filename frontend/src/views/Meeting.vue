@@ -93,6 +93,20 @@ export default defineComponent({
 		MeetingFooter
 	},
 	setup() {
+		//카메라, 마이크 접근 권한을 받기 위한 처리
+		async function getMedia(){
+			try{
+				await navigator.mediaDevices.getUserMedia({
+					audio: true,
+					video: true,
+				})
+			} catch(e){
+				console.log(e);
+			}
+		}
+		getMedia();
+
+		
 		const wholeVideosWrapper = ref(null)
 
 		let width = ref(0)
@@ -101,6 +115,8 @@ export default defineComponent({
 
 		onMounted(() => {
 			document.getElementById('joinButton').onclick=function(){register(); return false;};
+			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
+			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 

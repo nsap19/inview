@@ -19,10 +19,44 @@
 var participants = {};
 var userId;
 
+// 음소거, 카메라 on/off 기능
+let myStream;
+let muted = false;
+let cameraOff = false;
+
+function handleMuteClick(){
+	var participant = participants[userId];
+
+	myStream.getAudioTracks().forEach((track)=>(track.enabled = !track.enabled));
+	if(!muted){ //마이크 끄기
+		document.getElementById("mute").innerText = "Unmute";
+		muted = true;
+		participant.rtcPeer.audioEnabled = false;
+	}else{ //마이크 켜기
+		document.getElementById("mute").innerText = "Mute";
+		muted = false;
+		participant.rtcPeer.audioEnabled = true;
+	}
+}
+function handleCameraClick(){
+	var participant = participants[userId];
+
+	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
+	if(cameraOff){//카메라 켜기
+		document.getElementById("camera").innerText = "Turn Camera Off";
+		cameraOff = false;
+		participant.rtcPeer.videoEnabled = true;
+	} else{//카메라 끄기
+		document.getElementById("camera").innerText = "Turn Camera On";
+		cameraOff = true;
+		participant.rtcPeer.videoEnabled = false;
+	}
+}
+
 
 const serverURL = "http://localhost:8080/api/groupcall";
 let ws = new SockJS(serverURL);
-  
+
 window.onbeforeunload = function() {
 	ws.close();
 };
@@ -99,8 +133,6 @@ function register() {
 		meetingId : meetingId,
 	}
 
-	console.log(message)
-
 	sendMessage(message);
 }
 
@@ -127,7 +159,7 @@ function callResponse(message) {
 
 function onExistingParticipants(msg) {
 	var constraints = {
-		audio : true,
+		audio : false,
 		video : {
 			mandatory : {
 				maxWidth : 320,
@@ -144,8 +176,11 @@ function onExistingParticipants(msg) {
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
+	//음소거, 카메라 전환	
+	getMedia(userId);
+	
 	var options = {
-	      localVideo: video,
+	      localVideo: myStream,
 	      mediaConstraints: constraints,
 	      onicecandidate: participant.onIceCandidate.bind(participant)
 	    }
@@ -159,6 +194,19 @@ function onExistingParticipants(msg) {
 
 	msg.data.forEach(receiveVideo);
 }
+
+async function getMedia(userId) {
+	let myVideo = document.getElementById("video-" + userId);
+	try {
+	  myStream = await navigator.mediaDevices.getUserMedia({
+		audio: true,
+		video: true,
+	  });
+	  myVideo.srcObject = myStream;
+	} catch (e) {
+	  console.log(e);
+	}
+  }
 
 function leaveRoom() {
 	sendMessage({
