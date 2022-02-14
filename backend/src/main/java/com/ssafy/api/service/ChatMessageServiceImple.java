@@ -2,7 +2,11 @@ package com.ssafy.api.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -132,16 +136,22 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			message.setMessage(message.getSender() + "님이 입장하였습니다.");
 			break;
 		case DISCONNECT:
+			LocalDate today = LocalDate.now();
+			LocalTime localTime = LocalTime.now();
+			String date = today.getYear() + "년" + String.format("%02d", today.getMonthValue()) + "월"
+					+ String.format("%02d", today.getDayOfMonth()) + "일 "
+					+ today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+			String time = String.format("%02d", localTime.getHour()) + ":"
+					+ String.format("%02d", localTime.getMinute());
+			message.setDate(date);
+			message.setTime(time);
 			message.setMessage(message.getSender() + "님이 퇴장하였습니다.");
 			break;
 		case PARTICIPANT:
-//			List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
-//			StringBuilder sb = new StringBuilder();
-//			for (User user : participantList) {
-//				sb.append(user.getNickname()).append(" ");
-//			}
-//			message.setMessage(String.valueOf(sb));
 			message.setMessage(setReadyMessage(meetingId, sessionId, ""));
+			break;
+		case HOST:
+			message.setMessage(message.getSender() + "님이 방장입니다!");
 			break;
 		default:
 			message.setMessage("명령어 오류");
@@ -151,12 +161,16 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	}
 
 	private String setReadyMessage(String meetingId, String sessionId, String ready) {
-		if(!ready.equals(""))
+		if (!ready.equals(""))
 			meetingParticipant.setReadyParticipantByMeetingId(meetingId, sessionId, ready);
 		List<ChattingParticipant> readyParticipantList = meetingParticipant.getReadyParticipantByMeetingId(meetingId);
+		if (readyParticipantList == null)
+			return "";
+
 		StringBuilder sb = new StringBuilder();
 		for (ChattingParticipant participant : readyParticipantList) {
-			sb.append(participant.getReady() + participant.getUser().getNickname()).append(" ");
+			sb.append(participant.getUser().getUserId() + " " + participant.getReady() + " "
+					+ participant.getUser().getNickname()).append("  ");
 		}
 		return String.valueOf(sb);
 	}
