@@ -68,7 +68,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Chat',
   props: [ 
-    'endSignal', 'readySignal', 'startSignal'
+    'endSignal', 'readySignal', 'startSignal', 'leaveSignal'
   ],
   computed: {
     ...mapState(['meeting', 'user'])
@@ -93,13 +93,19 @@ export default {
       console.log("start!!!!!! in chat.vue", newValue, oldValue)
       this.start()
     },
+    leaveSignal: function() {
+      console.log("나감")
+      this.disconnect()
+    },
     recvList: () => {
       this.scrollToEnd()
     }
   },
-  created() {
+  mounted() {
     // .vue가 생성되면 소켓 연결 시도
-    this.connect()
+    if (this.$store.state.meeting) {
+      this.connect()
+    }
   },
   updated() {
       // whenever data changes and the component re-renders, this is called.

@@ -1,10 +1,16 @@
 <template>
   <div class="d-flex flex-row justify-content-end p-3 meeting-footer">
-    <div class="col-4 col-md-4 text-center">
-      <el-button type="primary" size="large" circle id="micOn"><i class="bi bi-mic"></i></el-button>
-      <el-button type="primary" size="large" circle id="micOff" style="display: none"><i class="bi bi-mic-mute"></i></el-button>
-      <el-button type="primary" id ="cameraOn" size="large" circle><i class="bi bi-camera-video"></i></el-button>
-      <el-button type="primary" id ="cameraOff" size="large" circle style="display: none"><i class="bi bi-camera-video-off"></i></el-button>
+    <div class="col-4 col-md-4 text-center" v-show="startSignal">
+      <el-button type="primary" size="large" circle id="mute">
+        <i class="bi bi-mic" id="micOn"></i>
+        <i class="bi bi-mic-mute" id="micOff" style="display: none"></i>
+      </el-button>
+      <!-- <el-button type="primary" size="large" circle ></el-button> -->
+      <el-button type="primary" id ="camera" size="large" circle>
+        <i class="bi bi-camera-video" id ="cameraOn"></i>
+        <i class="bi bi-camera-video-off" id ="cameraOff" style="display: none"></i>
+      </el-button>
+      <!-- <el-button type="primary" id ="cameraOff" size="large" circle style="display: none"></el-button> -->
       <input type="button" name="commit" value="비디오 참가" id="joinButton" style="display: none" />
       <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" />
       <input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" />
@@ -57,21 +63,22 @@ import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'MeetingFooter',
-  props: ['openAside', 'asideCategory'],
+  props: ['openAside', 'asideCategory', 'startSignal'],
   setup(props, { emit }) {
     const openAside = computed({
       get: () => props.openAside,
       set: (value) => emit("update:openAside", value),
-    });
+    })
     const asideCategory = computed({
       get: () => props.asideCategory,
       set: (value) => emit("update:asideCategory", value),
-    });
+    })
 
     const store = useStore()
     const participants = computed(() => store.state.participants)
+    const startSignal = computed(() => props.startSignal)
     return { 
-      openAside, asideCategory, participants,
+      openAside, asideCategory, participants, startSignal,
       ChatDotSquare, MoreFilled, List, VideoCamera, Microphone, Mute,
     }
   }

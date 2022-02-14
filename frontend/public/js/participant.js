@@ -26,7 +26,7 @@ const PARTICIPANT_CLASS = "participant";
  *                        The tag of the new element will be 'video<name>'
  * @return
  */
-function Participant(userId) {
+function Participant(userId, userNickname) {
   this.userId = userId;
   var container = document.createElement("div");
   container.className = isPresentMainParticipant()
@@ -97,7 +97,7 @@ function Participant(userId) {
   nicknameWrapper.className = 'nickname-wrapper'
 	const nickname = document.createElement('div')
 	nickname.className = 'nickname'
-	nickname.textContent = document.getElementById('userNickname').value
+	nickname.textContent = userNickname
 	nicknameWrapper.appendChild(nickname)
 	container.appendChild(nicknameWrapper)
 

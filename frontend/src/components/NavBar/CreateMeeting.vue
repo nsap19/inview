@@ -126,7 +126,7 @@ export default defineComponent({
                               + datetime_object.getHours() + ":" + datetime_object.getUTCMinutes()
       if (ruleForm.endTime === '') {
         callback()
-      } else if (ruleForm.startTime && ruleForm.endTime < ruleForm.startTime) {
+      } else if (ruleForm.startTime && ruleForm.endTime.slice(0, 16) <= ruleForm.startTime.slice(0, 16)) {
         callback(new Error('종료 시간은 시작 시간 이후로 설정해주세요'))
       } else if (ruleForm.endTime < current_datetime) {
         callback(new Error('종료 시간은 현재 시간 이후로 설정해주세요'))

@@ -66,7 +66,9 @@ window.onbeforeunload = function() {
 };
 
 ws.onmessage = function(message) {
+	console.log("onmessage에서 받은 매개변수", message)
 	var parsedMessage = JSON.parse(message.data);
+	console.log("onmessage에서 파싱된 메세지", parsedMessage)
 	console.info('Received message: ' + message.data);
 
 	switch (parsedMessage.id) {
@@ -127,6 +129,7 @@ ws.onmessage = function(message) {
 function register() {
 	var meetingId = document.getElementById('meetingId').value;
 	let token = localStorage.getItem("token");
+	let userNickname = document.getElementById('userNickname').value
 
 	// document.getElementById('join').style.display = 'none';
 	// document.getElementById('room').style.display = 'block';
@@ -135,6 +138,7 @@ function register() {
 		id : 'joinRoom',
 		accessToken : token,
 		meetingId : meetingId,
+		userNickname: userNickname
 	}
 
 	sendMessage(message);
@@ -173,10 +177,13 @@ function onExistingParticipants(msg) {
 		}
 	};
 	
+	console.log("onExistingParticipants에서 받은 메세지", msg)
 	userId = msg.userId;
 	meetingId = msg.meetingId;
+	userNickname = msg.userNickname;
 	console.log(userId + " registered in room " + meetingId);
-	var participant = new Participant(userId);
+	console.log("onExistingParticipants에서 보내는 유저닉네임", userNickname)
+	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
