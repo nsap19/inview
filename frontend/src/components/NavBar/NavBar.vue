@@ -1,9 +1,10 @@
 <template>
   <!-- <div id="nav" :class="['container', this.$route.path === '/' ? 'nav-home' : 'nav']" v-if="this.$route.path !== '/' && !this.$route.path.startsWith('/meeting')"> -->
   <div id="nav" class="nav-wrapper container" v-if="this.$route.path !== '/' && !this.$route.path.startsWith('/meeting')">
-    <div class="row align-items-center justify-content-between nav">
+    <!-- <div class="row align-items-center justify-content-between nav"> -->
+    <div :class="['row', 'align-items-center', 'justify-content-between', this.$route.path === '/home' ? 'nav-home' : 'nav']">
       <!-- 로고 -->
-      <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col-5 col-sm-3">
+      <div :style="{visibility: this.$route.path !== '/home' ? 'visible' : 'hidden'}" class="col-5 col-sm-3">
         <router-link to="/">
           <img alt="INVIEW logo" src="@/assets/logo_shadow.png" class="w-100">
         </router-link>
@@ -11,7 +12,7 @@
 
       <!-- 검색바 -->
       <!-- <div :style="{visibility: this.$route.path !== '/' ? 'visible' : 'hidden'}" class="col text-center"> -->
-      <div :style="{visibility: !this.$route.path.startsWith('/search') ? 'visible' : 'hidden'}" class="col text-center d-none d-sm-block">
+      <div :style="{visibility: this.$route.path !== '/home' ? 'visible' : 'hidden'}" class="col text-center d-none d-sm-block">
         <Search/>
       </div>
 
@@ -91,10 +92,8 @@ export default defineComponent({
 }
 
 .nav-home {
-	/* border-radius: 10px;
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
-	margin: 20px auto;
-  padding: 10px;
+	margin: 0 auto;
+  padding: 25px 15px;
 }
 
 @media screen and (min-width: 1200px) {

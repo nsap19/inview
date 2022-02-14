@@ -35,9 +35,9 @@ export default defineComponent({
       // 검색어에 글자가 있는 경우 검색 결과 페이지로 이동
       if (searchQuery.value.trim()) {
         const wholeQuery = {
-          title: selectedCategory.value === '제목' ? searchQuery.value : '',
-          industry: selectedCategory.value === '직군' ? searchQuery.value : '',
-          company: selectedCategory.value === '회사' ? searchQuery.value : ''
+          title: selectedCategory.value === 'title' ? searchQuery.value : '',
+          industry: selectedCategory.value === 'industry' ? searchQuery.value : '',
+          company: selectedCategory.value === 'company' ? searchQuery.value : ''
         }
         router.push({ name: 'Search', query: wholeQuery})
         store.dispatch('search', wholeQuery)

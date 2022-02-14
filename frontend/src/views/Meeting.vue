@@ -30,7 +30,7 @@
 		<div class="meeting-content">
 			<!-- 미팅 대기실/비디오 -->
 			<Video v-if="startSignal" />
-			<Waiting v-else @ready="readySignal=!readySignal" @start="startSignal=true" />
+			<Waiting v-else @ready="readySignal=!readySignal" @start="startSignal=true" @leave="leaveSignal=true" />
 
 			<!-- 우측 aside -->
 			<div 
@@ -51,14 +51,21 @@
 						:endSignal="endSignal" 
 						v-show="asideCategory === 'evaluation' + participant.nickname" />
 				</div>
-				<Chat :readySignal="readySignal" :endSignal="endSignal" :startSignal="startSignal" @start="startSignal=true" v-show="asideCategory === 'chat'" />
+				<Chat 
+					:readySignal="readySignal" 
+					:endSignal="endSignal" 
+					:startSignal="startSignal" 
+					:leaveSignal="leaveSignal"
+					@start="startSignal=true" 
+					v-show="asideCategory === 'chat'" 
+				/>
 				<Memo :endSignal="endSignal" v-show="asideCategory === 'memo'" />
 				<File v-if="asideCategory === 'file'" />
 			</div>
 		</div>
 
 		<!-- meeting footer -->
-		<MeetingFooter v-model:openAside="openAside" v-model:asideCategory="asideCategory" />
+		<MeetingFooter v-model:openAside="openAside" v-model:asideCategory="asideCategory" :startSignal="startSignal" />
 	</div>
 </template>
 
@@ -115,10 +122,8 @@ export default defineComponent({
 
 		onMounted(() => {
 			document.getElementById('joinButton').onclick=function(){register(); return false;};
-			document.getElementById('micOn').onclick = function(){handleMuteClick(); return false};
-			document.getElementById('micOff').onclick = function(){handleMuteClick(); return false};
-			document.getElementById('cameraOn').onclick = function(){handleCameraClick(); return false};
-			document.getElementById('cameraOff').onclick = function(){handleCameraClick(); return false};
+			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
+			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
@@ -256,6 +261,7 @@ export default defineComponent({
 		const endSignal = ref(false)  
 		const startSignal = ref(false)
 		const readySignal = ref(false)
+		const leaveSignal = ref(false)
 		watch(startSignal, (oldVal) => {
 			register()
 		})
@@ -267,7 +273,7 @@ export default defineComponent({
 		const participants = computed(() => store.state.participants)
 
 		return { 
-			CloseBold, readySignal,
+			CloseBold, readySignal, leaveSignal,
 			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
 			handleClose,
