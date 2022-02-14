@@ -42,6 +42,7 @@ public class MeetingParticipant {
 		}
 		return participantList;
 	}
+	
 
 	public void setReadyParticipantByMeetingId(String meetingId, String sessionId, String ready) {
 		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().get(meetingId);
@@ -66,16 +67,29 @@ public class MeetingParticipant {
 	}
 
 	public void addParticipantBySessionId(String sessionId, String meetingId, User user) {
-		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().getOrDefault(meetingId,
-				new HashMap<>());
+		boolean isHost = false;
+		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().get(meetingId);
+		if (hashMap == null) {
+			hashMap = new HashMap<>();
+			isHost = true;
+		}
 		String nickname = user.getNickname();
 		ChattingParticipant participant = ChattingParticipant.builder().sessionId(sessionId).meetingId(meetingId)
 				.user(user).ready("F").build();
 		hashMap.put(sessionId, participant);
 		chattingUser.getParticipantByMeetingId().put(meetingId, hashMap);
 		chattingUser.getParticipantBySessionId().put(sessionId, participant);
+		if (isHost) {
+			chattingUser.getHostByMeetingId().put(meetingId, participant);
+		}
 	}
 
+	public ChattingParticipant getHostByMeetingId(String meetingId) {
+		ChattingParticipant participant = chattingUser.getHostByMeetingId().get(meetingId);
+		return participant;
+	}
+	
+	
 	public ChattingParticipant getParticipantBySessionId(String sessionId) {
 		ChattingParticipant participant = chattingUser.getParticipantBySessionId().get(sessionId);
 		return participant;
@@ -90,10 +104,24 @@ public class MeetingParticipant {
 		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().getOrDefault(meetingId,
 				new HashMap<>());
 		hashMap.remove(sessionId);
-		if (hashMap.isEmpty())
+		if (hashMap.isEmpty()) {
 			chattingUser.getParticipantByMeetingId().remove(meetingId);
+			chattingUser.getHostByMeetingId().remove(meetingId);
+		}
 		chattingUser.getParticipantBySessionId().remove(sessionId);
 		return participant;
+	}
+
+	public ChattingParticipant setHost(String meetingId, ChattingParticipant host) {
+		List<ChattingParticipant> participantList = getReadyParticipantByMeetingId(meetingId);
+		String originalHostId = host.getSessionId();
+		for (ChattingParticipant participant : participantList) {
+			if(!originalHostId.equals(participant.getSessionId())) {
+				chattingUser.getHostByMeetingId().put(meetingId, participant);
+				return participant;
+			}
+		}
+		return null;
 	}
 
 }

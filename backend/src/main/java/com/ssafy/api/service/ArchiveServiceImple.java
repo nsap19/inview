@@ -48,7 +48,6 @@ public class ArchiveServiceImple implements ArchiveService {
 		System.out.println("meetingParticipant : " + meetingParticipant);
 		List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
 		for (User user : participantList) {
-			System.out.println(user.toString());
 			if (this.findByPathAndUser(path, user) == null) {
 				Archive archive = new Archive();
 				archive.setArchiveName(archiveRegisterPostReq.getArchiveName());
