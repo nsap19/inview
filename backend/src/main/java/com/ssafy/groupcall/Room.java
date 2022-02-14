@@ -51,6 +51,15 @@ public class Room implements Closeable {
     sendParticipantNames(participant);
     return participant;
   }
+  
+  public UserSession join(int userId, String userNickname, WebSocketSession session) throws IOException {
+	    log.info("ROOM {}: adding participant {}", this.meetingId, userId);
+	    final UserSession participant = new UserSession(userId, this.meetingId, session, this.pipeline);
+	    joinRoom(participant);
+	    participants.put(participant.getUserId(), participant);
+	    sendParticipantNames(participant, userNickname);
+	    return participant;
+	  }
 
   public void leave(UserSession user) throws IOException {
     log.debug("PARTICIPANT {}: Leaving room {}", user.getUserId(), this.meetingId);
@@ -113,7 +122,7 @@ public class Room implements Closeable {
         participantsArray.add(participantName);
       }
     }
-
+       
     final JsonObject existingParticipantsMsg = new JsonObject();
     existingParticipantsMsg.addProperty("id", "existingParticipants");
     existingParticipantsMsg.add("data", participantsArray);
@@ -125,6 +134,29 @@ public class Room implements Closeable {
     user.sendMessage(existingParticipantsMsg);
   }
 
+  public void sendParticipantNames(UserSession user, String userNickname) throws IOException {
+
+	    final JsonArray participantsArray = new JsonArray();
+	    for (final UserSession participant : this.getParticipants()) {
+	      if (!participant.equals(user)) {
+	        final JsonElement participantName = new JsonPrimitive(participant.getUserId());
+	        participantsArray.add(participantName);
+	      }
+	    }
+	    
+	    final JsonObject existingParticipantsMsg = new JsonObject();
+	    existingParticipantsMsg.addProperty("id", "existingParticipants");
+	    existingParticipantsMsg.add("data", participantsArray);
+	    existingParticipantsMsg.add("userId", new JsonPrimitive(user.getUserId()));
+	    existingParticipantsMsg.add("meetingId", new JsonPrimitive(user.getMeetingId()));
+	    existingParticipantsMsg.add("userNickname", new JsonPrimitive(userNickname));
+	    
+	    
+	    log.debug("PARTICIPANT {}: sending a list of {} participants", user.getUserId(),
+	        participantsArray.size());
+	    user.sendMessage(existingParticipantsMsg);
+	  }
+  
   public Collection<UserSession> getParticipants() {
     return participants.values();
   }

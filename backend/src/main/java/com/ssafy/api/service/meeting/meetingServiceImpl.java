@@ -133,7 +133,7 @@ public class meetingServiceImpl implements MeetingService {
 				.anyMatch(p -> p.getUser().equals(user));
 
 		if (meeting.getUser().getUserId() == user.getUserId() || isAlreadyParticipant)
-			throw new AlreadyJoinMeetingException();
+			return MeetingJoinRes.builder().url(meeting.getUrl()).build();
 		else if (meeting.getPassword() != null && !meeting.getPassword().equals(password))
 			throw new NotEqualPasswordException();
 		else {
