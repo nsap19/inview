@@ -32,15 +32,18 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <router-link to="/myproject" class="text-decoration-none"><el-dropdown-item>회의 목록 조회</el-dropdown-item></router-link>
-                <router-link to="/mypage" class="text-decoration-none"><el-dropdown-item>회원 정보 수정</el-dropdown-item></router-link>
+                <el-dropdown-item @click="openUpdateUserDialog=true" class="text-decoration-none">회원 정보 수정</el-dropdown-item>
               <el-dropdown-item  @click="this.$store.dispatch('logout')">로그아웃</el-dropdown-item>
              </el-dropdown-menu>
             </template>
          </el-dropdown>
         </div>
+        
         <div v-else>
           <el-button class="m-1" round @click="openLoginDialog=true" plain type="primary">로그인</el-button>
         </div>
+        <UpdateUser v-model="openUpdateUserDialog" v-on:outUser="[openUpdateUserDialog=true, openOutUserDialog=false]"/>
+        <OutUser v-model="openOutUserDialog" v-on:updateUser="[openUpdateUserDialog=true, openOutUserDialog=false]" />
         <Login v-model="openLoginDialog" v-on:signup="[openSignupDialog=true, openLoginDialog=false]" />
         <Register v-model="openSignupDialog" v-on:login="[openSignupDialog=false, openLoginDialog=true]" />
       </div>
@@ -56,23 +59,27 @@ import Search from '@/components/SearchBar.vue'
 import CreateMeeting from "@/components/NavBar/CreateMeeting.vue"
 import Login from "@/components/NavBar/Login.vue"
 import Register from "@/components/NavBar/Register.vue"
+import UpdateUser from "@/components/NavBar/UpdateUser.vue"
+import OutUser from "@/components/NavBar/OutUser.vue"
 import { useStore } from 'vuex'
 
 export default defineComponent({
   name: "NavBar",
   components: {
     Search, CreateMeeting,
-    Login, Register
+    Login, Register, UpdateUser, OutUser
   },
   setup() {
     const openCreateMeetingDialog = ref(false)
     const openLoginDialog = ref(false)
     const openSignupDialog = ref(false)
+    const openUpdateUserDialog = ref(false)
+    const openOutUserDialog = ref(false)
 
     const store = useStore()
     const user = computed(() => store.state.user)
 
-    return { SearchIcon, Plus, openCreateMeetingDialog, openLoginDialog, openSignupDialog, user }
+    return { SearchIcon, Plus, openCreateMeetingDialog, openUpdateUserDialog, openOutUserDialog, openLoginDialog, openSignupDialog, user }
   }
 })
 </script>

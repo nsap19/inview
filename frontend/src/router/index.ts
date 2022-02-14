@@ -39,18 +39,18 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/account',
     name: 'Account',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/Mypage.vue')
+    component: () => import(/* webpackChunkName: "create" */ '@/components/NavBar/UpdateUser.vue')
   },
   {
     path: '/video',
     name: 'Video',
     component: () => import(/* webpackChunkName: "create" */ '@/components/Meeting/Video.vue')
   },
-  {
-    path: "/mypage",
-    name: 'mypage',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/Mypage.vue')
-  },
+  // {
+  //   path: "/mypage",
+  //   name: 'mypage',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/views/Mypage.vue')
+  // },
   {
     path: "/myproject",
     name: 'MyProjectList',
