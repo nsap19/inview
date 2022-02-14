@@ -36,8 +36,8 @@ services:
       TZ: Asia/Seoul
     privileged: true
     volumes:
-      - /home/jenkins/workspace/INVIEW/backend/db/initdb.d:/docker-entrypoint-initdb.d #: 앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
-      - /home/jenkins/workspace/INVIEW/backend/db/conf.d:/etc/mysql/conf.d
+      - /home/jenkins/workspace/INVIEW/db/initdb.d:/docker-entrypoint-initdb.d #: 앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
+      - /home/jenkins/workspace/INVIEW/db/conf.d:/etc/mysql/conf.d
       - /home/systemv/mysql/data:/var/lib/mysql
     networks:
       - backend
