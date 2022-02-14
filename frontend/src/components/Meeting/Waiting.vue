@@ -89,6 +89,20 @@ export default defineComponent({
         })
     }
 
+    const leaveMeeting = function () {
+      axios.delete(`/meeting/${store.state.meeting.id}/users/${store.state.user.id}`, 
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
+      ).then(res => {
+        console.log(res)
+        axios.get(`/meeting/${store.state.meeting.id}`).then(res => {
+          console.log("새 미팅 정보")
+          console.log(res)
+        })
+      }).catch(err => {
+        console.log(err.response)
+      }) 
+    }
+
     const clickLeaveMeeting = function () {
       ElMessageBox.confirm(
         '방을 나가시겠습니까?',
@@ -100,8 +114,9 @@ export default defineComponent({
         }
       )
         .then(() => {
-          store.dispatch('deleteMeeting')
           router.push({ name: 'Home'})
+          leaveMeeting()
+          // store.dispatch('deleteMeeting')
           emit('leave')
           ElMessage({
             type: 'success',

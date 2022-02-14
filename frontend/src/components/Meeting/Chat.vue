@@ -99,11 +99,16 @@ export default {
     },
     recvList: () => {
       this.scrollToEnd()
+    },
+    meeting: function(newValue, oldValue) {
+      console.log("연결안할꺼냐", newValue, oldValue)
+      this.connect()
     }
   },
   mounted() {
     console.log("소켓아", this.$store.state.meeting)
-    if (this.$store.state.meeting.id) {
+    console.log("소켓아", this.$store.state.meeting.id)
+    if (this.$store.state.meeting.id !== undefined) {
       this.connect()
     }
   },
@@ -153,8 +158,6 @@ export default {
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()}
       this.stompClient = Stomp.over(socket, options);
       let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`, meetingId : this.meeting.id};
-      // console.log('headers' + headers)
-      // console.log(this.meeting.id)
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       this.stompClient.connect(
         headers,
@@ -184,25 +187,30 @@ export default {
           // callback 첫번째 파라미터의 body로 메시지의 내용이 들어옵니다.
           this.subscribeId = this.stompClient.subscribe('/subscribe/chat/room/' + this.meeting.id, res => {
             console.log('구독으로 받은 메시지 입니다.', res.body)
-            // console.log(res.body.split(',').slice(-1)[0].slice(11, -2))
-            const command = res.body.split(',')[7].slice(11, -2)
+            console.log(JSON.parse(res.body))
+            const command = JSON.parse(res.body).command
             if (command === "UNREADY" || command === "READY" || command === "PARTICIPANT") {
-              const commandMessage = res.body.split(',')[4].slice(11, -2).split(' ')
+              const commandMessage = JSON.parse(res.body).message.trim().split("  ")
               let participants = []
               commandMessage.forEach(element => {
+                const info = element.split(" ")
                 participants.push({
-                  nickname: element.slice(1),
-                  ready: element.slice(0, 1) === "T" ? true : false
+                  id: info[0],
+                  nickname: info[2],
+                  ready: info[1] === "T" ? true : false
                 })
               });
-              console.log(participants)
-              if (command === "UNREADY" || command === "READY") {
-                this.$store.dispatch('setParticipants', participants)
-              }
+              // console.log(participants)
+              this.$store.dispatch('setParticipants', participants)
+              // if (command === "UNREADY" || command === "READY") {
+              // }
             } else if (command === "START") {
               console.log('start!!!')
               this.$emit('start')
-            } else if (command === "ul" || command === "DISCONNECT") {
+            } else if (command === "HOST") {
+              console.log('HOST!!!')
+              this.$store.dispatch('setNewHost', 3)
+            } else if (command === null || command === "DISCONNECT") {
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               this.recvList.push(JSON.parse(res.body))
             }
@@ -241,6 +249,7 @@ export default {
         this.subscribeId = "";
         this.stompClient.connected = false;
         console.log("구독 해지 완료");
+        this.$store.dispatch('deleteMeeting')
       }
     },
     start(){

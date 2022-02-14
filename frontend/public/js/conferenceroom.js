@@ -68,7 +68,6 @@ window.onbeforeunload = function() {
 ws.onmessage = function(message) {
 	console.log("onmessage에서 받은 매개변수", message)
 	var parsedMessage = JSON.parse(message.data);
-	console.log("onmessage에서 파싱된 메세지", parsedMessage)
 	console.info('Received message: ' + message.data);
 
 	switch (parsedMessage.id) {
@@ -145,8 +144,8 @@ function register() {
 }
 
 function onNewParticipant(request) {
-	console.log("onNewParticipant", request)
-	receiveVideo(request.userId);
+	console.log("onNewParticipant에서", request)
+	receiveVideo(request.userId, request.userNickname);
 }
 
 function receiveVideoResponse(result) {
@@ -182,8 +181,7 @@ function onExistingParticipants(msg) {
 	userId = msg.userId;
 	meetingId = msg.meetingId;
 	userNickname = msg.userNickname;
-	console.log(userId + " registered in room " + meetingId);
-	console.log("onExistingParticipants에서 보내는 유저닉네임", userNickname)
+	// console.log(userId + " registered in room " + meetingId);
 	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
@@ -203,8 +201,13 @@ function onExistingParticipants(msg) {
 		  }
 		  this.generateOffer (participant.offerToReceiveVideo.bind(participant));
 	});
-
-	msg.data.forEach(receiveVideo);
+	// console.log(msg.data)
+	// console.log(msg.infos)
+	// msg.infos.forEach(receiveVideo);
+	for (let [userNickname, userId] of Object.entries(msg.infos)) {
+    console.log(userNickname, userId);
+		receiveVideo(userId, userNickname)
+	}
 }
 
 async function getMedia(userId) {
@@ -235,8 +238,9 @@ function leaveRoom() {
 	ws.close();
 }
 
-function receiveVideo(userId) {
-	var participant = new Participant(userId);
+function receiveVideo(userId, nickname) {
+	console.log("receiveVideo에서", userId, nickname)
+	var participant = new Participant(userId, nickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
