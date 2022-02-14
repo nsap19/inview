@@ -1,6 +1,5 @@
 module.exports = {
   devServer: {
-    // https: true,
     port: 3000,
     open: true,
     // proxy: {
@@ -18,11 +17,9 @@ module.exports = {
     //   }
     // },
     historyApiFallback: true,
-    hot: true
+    hot: true,
   },
-  // css: {
-  //   requireModuleExtension: false
-  // },
+ 
   transpileDependencies: [
     'element-plus'
   ],

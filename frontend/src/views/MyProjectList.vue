@@ -1,31 +1,6 @@
 <template>
     <div class="wrap">
-        <Result :tableDatas="[
-      {
-        category: '직군',
-        content: meetingInfo.industry,
-      },
-      {
-        category: '회사',
-        content: meetingInfo.company,
-      },
-      {
-        category: '시작 시간',
-        content: meetingInfo.startTime,
-      },
-      {
-        category: '종료 시간',
-        content: meetingInfo.endTime,
-      },
-      {
-        category: '참가자',
-        content: meetingInfo.participants,
-      },
-      {
-        category: '다운로드 유효 기간',
-        content: getExpirationDate(),
-      },
-    ]"></Result>
+        <Result :tableDatas="v" v-for="(v, i) in tableDatas" :key="i"></Result>
     </div>
 </template>
 
@@ -33,7 +8,7 @@
 
 import axios from 'axios'
 
-import { defineComponent, reactive,ref } from 'vue'
+import { defineComponent, reactive,ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
@@ -46,31 +21,22 @@ export default defineComponent({
     },
 
     setup(){
-         const meetingInfo = {
-      meetingId: 1,
-      title : '일이삼사오육칠팔구십일이삼사오육칠팔구십',
-      startTime: '2020-01-01 13:53',
-      endTime: '2020-01-01 14:59',
-      participants : ['참가자1', '참가자2', '참가자3'],
-      industry: 'IT',
-      company: '네이버'
-    }
-
-    const getExpirationDate = function () {
-      const date = new Date(meetingInfo.endTime)
-      date.setDate(new Date(meetingInfo.endTime).getDate() + 7)
-      return date.getFullYear() + "-"
-             + ("0" + (1 + date.getMonth())).slice(-2) + "-" 
-             + ("0" + date.getDate()).slice(-2) + " " 
-             + date.getHours() + ":" + date.getMinutes()
-    }
-
         const store = useStore()
-        const router = useRouter()
+      const tableDatas = ref([])
+        onMounted(() => {
+            axios.get(`/users/${store.state.user.id}/meeting`,{
+                         headers: 
+                            {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                            }
+                        }).then(res=>{
+                            tableDatas.value = res.data.data
+            })
 
-        const password = ref('')
-    
-        return {meetingInfo,getExpirationDate}
+         })
+
+
+        return {tableDatas}
     }
 
 

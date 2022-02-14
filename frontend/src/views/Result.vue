@@ -1,14 +1,14 @@
 <template>
   <div class="container result-container">
     <div>
-      <span class="fs-3 mb-0">{{ meetingInfo.title }}</span>
+      <span class="fs-3 mb-0">{{ props.tableDatas.title }}</span>
     </div>
     <div>
-      <el-button>받은 면접 평가 다운로드</el-button>
-      <el-button>면접 영상 다운로드</el-button>
-      <el-button>채팅 내역 다운로드</el-button>
-      <el-button>메모 다운로드</el-button>
-      <el-button>공유 파일 다운로드</el-button>
+      <el-button @click="download('')">받은 면접 평가 다운로드</el-button>
+      <el-button @click="download('')">면접 영상 다운로드</el-button>
+      <el-button @click="download('CHAT')">채팅 내역 다운로드</el-button>
+      <el-button @click="download('')">메모 다운로드</el-button>
+      <el-button @click="download('')">공유 파일 다운로드</el-button>
     </div>
     <hr>
     <div class="row p-1" v-for="(data, index) in tableData" :key="index">
@@ -30,10 +30,12 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
+import axios from "axios"
 
 export default defineComponent({
   name: "Result",
@@ -44,31 +46,68 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const store = useStore()
     const route = useRoute()
 
     const meetingId = route.params.meetingId
     const userName = route.params.userName
-    const meetingInfo = {
-      meetingId: 1,
-      title : '일이삼사오육칠팔구십일이삼사오육칠팔구십',
-      startTime: '2020-01-01 13:53',
-      endTime: '2020-01-01 14:59',
-      participants : ['참가자1', '참가자2', '참가자3'],
-      industry: 'IT',
-      company: '네이버'
-    }
-
+  
     const getExpirationDate = function () {
-      const date = new Date(meetingInfo.endTime)
-      date.setDate(new Date(meetingInfo.endTime).getDate() + 7)
+      const date = new Date(props.tableDatas.endTime)
+      date.setDate(new Date(props.tableDatas.endTime).getDate() + 7)
       return date.getFullYear() + "-"
              + ("0" + (1 + date.getMonth())).slice(-2) + "-" 
              + ("0" + date.getDate()).slice(-2) + " " 
              + date.getHours() + ":" + date.getMinutes()
     }
 
-    const tableData = ref<any>(props.tableDatas);
-    return { meetingId, userName, meetingInfo, tableData }
+    const download = function (type){
+      axios.get(`users/${store.state.user.id}/meeting/${props.tableDatas.meetingId}`).then(res=>{
+        console.log("download",res.data.data.archives)
+
+        for ( let v of res.data.data.archives){
+          if(v.archiveType == type){
+            console.log("s", v)
+
+             var element = document.createElement('a');
+            element.setAttribute('href',v.path);
+            document.body.appendChild(element);
+             element.click();
+          }
+        }
+        
+      })
+    }
+
+    const tableData = ref([
+      {
+        category: '직군',
+        content: props.tableDatas.industry.industryName,
+      },
+      {
+        category: '회사',
+        content: props.tableDatas.company,
+      },
+      {
+        category: '시작 시간',
+        content: props.tableDatas.startTime,
+      },
+      {
+        category: '종료 시간',
+        content: props.tableDatas.endTime,
+      },
+      {
+        category: '참가자',
+        content: props.tableDatas.participants,
+      },
+      {
+        category: '다운로드 유효 기간',
+        content: getExpirationDate(),
+      },
+    ]);
+
+    console.log("test",props.tableDatas, tableData.value)
+    return {download,  meetingId, userName, props, tableData }
   }
 })
 </script>
