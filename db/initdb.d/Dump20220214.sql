@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `inview` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `inview`;
 -- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: inview
@@ -26,15 +24,15 @@ DROP TABLE IF EXISTS `archive`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `archive` (
   `archiveId` int(11) NOT NULL AUTO_INCREMENT,
-  `archiveName` varchar(120) NOT NULL,
+  `archiveName` varchar(200) NOT NULL,
   `archiveType` int(11) NOT NULL,
-  `path` varchar(200) NOT NULL,
+  `path` varchar(350) NOT NULL,
   `meetingId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`archiveId`),
   KEY `archive_userid_fk_idx` (`userId`),
   KEY `archive_meetingid_fk_idx` (`meetingId`),
-  CONSTRAINT `archive_meetingid_fk` FOREIGN KEY (`meetingId`) REFERENCES `meeting` (`meetingId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `archive_meetingid_fk` FOREIGN KEY (`meetingId`) REFERENCES `meeting` (`meetingId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `archive_userid_fk` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -143,8 +141,8 @@ CREATE TABLE `meeting` (
   PRIMARY KEY (`meetingId`),
   KEY `meeting_hostid_fk_idx` (`hostId`),
   KEY `meeting_industryid_fk_idx` (`industryId`),
-  CONSTRAINT `meeting_hostid_fk` FOREIGN KEY (`hostId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `meeting_industryid_fk` FOREIGN KEY (`industryId`) REFERENCES `industry` (`industryId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `meeting_hostid_fk` FOREIGN KEY (`hostId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `meeting_industryid_fk` FOREIGN KEY (`industryId`) REFERENCES `industry` (`industryId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -172,8 +170,8 @@ CREATE TABLE `meetingcompany` (
   PRIMARY KEY (`meetingCompanyId`),
   KEY `mc_meetingid_fk_idx` (`meetingId`),
   KEY `mc_companyid_fk_idx` (`companyId`),
-  CONSTRAINT `mc_companyid_fk` FOREIGN KEY (`companyId`) REFERENCES `company` (`companyId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `mc_meetingid_fk` FOREIGN KEY (`meetingId`) REFERENCES `meeting` (`meetingId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `mc_companyid_fk` FOREIGN KEY (`companyId`) REFERENCES `company` (`companyId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mc_meetingid_fk` FOREIGN KEY (`meetingId`) REFERENCES `meeting` (`meetingId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -201,8 +199,8 @@ CREATE TABLE `participant` (
   PRIMARY KEY (`participantId`),
   KEY `participant_userid_fk_idx` (`userId`),
   KEY `participant_meetingid_fk_idx` (`meetingId`),
-  CONSTRAINT `participant_meetingid_fk` FOREIGN KEY (`meetingId`) REFERENCES `meeting` (`meetingId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `participant_userid_fk` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `participant_meetingid_fk` FOREIGN KEY (`meetingId`) REFERENCES `meeting` (`meetingId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `participant_userid_fk` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -229,7 +227,7 @@ CREATE TABLE `question` (
   `content` varchar(200) NOT NULL,
   PRIMARY KEY (`questionId`),
   KEY `question_industryid_fk_idx` (`industryId`),
-  CONSTRAINT `question_industryid_fk` FOREIGN KEY (`industryId`) REFERENCES `industry` (`industryId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `question_industryid_fk` FOREIGN KEY (`industryId`) REFERENCES `industry` (`industryId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -279,4 +277,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-08 13:36:41
+-- Dump completed on 2022-02-14 13:07:04
