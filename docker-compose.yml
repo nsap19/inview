@@ -71,8 +71,8 @@ services:
       - kurento
     networks:
       - backend
-      # - frontend
+      - frontend
 networks:
   backend: 
-  # frontend:
+  frontend:
         
