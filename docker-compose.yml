@@ -1,17 +1,16 @@
 version: "3.8"
 services:
-  # vue:
-  #   image: node:16.13.0
-  #   build: 
-  #     context: ./frontend
-  #   command: sh -c "npm install && npm start"
-  #   ports:
-  #     - 3000:3000
-  #   container_name: frontend_ssafy_app
-  #   depends_on:
-  #     - spring-boot
-  #   networks:
-  #     - frontend
+  vue:
+    image: node:16.13.0
+    working_dir: ./frontend
+    command: sh -c "npm install && npm start"
+    ports:
+      - 3000:3000
+    container_name: frontend_ssafy_app
+    depends_on:
+      - spring-boot
+    networks:
+      - frontend
 
   db:
     image: mysql:5.7
