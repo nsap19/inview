@@ -27,7 +27,7 @@ export default defineComponent({
   name: 'Search',
   setup () {
     const searchQuery = ref('')
-    const selectedCategory = ref('제목')
+    const selectedCategory = ref('title')
     const router = useRouter()
     const store = useStore()
 

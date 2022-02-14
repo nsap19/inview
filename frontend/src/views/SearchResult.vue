@@ -58,7 +58,7 @@ export default defineComponent({
 
     const loading = ref(false)
     watch(meetings, (newValue, oldValue) => {
-      // console.log('old', oldValue, 'new', newValue)
+      console.log('old', oldValue, 'new', newValue)
       if (!oldValue.length || oldValue.length === newValue.length) {
         loading.value = false
       } else {

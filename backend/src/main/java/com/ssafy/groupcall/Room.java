@@ -23,7 +23,7 @@ import com.google.gson.JsonPrimitive;
 
 public class Room implements Closeable {
   private final Logger log = LoggerFactory.getLogger(Room.class);
-
+  
   private final ConcurrentMap<Integer, UserSession> participants = new ConcurrentHashMap<>(); //key : userId
   private final MediaPipeline pipeline;
   private final int meetingId;
@@ -51,6 +51,15 @@ public class Room implements Closeable {
     sendParticipantNames(participant);
     return participant;
   }
+  
+  public UserSession join(int userId, String userNickname, WebSocketSession session) throws IOException {
+	    log.info("ROOM {}: adding participant {}", this.meetingId, userId);
+	    final UserSession participant = new UserSession(userId, userNickname, this.meetingId, session, this.pipeline);
+	    joinRoom(participant, userNickname);
+	    participants.put(participant.getUserId(), participant);
+	    sendParticipantNames(participant, userNickname);
+	    return participant;
+	  }
 
   public void leave(UserSession user) throws IOException {
     log.debug("PARTICIPANT {}: Leaving room {}", user.getUserId(), this.meetingId);
@@ -78,6 +87,28 @@ public class Room implements Closeable {
 
     return participantsList;
   }
+  
+  private Collection<Integer> joinRoom(UserSession newParticipant, String nickname) throws IOException {
+	    final JsonObject newParticipantMsg = new JsonObject();
+	    newParticipantMsg.addProperty("id", "newParticipantArrived");
+	    newParticipantMsg.addProperty("userId", newParticipant.getUserId());
+	    newParticipantMsg.addProperty("userNickname", nickname);
+
+	    final List<Integer> participantsList = new ArrayList<>(participants.values().size());
+	    log.debug("ROOM {}: notifying other participants of new participant {}", meetingId,
+	        newParticipant.getUserId());
+
+	    for (final UserSession participant : participants.values()) {
+	      try {
+	        participant.sendMessage(newParticipantMsg);
+	      } catch (final IOException e) {
+	        log.debug("ROOM {}: participant {} could not be notified", meetingId, participant.getUserId(), e);
+	      }
+	      participantsList.add(participant.getUserId());
+	    }
+
+	    return participantsList;
+	  }
 
   private void removeParticipant(int userId) throws IOException {
     participants.remove(userId);
@@ -106,25 +137,56 @@ public class Room implements Closeable {
 
   public void sendParticipantNames(UserSession user) throws IOException {
 
-    final JsonArray participantsArray = new JsonArray();
-    for (final UserSession participant : this.getParticipants()) {
-      if (!participant.equals(user)) {
-        final JsonElement participantName = new JsonPrimitive(participant.getUserId());
-        participantsArray.add(participantName);
-      }
-    }
+	  final JsonArray participantsArray = new JsonArray();
+	    for (final UserSession participant : this.getParticipants()) {
+	      if (!participant.equals(user)) {
+	        final JsonElement participantName = new JsonPrimitive(participant.getUserId());
+	        participantsArray.add(participantName);
+	      }
+	    }
 
-    final JsonObject existingParticipantsMsg = new JsonObject();
-    existingParticipantsMsg.addProperty("id", "existingParticipants");
-    existingParticipantsMsg.add("data", participantsArray);
-    existingParticipantsMsg.add("userId", new JsonPrimitive(user.getUserId()));
-    existingParticipantsMsg.add("meetingId", new JsonPrimitive(user.getMeetingId()));
+	    final JsonObject existingParticipantsMsg = new JsonObject();
+	    existingParticipantsMsg.addProperty("id", "existingParticipants");
+	    existingParticipantsMsg.add("data", participantsArray);
+	    existingParticipantsMsg.add("userId", new JsonPrimitive(user.getUserId()));
+	    existingParticipantsMsg.add("meetingId", new JsonPrimitive(user.getMeetingId()));
+
     
     log.debug("PARTICIPANT {}: sending a list of {} participants", user.getUserId(),
         participantsArray.size());
     user.sendMessage(existingParticipantsMsg);
   }
 
+  public void sendParticipantNames(UserSession user, String userNickname) throws IOException {
+	  
+	  final JsonArray participantsArray = new JsonArray();
+	    final JsonObject participantsInfos = new JsonObject();
+	    for (final UserSession participant : this.getParticipants()) {
+	      if (!participant.equals(user)) {
+	    	int userId = participant.getUserId();
+	        final JsonElement participantName = new JsonPrimitive(userId);
+	        participantsArray.add(participantName);
+	        
+	        String nickname = participant.getNickname();
+	        participantsInfos.addProperty(nickname, userId);
+	        
+	      }
+	    }
+
+
+	    final JsonObject existingParticipantsMsg = new JsonObject();
+	    existingParticipantsMsg.addProperty("id", "existingParticipants");
+	    existingParticipantsMsg.add("data", participantsArray);
+	    existingParticipantsMsg.add("userId", new JsonPrimitive(user.getUserId()));
+	    existingParticipantsMsg.add("meetingId", new JsonPrimitive(user.getMeetingId()));
+	    existingParticipantsMsg.add("userNickname", new JsonPrimitive(userNickname));
+	    existingParticipantsMsg.add("infos", participantsInfos);
+
+	    log.debug("PARTICIPANT {}: sending a list of {} participants", user.getUserId(),
+	        participantsArray.size());
+	    user.sendMessage(existingParticipantsMsg);
+	  }
+  
   public Collection<UserSession> getParticipants() {
     return participants.values();
   }

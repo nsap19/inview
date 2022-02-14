@@ -5,18 +5,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import NavBar from "./components/NavBar/NavBar.vue"
 import Footer from "./components/Footer.vue"
+import { useRouter } from "vue-router"
+import { useStore } from "vuex"
+
 export default defineComponent({
   name: 'App',
   components: {
     NavBar, Footer,
   },
   setup() {
-    const openCreateMeetingDialog = ref(false)
+    const router = useRouter()
+    const store = useStore()
+    if (router.currentRoute.value.name !== "Meeting") {
+      // store.dispatch('deleteMeeting')
+      // store.dispatch('setParticipants', [])
+    }
 
-    return { openCreateMeetingDialog }
   }
 })
 </script>

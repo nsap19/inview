@@ -74,12 +74,12 @@ export default defineComponent({
         }
       )
         .then(() => {
+          store.dispatch('deleteMeeting')
           ElMessage({
             type: 'success',
             message: '삭제되었습니다.',
           })
           deleteMeeting()
-          store.dispatch('deleteMeeting')
         })
         .catch(() => {
           ElMessage({
@@ -87,6 +87,20 @@ export default defineComponent({
             message: '취소되었습니다.',
           })
         })
+    }
+
+    const leaveMeeting = function () {
+      axios.delete(`/meeting/${store.state.meeting.id}/users/${store.state.user.id}`, 
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
+      ).then(res => {
+        console.log(res)
+        axios.get(`/meeting/${store.state.meeting.id}`).then(res => {
+          console.log("새 미팅 정보")
+          console.log(res)
+        })
+      }).catch(err => {
+        console.log(err.response)
+      }) 
     }
 
     const clickLeaveMeeting = function () {
@@ -100,8 +114,9 @@ export default defineComponent({
         }
       )
         .then(() => {
-          store.dispatch('deleteMeeting')
           router.push({ name: 'Home'})
+          leaveMeeting()
+          // store.dispatch('deleteMeeting')
           emit('leave')
           ElMessage({
             type: 'success',

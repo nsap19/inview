@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.response.MeetingDetailRes;
 import com.ssafy.api.response.MeetingRes;
@@ -71,13 +73,17 @@ public class MeetingRepositorySupport {
 		if (companies != null) {
 			builder.and(qCompany.companyName.in(companies));
 		}
-
+		
+		builder.and(Expressions.dateTemplate(Date.class,"{0}",qMeeting.startTime)
+				.after(
+					Expressions.dateTemplate(Date.class,"{0}",Expressions.currentTimestamp())));
+		
 		List<Meeting> meetingList = jpaQueryFactory.select(qMeeting).from(qMeeting).leftJoin(qMeetingCompany)
 				.on(qMeeting.eq(qMeetingCompany.meeting)).fetchJoin().leftJoin(qParticipant)
 				.on(qParticipant.meeting.eq(qMeeting)).fetchJoin().leftJoin(qUser).on(qUser.eq(qParticipant.user))
 				.fetchJoin().leftJoin(qCompany).on(qCompany.eq(qMeetingCompany.company)).fetchJoin().leftJoin(qIndustry)
 				.on(qIndustry.eq(qMeeting.industry)).fetchJoin().where(builder).groupBy(qMeeting)
-				.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+				.offset(pageable.getOffset()).limit(pageable.getPageSize()).orderBy(qMeeting.meetingId.desc()).fetch();
 
 		List<MeetingRes> ret = meetingList.stream().map(m -> MeetingRes.builder().id(m.getMeetingId())
 				.title(m.getTitle()).startTime(m.getStartTime()).endTime(m.getEndTime()).userLimit(m.getUserLimit())

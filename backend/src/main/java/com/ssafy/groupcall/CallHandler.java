@@ -95,6 +95,7 @@ public class CallHandler extends TextWebSocketHandler {
 	private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
 		final int meetingId = params.get("meetingId").getAsInt();
 		String token = params.get("accessToken").getAsString();
+		String userNickname = params.get("userNickname").getAsString();
 		
 		User userInfo = meetingVerify.verifyToken(token, meetingId); //토큰 검증 및 해당회의실 participant인지 확인
 		
@@ -102,7 +103,7 @@ public class CallHandler extends TextWebSocketHandler {
 		log.info("PARTICIPANT {}: trying to join room {}", userId, meetingId);
 
 		Room room = roomManager.getRoom(meetingId);
-		final UserSession user = room.join(userId, session);
+		final UserSession user = room.join(userId, userNickname, session);
 		registry.register(user);
 	}
 

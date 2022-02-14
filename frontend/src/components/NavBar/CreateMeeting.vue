@@ -7,7 +7,7 @@
       ref="ruleFormRef"
       :model="ruleForm"
       :rules="rules"
-      label-width="120px"
+      label-width="80px"
       class="demo-ruleForm"
       size="large"
     >
@@ -21,7 +21,7 @@
         <CompanySearchBar v-model="ruleForm.companyName" />
       </el-form-item>
       <el-form-item label="참가 인원">
-        <el-radio-group v-model="ruleForm.userLimit" size="large">
+        <el-radio-group v-model="ruleForm.userLimit">
           <el-radio-button label="1"></el-radio-button>
           <el-radio-button label="2"></el-radio-button>
           <el-radio-button label="3"></el-radio-button>

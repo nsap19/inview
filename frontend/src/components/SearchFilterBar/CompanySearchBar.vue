@@ -6,7 +6,6 @@
     class="inline-input w-100"
     placeholder="회사명을 입력해주세요"
     @select="handleSelect"
-    @keydown="handleInput"
   />
 
 </template>
@@ -69,20 +68,21 @@ export default defineComponent({
 
     const handleSelect = (item: CompanyItem) => {
       company.value = item.value
-      handleInput()
+      // console.log(company.value, item.value)
+      // handleInput()
     }
 
-    const handleInput = () => {
-      if (company.value.trim()) {
-        emit('update:modelValue', company.value)
-      }
-    }
+    // const handleInput = () => {
+    //   if (company.value.trim()) {
+    //     emit('update:modelValue', company.value)
+    //   }
+    // }
 
     onMounted(() => {
       loadAll()
     })
 
-    return { company, state, querySearch, handleSelect, handleInput }
+    return { company, state, querySearch, handleSelect }
   },
   
 })
