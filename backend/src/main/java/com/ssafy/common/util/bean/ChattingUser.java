@@ -19,12 +19,14 @@ import lombok.ToString;
 public class ChattingUser {
 	HashMap<String, Map<String, ChattingParticipant>> participantByMeetingId;
 	HashMap<String, ChattingParticipant> participantBySessionId;
-//	HashMap<String, ChattingParticipant> participantByNickname;
+	HashMap<String, ChattingParticipant> hostByMeetingId;
 
 	public ChattingUser(HashMap<String, Map<String, ChattingParticipant>> participantByMeetingId,
-			HashMap<String, ChattingParticipant> participantBySessionId) {
+			HashMap<String, ChattingParticipant> participantBySessionId,
+			HashMap<String, ChattingParticipant> hostByMeetingId) {
 		this.participantByMeetingId = participantByMeetingId;
 		this.participantBySessionId = participantBySessionId;
+		this.hostByMeetingId = hostByMeetingId;
 	}
 
 }

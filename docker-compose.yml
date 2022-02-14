@@ -2,8 +2,7 @@ version: "3.8"
 services:
   vue:
     image: node:16.13.0
-    build: 
-      context: ./frontend
+    working_dir: ./frontend
     command: sh -c "npm install && npm start"
     ports:
       - 3000:3000
@@ -60,10 +59,10 @@ services:
       - "8080:8080"        
       - "8443:8443"
     environment: 
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/inview?&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ssafy
-      DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
+      # SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/inview?&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+      # SPRING_DATASOURCE_USERNAME: root
+      # SPRING_DATASOURCE_PASSWORD: ssafy
+      # DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
       TZ: "Asia/Seoul"
       JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
       server.address: 0.0.0.0

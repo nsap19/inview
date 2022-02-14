@@ -22,6 +22,8 @@ import com.ssafy.common.util.bean.ChattingParticipant;
 import com.ssafy.db.entity.ChatMessage;
 import com.ssafy.db.entity.ChatMessage.CommandType;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.meeting.Meeting;
+import com.ssafy.db.entity.meeting.Status;
 
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class StompInterceptor implements ChannelInterceptor {
@@ -36,7 +38,7 @@ public class StompInterceptor implements ChannelInterceptor {
 
 	@Autowired
 	private MeetingService meetingService;
-	
+
 	@Autowired
 	private ChatMessageService chatMessageService;
 
@@ -82,7 +84,9 @@ public class StompInterceptor implements ChannelInterceptor {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 		String sessionId = headerAccessor.getSessionId();
 		ChattingParticipant participant;
-		System.out.println(headerAccessor.getCommand()+" seesiongId : " + headerAccessor.getSessionId());
+		ChattingParticipant host;
+		String meetingId;
+		System.out.println(headerAccessor.getCommand() + " seesiongId : " + headerAccessor.getSessionId());
 		System.out.println(headerAccessor.getDetailedLogMessage(message.getPayload()));
 
 		switch (headerAccessor.getCommand()) {
@@ -92,21 +96,28 @@ public class StompInterceptor implements ChannelInterceptor {
 				break;
 
 			// 유저가 Websocket으로 connect()를 한 뒤 호출됨
-			chatMessageService.sendCommandMessage(
-					ChatMessage.builder().command(CommandType.CONNECT).meetingId(participant.getMeetingId())
-							.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.CONNECT)
+					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
+					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
 			break;
 		case SUBSCRIBE:
 			participant = meetingParticipant.getParticipantBySessionId(sessionId);
 			if (participant == null)
 				break;
 
-			User user = meetingService.getMeetingById(Integer.parseInt(participant.getMeetingId())).getUser();
+			meetingId = participant.getMeetingId();
+			host = meetingParticipant.getHostByMeetingId(meetingId);
+			User user = meetingService.getMeetingById(Integer.parseInt(meetingId)).getUser();
 			// 유저가 Websocket으로 subscribe() 를 한 뒤 호출됨
-			CommandType commandType = participant.getUser().getUserId() == user.getUserId() ?  CommandType.READY : CommandType.UNREADY;
-			chatMessageService.sendCommandMessage(
-					ChatMessage.builder().command(commandType).meetingId(participant.getMeetingId())
-							.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+			CommandType commandType = participant.getUser().getUserId() == user.getUserId() ? CommandType.READY
+					: CommandType.UNREADY;
+			chatMessageService.sendCommandMessage(ChatMessage.builder().command(commandType)
+					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
+					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+
+			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.HOST)
+					.meetingId(host.getMeetingId()).sessionId(host.getSessionId())
+					.sender(host.getUser().getNickname().toString()).message("").build(), host.getSessionId());
 			break;
 		case UNSUBSCRIBE: // 유저가 Websocket으로 UNSUBSCRIBE() 를 한 뒤 호출됨
 		case DISCONNECT:
@@ -114,12 +125,27 @@ public class StompInterceptor implements ChannelInterceptor {
 			participant = meetingParticipant.deleteParticipantBySessionId(sessionId);
 			if (participant == null)
 				break;
-			chatMessageService.sendCommandMessage(
-					ChatMessage.builder().command(CommandType.DISCONNECT).meetingId(participant.getMeetingId())
-							.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
-			chatMessageService.sendCommandMessage(
-					ChatMessage.builder().command(CommandType.PARTICIPANT).meetingId(participant.getMeetingId())
-							.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+
+			meetingId = participant.getMeetingId();
+			host = meetingParticipant.getHostByMeetingId(meetingId);
+			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.DISCONNECT)
+					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
+					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.PARTICIPANT)
+					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
+					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+
+			if (host != null && host.getSessionId().equals(sessionId)) {
+				// 미팅종료 전 방장이 나간 경우, 새로운 방장을 선출한다.
+				Meeting meeting = meetingService.getMeetingById(Integer.parseInt(meetingId));
+				if (!meeting.getStatus().equals(Status.CLOSING)) {
+					host = meetingParticipant.setHost(meetingId, host);
+					System.out.println("새 호스트!! : " + host.toString());
+					chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.HOST)
+							.meetingId(host.getMeetingId()).sessionId(host.getSessionId())
+							.sender(host.getUser().getNickname().toString()).message("").build(), host.getSessionId());
+				}
+			}
 			break;
 		default:
 			break;

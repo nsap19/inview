@@ -1,7 +1,5 @@
 package com.ssafy.db.entity;
 
-import com.google.gson.annotations.SerializedName;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +10,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class ChatMessage {
 	private String meetingId;
@@ -25,14 +22,19 @@ public class ChatMessage {
 	private CommandType command; // 받는 사람, "" => 모두에게 로 기록한다.
 
 	@Builder
-	public ChatMessage(String meetingId, String message, String sender, CommandType command) {
+	public ChatMessage(String meetingId, String sessionId, String date, String time, String message, String sender,
+			String receiver, CommandType command) {
 		this.meetingId = meetingId;
+		this.sessionId = sessionId;
+		this.date = date;
+		this.time = time;
 		this.message = message;
 		this.sender = sender;
+		this.receiver = receiver;
 		this.command = command;
 	}
 
 	public enum CommandType {
-		READY, UNREADY, START, END, CONNECT, DISCONNECT, PARTICIPANT
+		READY, UNREADY, START, END, CONNECT, DISCONNECT, PARTICIPANT, HOST
 	}
 }
