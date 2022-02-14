@@ -102,8 +102,8 @@ export default {
     }
   },
   mounted() {
-    // .vue가 생성되면 소켓 연결 시도
-    if (this.$store.state.meeting) {
+    console.log("소켓아", this.$store.state.meeting)
+    if (this.$store.state.meeting.id) {
       this.connect()
     }
   },

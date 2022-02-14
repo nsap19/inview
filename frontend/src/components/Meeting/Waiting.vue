@@ -74,12 +74,12 @@ export default defineComponent({
         }
       )
         .then(() => {
+          store.dispatch('deleteMeeting')
           ElMessage({
             type: 'success',
             message: '삭제되었습니다.',
           })
           deleteMeeting()
-          store.dispatch('deleteMeeting')
         })
         .catch(() => {
           ElMessage({

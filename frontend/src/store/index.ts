@@ -56,6 +56,7 @@ export default createStore({
           page: query.page
         }
       }).then(res => {
+          console.log(res)
           if (1 < query.page) {
             commit('ADD_SEARCH_RESULT', res.data.data.content)
           } else {

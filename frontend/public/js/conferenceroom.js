@@ -145,6 +145,7 @@ function register() {
 }
 
 function onNewParticipant(request) {
+	console.log("onNewParticipant", request)
 	receiveVideo(request.userId);
 }
 
