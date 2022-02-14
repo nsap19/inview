@@ -55,7 +55,7 @@ public class Room implements Closeable {
   public UserSession join(int userId, String userNickname, WebSocketSession session) throws IOException {
 	    log.info("ROOM {}: adding participant {}", this.meetingId, userId);
 	    final UserSession participant = new UserSession(userId, this.meetingId, session, this.pipeline);
-	    joinRoom(participant);
+	    joinRoom(participant, userNickname);
 	    participants.put(participant.getUserId(), participant);
 	    sendParticipantNames(participant, userNickname);
 	    return participant;
@@ -87,6 +87,28 @@ public class Room implements Closeable {
 
     return participantsList;
   }
+  
+  private Collection<Integer> joinRoom(UserSession newParticipant, String nickname) throws IOException {
+	    final JsonObject newParticipantMsg = new JsonObject();
+	    newParticipantMsg.addProperty("id", "newParticipantArrived");
+	    newParticipantMsg.addProperty("userId", newParticipant.getUserId());
+	    newParticipantMsg.addProperty("userNickname", nickname);
+
+	    final List<Integer> participantsList = new ArrayList<>(participants.values().size());
+	    log.debug("ROOM {}: notifying other participants of new participant {}", meetingId,
+	        newParticipant.getUserId());
+
+	    for (final UserSession participant : participants.values()) {
+	      try {
+	        participant.sendMessage(newParticipantMsg);
+	      } catch (final IOException e) {
+	        log.debug("ROOM {}: participant {} could not be notified", meetingId, participant.getUserId(), e);
+	      }
+	      participantsList.add(participant.getUserId());
+	    }
+
+	    return participantsList;
+	  }
 
   private void removeParticipant(int userId) throws IOException {
     participants.remove(userId);

@@ -123,6 +123,7 @@ ws.onmessage = function(message) {
 function register() {
 	var meetingId = document.getElementById('meetingId').value;
 	let token = localStorage.getItem("token");
+	let userNickname = document.getElementById('userNickname').value;
 
 	// document.getElementById('join').style.display = 'none';
 	// document.getElementById('room').style.display = 'block';
@@ -131,6 +132,7 @@ function register() {
 		id : 'joinRoom',
 		accessToken : token,
 		meetingId : meetingId,
+		userNickname : userNickname
 	}
 
 	sendMessage(message);
