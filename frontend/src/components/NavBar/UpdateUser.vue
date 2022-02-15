@@ -68,7 +68,11 @@ export default defineComponent({
     const openDialog = computed({
 
       get: () => props.modelValue,
-      set: (value) => emit("update:modelValue", value),
+      set: (value) => {
+        ruleForm.password = '',
+        ruleForm.passwordCheck = '',
+        emit("update:modelValue", value);
+      },
     });
 
     watch(() => props.modelValue, (newValue, oldValue) => {
@@ -161,12 +165,13 @@ export default defineComponent({
                 ).then((res: any) => {
                     console.log('SUCCESS!!');
                     console.log(res)
-
+                    confirm('회원 정보가 수정되었습니다.')
                     resetInfoForm()
 
                 }).catch((err: any) => {
                     console.log('FAILURE!!');
                     console.log(err.response)
+                    confirm('회원 정보 수정에 실패했습니다.')
                 })
                     //reset
         } else {
