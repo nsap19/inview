@@ -79,7 +79,7 @@ export default defineComponent({
         .then(() => {
           emit('leaveMeeting')
           store.dispatch('deleteMeeting')
-          router.push({ name: 'Home'})
+          // router.push({ name: 'Home'})
           ElMessage({
             type: 'success',
             message: '퇴장하셨습니다.',
