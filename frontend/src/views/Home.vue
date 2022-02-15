@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="container recent-result">
-      <h4>최근 개설 방</h4>
+      <h4>최근 최근 개설 방</h4>
       <div class="row row-cols-1 row-cols-md-3 g-4">
         <div 
           v-for="meeting in meetings.slice(0, 10)" 
