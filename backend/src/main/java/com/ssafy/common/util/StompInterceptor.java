@@ -98,7 +98,7 @@ public class StompInterceptor implements ChannelInterceptor {
 			// 유저가 Websocket으로 connect()를 한 뒤 호출됨
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.CONNECT)
 					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
-					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+					.sender(participant.getUser().getNickname()).message("").build(), sessionId);
 			break;
 		case SUBSCRIBE:
 			participant = meetingParticipant.getParticipantBySessionId(sessionId);
@@ -113,7 +113,7 @@ public class StompInterceptor implements ChannelInterceptor {
 					: CommandType.UNREADY;
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(commandType)
 					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
-					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+					.sender(participant.getUser().getNickname()).message("").build(), sessionId);
 
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.HOST)
 					.meetingId(host.getMeetingId()).sessionId(host.getSessionId())
@@ -130,7 +130,7 @@ public class StompInterceptor implements ChannelInterceptor {
 			host = meetingParticipant.getHostByMeetingId(meetingId);
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.DISCONNECT)
 					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
-					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+					.sender(participant.getUser().getNickname()).message("").build(), sessionId);
 
 			if (host != null && host.getSessionId().equals(sessionId)) {
 				// 미팅종료 전 방장이 나간 경우, 새로운 방장을 선출한다.
@@ -146,7 +146,7 @@ public class StompInterceptor implements ChannelInterceptor {
 			
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.PARTICIPANT)
 					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
-					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
+					.sender(participant.getUser().getNickname()).message("").build(), sessionId);
 			break;
 		default:
 			break;
