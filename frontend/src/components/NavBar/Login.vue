@@ -27,6 +27,9 @@
       <div class="d-flex flex-row justify-content-center">
         <el-button type="text" @click="$emit('signup')">회원가입</el-button>
       </div>
+       <div class="d-flex flex-row justify-content-center" style="margin-top: 4px; cursor:pointer; font-size: 12px; color: blue;"  @click="$emit('password')">
+        <div>비밀번호를 잊어버리셨나요?</div>
+      </div>
 
     </el-form>
   </el-dialog>
@@ -48,17 +51,23 @@ export default defineComponent({
   components:{
     Kakao
   },
-  emits: ['signup', 'update:modelValue'],
+  emits: ['signup', "password",'update:modelValue'],
   setup(props, { emit }) {
     const openDialog = computed({
       get: () => props.modelValue,
-      set: (value) => emit("update:modelValue", value),
+      set: (value) => {   ruleForm.email = ''
+                          ruleForm.password = ''; 
+                          emit("update:modelValue", value); 
+                      },
     });
     const ruleFormRef = ref<InstanceType<typeof ElForm>>()
     const ruleForm = reactive({
       email: '',
       password: '',
     })
+
+
+    
 
     const rules = {
       email: [

@@ -4,13 +4,15 @@
       <span class="fs-3 mb-0">{{ props.tableDatas.title }}</span>
     </div>
     <div>
-      <el-button @click="download('')">받은 면접 평가 다운로드</el-button>
-      <el-button @click="download('')">면접 영상 다운로드</el-button>
+      <el-button @click="download('EVALUATION')">받은 면접 평가 다운로드</el-button>
+      <el-button @click="download('VIDEO')">면접 영상 다운로드</el-button>
       <el-button @click="download('CHAT')">채팅 내역 다운로드</el-button>
-      <el-button @click="download('')">메모 다운로드</el-button>
-      <el-button @click="download('')">공유 파일 다운로드</el-button>
+      <el-button @click="download('MEMO')">메모 다운로드</el-button>
+      <el-button @click="download('FILE')">공유 파일 다운로드</el-button>
     </div>
     <hr>
+
+    
     <div class="row p-1" v-for="(data, index) in tableData" :key="index">
       <div class="col-2">
         <span>{{ data.category }}</span>
@@ -27,6 +29,7 @@
 
       </div>
     </div>
+ 
   </div>
 </template>
 
@@ -34,6 +37,7 @@
 import { defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import dayjs from 'dayjs'
 
 import axios from "axios"
 
@@ -41,7 +45,7 @@ export default defineComponent({
   name: "Result",
    props: {
     tableDatas: {
-      type: Array,
+      type: Object,
       required: true
     }
   },
@@ -53,31 +57,62 @@ export default defineComponent({
     const userName = route.params.userName
   
     const getExpirationDate = function () {
+      if(props.tableDatas.endTime == null){
+        return ''
+      }else{
       const date = new Date(props.tableDatas.endTime)
       date.setDate(new Date(props.tableDatas.endTime).getDate() + 7)
       return date.getFullYear() + "-"
              + ("0" + (1 + date.getMonth())).slice(-2) + "-" 
              + ("0" + date.getDate()).slice(-2) + " " 
              + date.getHours() + ":" + date.getMinutes()
+      }
     }
 
     const download = function (type){
-      axios.get(`users/${store.state.user.id}/meeting/${props.tableDatas.meetingId}`).then(res=>{
-        console.log("download",res.data.data.archives)
-
+      axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.meetingId}`).then(res=>{
         for ( let v of res.data.data.archives){
+          console.log(v.archiveType, type)
           if(v.archiveType == type){
+            if( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
+              alert("다운로드 유효 기간이 지났습니다.")
+            }else{
             console.log("s", v)
+            axios.get(`/download/meeting/${props.tableDatas.meetingId}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
+              headers: 
+                            {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                            }
+                        }).then(res=>{
 
-             var element = document.createElement('a');
-            element.setAttribute('href',v.path);
-            document.body.appendChild(element);
-             element.click();
+                          const FILE = window.URL.createObjectURL(new Blob([res.data]));
+        const fileName = res.headers['content-disposition'].slice(22)
+
+        const fileUrl = document.createElement('a');
+        fileUrl.href = FILE;
+        fileUrl.setAttribute('download', fileName.slice(0, fileName.length - 1));
+        document.body.appendChild(fileUrl);
+        fileUrl.click();
+
+              console.log(res)
+            })
+            }
+            
+            // var element = document.createElement('a');
+            // element.setAttribute('href',v.path);
+            // document.body.appendChild(element);
+            // element.click();
           }
         }
-        
+
       })
     }
+
+    let user ='';
+
+    // for (let v of props.tableDatas.user){
+    //   user = user + v.nickname+ " ";
+    // }
 
     const tableData = ref([
       {
@@ -98,7 +133,7 @@ export default defineComponent({
       },
       {
         category: '참가자',
-        content: props.tableDatas.participants,
+        content: user,
       },
       {
         category: '다운로드 유효 기간',

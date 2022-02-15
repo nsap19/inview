@@ -76,7 +76,7 @@ export default defineComponent({
   props: {
     modelValue: Boolean,
   },
-  emits: ['login', 'update:modelValue'],
+  emits: ['updateUser', 'update:modelValue'],
   setup(props, { emit }) {
     const openDialog = computed({
       get: () => props.modelValue,
@@ -195,6 +195,7 @@ export default defineComponent({
                         console.log(res)
                         
                         resetInfoForm()
+
                         
                     }).catch((err: any) => {
                         console.log('FAILURE!!');
