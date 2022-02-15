@@ -61,8 +61,6 @@ services:
     working_dir: /tmp # RUN, CMD, ADD, COPY등이 이루어질 기본 디렉토리를 설정합니다.
     volumes: # 컨테이너 외부에 파일시스템을 마운트 할 때 사용합니다. 반드시 지정하지 않아도 마운트 할 수 있지만, 기본적으로 지정하는 것이 좋습니다.
       - ./:/tmp
-      - /etc/localtime:/etc/localtime
-      - /usr/share/zoneinfo/Aisa/Seoul:/etc/timezone
 
   spring-boot: 
     build: 
