@@ -151,6 +151,8 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			message.setMessage(setReadyMessage(meetingId, sessionId, ""));
 			break;
 		case HOST:
+			// 위임받은 방장은 바로 준비상태에 진입한다.
+			meetingParticipant.setReadyParticipantByMeetingId(meetingId, sessionId, "T");
 			break;
 		default:
 			message.setMessage("명령어 오류");
