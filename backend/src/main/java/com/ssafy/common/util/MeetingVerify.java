@@ -30,6 +30,15 @@ public class MeetingVerify {
 		return userService.getUserByEmail(email);
 	}
 	
+	public User verifyToken(String token, String meetingUrl) {
+		jwtTokenUtil.handleError(token);
+		String email = Objects.requireNonNull(jwtTokenUtil.getUserEmailFromJwt(token)).trim();
+		int meetingId = meetingInsideService.getMeetingIdByUrl(meetingUrl);
+		checkParticipant(meetingId, email);
+		
+		return userService.getUserByEmail(email);
+	}
+	
 	public void checkParticipant(int meetingId, String email) {
 		User user = userService.getUserByEmail(email);
 		Participant p = meetingInsideService.checkParticipant(meetingId, user.getUserId()); //해당 회의실 participant가 아닌경우 'NotExistsUserException' 발생

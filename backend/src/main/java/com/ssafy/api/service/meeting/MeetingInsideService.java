@@ -13,5 +13,9 @@ public interface MeetingInsideService {
 
 	void kickParticipant(int meetingId, int userId);
 	
+//	void forcedExit(int meetingId, int userId);
+	
 	Participant checkParticipant(int meetingId, int userId);
+	
+	int getMeetingIdByUrl(String meetingUrl);
 }

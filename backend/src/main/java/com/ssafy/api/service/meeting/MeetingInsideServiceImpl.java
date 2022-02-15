@@ -68,4 +68,20 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 		return participant;
 	}
 
+//	@Override
+//	public void forcedExit(int meetingId, int userId) {
+//		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
+//
+//		Participant participant = this.checkParticipant(meetingId, userId);
+//		
+//		participant.setForcedExit(1);
+//	}
+
+	@Override
+	public int getMeetingIdByUrl(String meetingUrl) {
+		Meeting meeting = meetingRepository.findByUrl(meetingUrl).orElseThrow(() -> new NotExistsMeetingException());
+		
+		return meeting.getMeetingId();
+	}
+
 }

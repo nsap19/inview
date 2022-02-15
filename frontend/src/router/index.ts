@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
+import axios from "axios";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,7 +19,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/meeting/:meetingUrl',
     name: 'Meeting',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/Meeting.vue')
+    component: () => import(/* webpackChunkName: "create" */ '@/views/Meeting.vue'),
+    beforeEnter: function (to, from, next) {
+      try {
+        joinMeeting(to.params.meetingUrl);
+      } finally{
+        next();
+      }
+    }
   },
   {
     path: '/result/:userName/:meetingId',
@@ -56,5 +64,21 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+const joinMeeting = function (meetingUrl: unknown) {
+  axios({
+    url: `/meeting/${meetingUrl}/verify`,
+    method: "GET",
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      // console.log(err.response.data.message);
+      router.push({ name: 'Home' })
+      return false;
+    });
+};
 
 export default router
