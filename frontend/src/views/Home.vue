@@ -108,6 +108,7 @@ export default defineComponent({
 
 .recent-result {
   margin-top: 10rem;
+  margin-bottom: 10rem;
   padding: 0 10px;
   min-height: 500px;
 }

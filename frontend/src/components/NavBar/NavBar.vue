@@ -28,18 +28,20 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <router-link to="/myproject" class="text-decoration-none"><el-dropdown-item>회의 목록 조회</el-dropdown-item></router-link>
-                  <router-link to="/mypage" class="text-decoration-none"><el-dropdown-item>회원 정보 수정</el-dropdown-item></router-link>
+                  <el-dropdown-item @click="UpdateUserModal">회원 정보 수정</el-dropdown-item>
                 <el-dropdown-item  @click="this.$store.dispatch('logout')">로그아웃</el-dropdown-item>
               </el-dropdown-menu>
               </template>
           </el-dropdown>
           </div>
           <div v-else>
-            <el-button class="m-1" round @click="openLoginDialog=true" plain type="primary">로그인</el-button>
+            <el-button class="m-1" round @click="openLoginDialog=true" plain size="large">로그인</el-button>
           </div>
-          <Login v-model="openLoginDialog" v-on:signup="[openSignupDialog=true, openLoginDialog=false]" />
+        <Login v-model="openLoginDialog" v-on:password="[openFindPasswordDialog=true, openLoginDialog=false]" v-on:signup="[openSignupDialog=true, openLoginDialog=false]" />
           <Register v-model="openSignupDialog" v-on:login="[openSignupDialog=false, openLoginDialog=true]" />
-        </div>
+         <UpdateUser v-model="openUserUpdateDialog" v-on:updateUser="[openUserUpdateDialog = false]" />
+        <FindPassword v-model="openFindPasswordDialog" v-on:password="[openFindPasswordDialog = false]" />
+     </div>
       </div>
     </div>
   </div>
@@ -54,22 +56,28 @@ import CreateMeeting from "@/components/NavBar/CreateMeeting.vue"
 import Login from "@/components/NavBar/Login.vue"
 import Register from "@/components/NavBar/Register.vue"
 import { useStore } from 'vuex'
+import UpdateUser from './UpdateUser.vue'
+import FindPassword from "@/components/NavBar/FindPassword.vue"
 
 export default defineComponent({
   name: "NavBar",
   components: {
-    Search, CreateMeeting,
+    Search, CreateMeeting,UpdateUser,FindPassword,
     Login, Register
   },
   setup() {
     const openCreateMeetingDialog = ref(false)
     const openLoginDialog = ref(false)
     const openSignupDialog = ref(false)
+    const openFindPasswordDialog = ref(false)
+    const openUserUpdateDialog = ref(false)
 
     const store = useStore()
     const user = computed(() => store.state.user)
-
-    return { SearchIcon, Plus, Avatar, openCreateMeetingDialog, openLoginDialog, openSignupDialog, user }
+ const UpdateUserModal = function(){
+      openUserUpdateDialog.value = true
+    }
+    return { UpdateUserModal,openFindPasswordDialog,openUserUpdateDialog, SearchIcon, Plus, Avatar, openCreateMeetingDialog, openLoginDialog, openSignupDialog, user }
   }
 })
 </script>

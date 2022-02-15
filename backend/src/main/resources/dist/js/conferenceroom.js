@@ -19,15 +19,54 @@
 var participants = {};
 var userId;
 
+// 음소거, 카메라 on/off 기능
+let myStream;
+let muted = false;
+let cameraOff = false;
+
+function handleMuteClick(){
+	var participant = participants[userId];
+
+	myStream.getAudioTracks().forEach((track)=>(track.enabled = !track.enabled));
+	if(!muted){ //마이크 끄기
+		document.getElementById("micOn").style.display = 'none'
+		document.getElementById("micOff").style.display = 'block'
+		muted = true;
+		participant.rtcPeer.audioEnabled = false;
+	}else{ //마이크 켜기
+		document.getElementById("micOn").style.display = 'block'
+		document.getElementById("micOff").style.display = 'none'
+		muted = false;
+		participant.rtcPeer.audioEnabled = true;
+	}
+}
+function handleCameraClick(){
+	var participant = participants[userId];
+
+	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
+	if(cameraOff){//카메라 켜기
+		document.getElementById("cameraOn").style.display = 'block'
+		document.getElementById("cameraOff").style.display = 'none'
+		cameraOff = false;
+		participant.rtcPeer.videoEnabled = true;
+	} else{//카메라 끄기
+		document.getElementById("cameraOn").style.display = 'none'
+		document.getElementById("cameraOff").style.display = 'block'
+		cameraOff = true;
+		participant.rtcPeer.videoEnabled = false;
+	}
+}
+
 
 const serverURL = "http://localhost:8080/api/groupcall";
 let ws = new SockJS(serverURL);
-  
+
 window.onbeforeunload = function() {
 	ws.close();
 };
 
 ws.onmessage = function(message) {
+	console.log("onmessage에서 받은 매개변수", message)
 	var parsedMessage = JSON.parse(message.data);
 	console.info('Received message: ' + message.data);
 
@@ -89,6 +128,7 @@ ws.onmessage = function(message) {
 function register() {
 	var meetingId = document.getElementById('meetingId').value;
 	let token = localStorage.getItem("token");
+	let userNickname = document.getElementById('userNickname').value
 
 	// document.getElementById('join').style.display = 'none';
 	// document.getElementById('room').style.display = 'block';
@@ -97,15 +137,15 @@ function register() {
 		id : 'joinRoom',
 		accessToken : token,
 		meetingId : meetingId,
+		userNickname: userNickname
 	}
-
-	console.log(message)
 
 	sendMessage(message);
 }
 
 function onNewParticipant(request) {
-	receiveVideo(request.userId);
+	console.log("onNewParticipant에서", request)
+	receiveVideo(request.userId, request.userNickname);
 }
 
 function receiveVideoResponse(result) {
@@ -127,7 +167,7 @@ function callResponse(message) {
 
 function onExistingParticipants(msg) {
 	var constraints = {
-		audio : true,
+		audio : false,
 		video : {
 			mandatory : {
 				maxWidth : 320,
@@ -137,15 +177,20 @@ function onExistingParticipants(msg) {
 		}
 	};
 	
+	console.log("onExistingParticipants에서 받은 메세지", msg)
 	userId = msg.userId;
 	meetingId = msg.meetingId;
-	console.log(userId + " registered in room " + meetingId);
-	var participant = new Participant(userId);
+	userNickname = msg.userNickname;
+	// console.log(userId + " registered in room " + meetingId);
+	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
+	//음소거, 카메라 전환	
+	getMedia(userId);
+	
 	var options = {
-	      localVideo: video,
+	      localVideo: myStream,
 	      mediaConstraints: constraints,
 	      onicecandidate: participant.onIceCandidate.bind(participant)
 	    }
@@ -156,9 +201,27 @@ function onExistingParticipants(msg) {
 		  }
 		  this.generateOffer (participant.offerToReceiveVideo.bind(participant));
 	});
-
-	msg.data.forEach(receiveVideo);
+	// console.log(msg.data)
+	// console.log(msg.infos)
+	// msg.infos.forEach(receiveVideo);
+	for (let [userNickname, userId] of Object.entries(msg.infos)) {
+    console.log(userNickname, userId);
+		receiveVideo(userId, userNickname)
+	}
 }
+
+async function getMedia(userId) {
+	let myVideo = document.getElementById("video-" + userId);
+	try {
+	  myStream = await navigator.mediaDevices.getUserMedia({
+		audio: true,
+		video: true,
+	  });
+	  myVideo.srcObject = myStream;
+	} catch (e) {
+	  console.log(e);
+	}
+  }
 
 function leaveRoom() {
 	sendMessage({
@@ -169,14 +232,15 @@ function leaveRoom() {
 		participants[key].dispose();
 	}
 
-	document.getElementById('join').style.display = 'block';
+	// document.getElementById('join').style.display = 'block';
 	// document.getElementById('room').style.display = 'none';
 
 	ws.close();
 }
 
-function receiveVideo(userId) {
-	var participant = new Participant(userId);
+function receiveVideo(userId, nickname) {
+	console.log("receiveVideo에서", userId, nickname)
+	var participant = new Participant(userId, nickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 

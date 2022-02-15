@@ -184,6 +184,7 @@ export default defineComponent({
     }
 
     watch(()=>props.endSignal, () => {
+      console.log("평가에서 신호 안받음?", props.endSignal)
       if (props.endSignal == true) {
         // createHtmlFile()
         console.log('평가에서 종료신호 받음')

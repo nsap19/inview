@@ -18,14 +18,19 @@
       <el-form-item prop="password" :error="errorMessage">
         <el-input type="password" v-model="ruleForm.password" autocomplete="off" @input="clearErrorMessage" placeholder="비밀번호"></el-input>
       </el-form-item>
-      <Kakao />
 
       <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
         <el-button type="primary" round @click="login(ruleFormRef)">로그인</el-button>
+        <div class="mt-2">
+          <Kakao />
+        </div>
         <!-- <el-button @click="openDialog=false">취소</el-button> -->
       </div>
       <div class="d-flex flex-row justify-content-center">
         <el-button type="text" @click="$emit('signup')">회원가입</el-button>
+      </div>
+       <div class="d-flex flex-row justify-content-center" style="margin-top: 4px; cursor:pointer; font-size: 12px; color: blue;"  @click="$emit('password')">
+        <div>비밀번호를 잊어버리셨나요?</div>
       </div>
 
     </el-form>
@@ -48,17 +53,23 @@ export default defineComponent({
   components:{
     Kakao
   },
-  emits: ['signup', 'update:modelValue'],
+  emits: ['signup', "password",'update:modelValue'],
   setup(props, { emit }) {
     const openDialog = computed({
       get: () => props.modelValue,
-      set: (value) => emit("update:modelValue", value),
+      set: (value) => {   ruleForm.email = ''
+                          ruleForm.password = ''; 
+                          emit("update:modelValue", value); 
+                      },
     });
     const ruleFormRef = ref<InstanceType<typeof ElForm>>()
     const ruleForm = reactive({
       email: '',
       password: '',
     })
+
+
+    
 
     const rules = {
       email: [
