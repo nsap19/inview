@@ -21,4 +21,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
 	@Query(value = "select p from Participant p where meetingId=:meetingId and userId=:userId and forcedExit=0")
 	Optional<Participant> findByMeetingIdAndUserId(@Param("meetingId") int meetingId, @Param("userId") int userId);
 	
+	@Query(value = "select count(*) from Participant p where meetingId=:meetingId and userId=:userId and forcedExit=1")
+	Long findCountByMeetingIdAndUserId(@Param("meetingId") int meetingId, @Param("userId") int userId);
+	
 }

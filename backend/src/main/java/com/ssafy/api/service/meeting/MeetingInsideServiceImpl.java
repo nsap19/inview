@@ -84,4 +84,10 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 		return meeting.getMeetingId();
 	}
 
+	@Override
+	public void checkForcedExit(int meetingId, int userId) {
+		Long count = participantRepository.findCountByMeetingIdAndUserId(meetingId, userId);
+		if(count!=0) new NotExistsUserException();
+	}
+
 }

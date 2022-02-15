@@ -39,6 +39,11 @@ public class MeetingVerify {
 		return userService.getUserByEmail(email);
 	}
 	
+	public void checkForcedExitParticipant(int meetingId, String email) {
+		User user = userService.getUserByEmail(email);
+		meetingInsideService.checkForcedExit(meetingId, user.getUserId());
+	}
+	
 	public void checkParticipant(int meetingId, String email) {
 		User user = userService.getUserByEmail(email);
 		Participant p = meetingInsideService.checkParticipant(meetingId, user.getUserId()); //해당 회의실 participant가 아닌경우 'NotExistsUserException' 발생
