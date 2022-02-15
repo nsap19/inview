@@ -18,6 +18,7 @@ import com.ssafy.db.entity.meeting.Meeting;
 public interface ParticipantRepository extends JpaRepository<Participant, Integer> {
 	List<Participant> findByMeeting(Meeting meeting);
 
-	@Query(value = "select p from Participant p where meetingId=:meetingId and userId=:userId")
+	@Query(value = "select p from Participant p where meetingId=:meetingId and userId=:userId and forcedExit=0")
 	Optional<Participant> findByMeetingIdAndUserId(@Param("meetingId") int meetingId, @Param("userId") int userId);
+	
 }

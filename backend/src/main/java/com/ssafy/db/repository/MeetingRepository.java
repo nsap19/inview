@@ -1,8 +1,11 @@
 package com.ssafy.db.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
 
 /**
@@ -10,4 +13,5 @@ import com.ssafy.db.entity.meeting.Meeting;
  */
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
+	Optional<Meeting> findByUrl(String url);
 }

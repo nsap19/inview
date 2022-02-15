@@ -3,10 +3,12 @@ package com.ssafy.api.controller.meeting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,7 @@ import com.ssafy.api.service.meeting.MeetingService;
 import com.ssafy.common.model.response.AdvancedResponseBody;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.CurrentUser;
+import com.ssafy.common.util.MeetingVerify;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
@@ -31,6 +34,22 @@ import io.swagger.annotations.ApiResponses;
 public class MeetingController {
 	@Autowired
 	MeetingService meetingService;
+
+	@Autowired
+	MeetingVerify meetingVerify;
+	
+	@GetMapping("/{meetingUrl}/verify")
+	@ApiOperation(value="미팅 참가자 검증")
+	@ApiResponses({ @ApiResponse(code = 200, message = "참가자 검증 성공"),
+		@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 존재하지 않는 유저입니다."),
+		@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<? extends BaseResponseBody> verifyParticipant(@PathVariable("meetingUrl") String meetingUrl,
+			@RequestHeader("Authorization") String token) {
+		
+		meetingVerify.verifyToken(token, meetingUrl);
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "참가자 검증 성공"));
+	}
 
 	@PostMapping
 	@ApiOperation(value = "미팅 생성")

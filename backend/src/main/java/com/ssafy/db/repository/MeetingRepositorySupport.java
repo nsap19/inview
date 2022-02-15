@@ -24,6 +24,7 @@ import com.ssafy.db.entity.QParticipant;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.entity.meeting.QMeeting;
+import com.ssafy.db.entity.meeting.Status;
 
 @Repository
 public class MeetingRepositorySupport {
@@ -78,6 +79,10 @@ public class MeetingRepositorySupport {
 				.after(
 					Expressions.dateTemplate(Date.class,"{0}",Expressions.currentTimestamp())));
 		
+		builder.or(qMeeting.startTime.isNull());
+		
+		builder.andNot(qMeeting.status.eq(Status.CLOSING));
+		
 		List<Meeting> meetingList = jpaQueryFactory.select(qMeeting).from(qMeeting).leftJoin(qMeetingCompany)
 				.on(qMeeting.eq(qMeetingCompany.meeting)).fetchJoin().leftJoin(qParticipant)
 				.on(qParticipant.meeting.eq(qMeeting)).fetchJoin().leftJoin(qUser).on(qUser.eq(qParticipant.user))
@@ -97,5 +102,5 @@ public class MeetingRepositorySupport {
 		// 페이징
 		return new PageImpl<>(ret, pageable, ret.size());
 	}
-
+	
 }

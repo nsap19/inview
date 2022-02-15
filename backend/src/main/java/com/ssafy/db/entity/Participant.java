@@ -1,5 +1,6 @@
 package com.ssafy.db.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
 import com.ssafy.db.entity.meeting.Meeting;
 
 import lombok.AllArgsConstructor;
@@ -36,4 +38,8 @@ public class Participant {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "meetingId")
 	Meeting meeting;
+
+	@Column(nullable = false)
+	@ColumnDefault("0") //1인 경우 강퇴당한 유저
+	int forcedExit;
 }
