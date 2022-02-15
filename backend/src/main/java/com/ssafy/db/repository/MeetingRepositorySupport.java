@@ -73,11 +73,10 @@ public class MeetingRepositorySupport {
 		if (companies != null) {
 			builder.and(qCompany.companyName.in(companies));
 		}
-		
-		builder.and(Expressions.dateTemplate(Date.class,"{0}",qMeeting.startTime)
-				.after(
-					Expressions.dateTemplate(Date.class,"{0}",Expressions.currentTimestamp())));
-		
+
+		builder.and(Expressions.dateTemplate(Date.class, "{0}", qMeeting.startTime)
+				.after(Expressions.dateTemplate(Date.class, "{0}", Expressions.currentTimestamp())));
+
 		List<Meeting> meetingList = jpaQueryFactory.select(qMeeting).from(qMeeting).leftJoin(qMeetingCompany)
 				.on(qMeeting.eq(qMeetingCompany.meeting)).fetchJoin().leftJoin(qParticipant)
 				.on(qParticipant.meeting.eq(qMeeting)).fetchJoin().leftJoin(qUser).on(qUser.eq(qParticipant.user))
