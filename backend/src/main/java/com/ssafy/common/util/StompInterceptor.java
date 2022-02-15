@@ -109,7 +109,7 @@ public class StompInterceptor implements ChannelInterceptor {
 			host = meetingParticipant.getHostByMeetingId(meetingId);
 			User user = meetingService.getMeetingById(Integer.parseInt(meetingId)).getUser();
 			// 유저가 Websocket으로 subscribe() 를 한 뒤 호출됨
-			CommandType commandType = participant.getUser().getUserId() == user.getUserId() ? CommandType.READY
+			CommandType commandType = participant.getSessionId() == host.getSessionId() ? CommandType.READY
 					: CommandType.UNREADY;
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(commandType)
 					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())

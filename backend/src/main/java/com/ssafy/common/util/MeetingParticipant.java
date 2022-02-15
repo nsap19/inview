@@ -42,7 +42,6 @@ public class MeetingParticipant {
 		}
 		return participantList;
 	}
-	
 
 	public void setReadyParticipantByMeetingId(String meetingId, String sessionId, String ready) {
 		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().get(meetingId);
@@ -88,8 +87,7 @@ public class MeetingParticipant {
 		ChattingParticipant participant = chattingUser.getHostByMeetingId().get(meetingId);
 		return participant;
 	}
-	
-	
+
 	public ChattingParticipant getParticipantBySessionId(String sessionId) {
 		ChattingParticipant participant = chattingUser.getParticipantBySessionId().get(sessionId);
 		return participant;
@@ -112,11 +110,34 @@ public class MeetingParticipant {
 		return participant;
 	}
 
+	public List<ChattingParticipant> deleteParticipantByMeetingId(String meetingId, String deleteUserId) {
+		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().get(meetingId);
+		if (hashMap == null) {
+			return null;
+		}
+		List<ChattingParticipant> participantList = new LinkedList<>();
+		ChattingParticipant participant;
+		int userId = Integer.parseInt(deleteUserId);
+		for (String sessionId : hashMap.keySet()) {
+			participant = getParticipantBySessionId(sessionId);
+			if (participant.getUser().getUserId() == userId) {
+				hashMap.remove(sessionId);
+				chattingUser.getParticipantBySessionId().remove(sessionId);
+				participantList.add(participant);
+			}
+		}
+		if (hashMap.isEmpty()) {
+			chattingUser.getParticipantByMeetingId().remove(meetingId);
+			chattingUser.getHostByMeetingId().remove(meetingId);
+		}
+		return participantList;
+	}
+
 	public ChattingParticipant setHost(String meetingId, ChattingParticipant host) {
 		List<ChattingParticipant> participantList = getReadyParticipantByMeetingId(meetingId);
 		String originalHostId = host.getSessionId();
 		for (ChattingParticipant participant : participantList) {
-			if(!originalHostId.equals(participant.getSessionId())) {
+			if (!originalHostId.equals(participant.getSessionId())) {
 				chattingUser.getHostByMeetingId().put(meetingId, participant);
 				return participant;
 			}
