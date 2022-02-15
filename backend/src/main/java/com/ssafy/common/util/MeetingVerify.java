@@ -34,7 +34,7 @@ public class MeetingVerify {
 		jwtTokenUtil.handleError(token);
 		String email = Objects.requireNonNull(jwtTokenUtil.getUserEmailFromJwt(token)).trim();
 		int meetingId = meetingInsideService.getMeetingIdByUrl(meetingUrl);
-		checkParticipant(meetingId, email);
+		checkForcedExitParticipant(meetingId, email);
 		
 		return userService.getUserByEmail(email);
 	}
