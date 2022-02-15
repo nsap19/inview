@@ -1,39 +1,57 @@
 <template>
-  <div class="container">
-    <div class="mb-4 m-2">
+  <div>
+    <Banner/> 
+    <div class="mt-5 mb-1 m-2">
       <SearchFilterBar/>
     </div>
-    <div v-if="meetings.length > 0" class="m-2 mb-3 pt-2">
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <div 
-          v-for="meeting in meetings" 
-          :key="meeting.id" 
-          class="col"
-        > 
-          <MeetingCard :meeting="meeting" />
+    <div class="result">
+      <div v-if="meetings.length > 0" class="result-cards">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          <div 
+            v-for="meeting in meetings" 
+            :key="meeting.id" 
+            class="col"
+          > 
+            <MeetingCard :meeting="meeting" />
+          </div>
         </div>
       </div>
-    </div>
-    <div v-else class="text-center p-5">
-      검색 결과가 존재하지 않습니다.
-    </div>
-    <div v-loading="loading" class="loading">
+      <div v-else class="text-center p-5 d-flex flex-column align-items-center">
+        <div>
+          <Vue3Lottie :animationData="NoResultsJSON" :width="300" />
+        </div>
+        <p>검색 결과가 존재하지 않습니다.</p>
+      </div>
+      <div v-loading="loading" class="loading" element-loading-background="#F9F9F9">
+      </div>
+      <div ref="createButton" class="create-button">
+        <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" size="large" style="linear-gradient(
+      to right, rgba(206, 229, 208, 0.5) 0%, rgba(243, 240, 215, 0.5) 20%, rgba(224, 192, 151, 0.5), 80%, rgba(255, 120, 120, 0.5) 100%), url(https: //grainy-gradients.vercel.app/noise.svg);
+      background: linear-gradient(145deg, rgba(206, 229, 208, 0.5) 0%, rgba(243, 240, 215, 0.5) 50%, 90%, rgba(255, 120, 120, 0.5) 120%), url(https://grainy-gradients.vercel.app/noise.svg);
+  ">방 만들기</el-button>   
+        <CreateMeeting v-model="openCreateMeetingDialog" />
+      </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, watch, computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SearchFilterBar from '@/components/SearchFilterBar/SearchFilterBar.vue'
 import MeetingCard from '@/components/MeetingCard.vue'
 import { useStore } from 'vuex'
+import Banner from '@/components/Banner.vue'
+import CreateMeeting from "@/components/NavBar/CreateMeeting.vue"
+import { Plus } from '@element-plus/icons-vue'
+import Vue3Lottie from 'vue3-lottie'
+import NoResultsJSON from '@/assets/lottie_json/no_results.json'
 
 export default defineComponent({
   name: 'SearchResult',
   components: {
     SearchFilterBar,
-    MeetingCard
+    MeetingCard, Banner, CreateMeeting, Vue3Lottie
   },
   setup () {
     const route = useRoute()
@@ -75,9 +93,7 @@ export default defineComponent({
         page: 1
       })
       document.addEventListener('scroll', (event) => {
-        // console.log(event)
         const {scrollHeight, scrollTop, clientHeight} = document.documentElement
-        // console.log(scrollHeight, scrollTop, clientHeight)
         if (scrollHeight - Math.round(scrollTop) === clientHeight) {
           store.dispatch('search', {
             title: route.query.title,
@@ -87,12 +103,16 @@ export default defineComponent({
           })
           console.log(meetings)
           page += 1
-          console.log(page)
         }
       })
-    })
 
-    return { getMeetingQuery, meetings, loading }
+      const footer = document.getElementById("footer")
+      console.log(footer.getBoundingClientRect())
+      console.log(createButton.value.getBoundingClientRect())
+    })
+    const openCreateMeetingDialog = ref(false)
+    const createButton = ref(null)
+    return { getMeetingQuery, meetings, loading, openCreateMeetingDialog, Plus, NoResultsJSON, createButton }
   }
 })
 </script>
@@ -101,5 +121,24 @@ export default defineComponent({
 .loading {
   margin: 0 auto;
   height: 80px;
+}
+
+.result {
+  background-color: #F9F9F9;
+  padding-top: 2rem;
+}
+
+.create-button {
+  position: sticky;
+  bottom: 10px;
+  background-color: transparent;
+  text-align: right;
+  margin-right: 20px;
+}
+
+.result-cards {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 0;
 }
 </style>

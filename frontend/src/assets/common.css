@@ -119,3 +119,22 @@ video {
   padding: 5px 10px;
   color: #FEFEFE;
 }
+
+.search-bar .el-input__inner{
+  border: none;
+}
+
+.search-bar .el-input-group__prepend{
+  border: none;
+  background-color: white;
+}
+
+.search-bar .el-input-group__append{
+  border: none;
+  background-color: white;
+}
+
+.el-card.is-always-shadow {
+  box-shadow: rgb(0 0 0 / 6%) 0px 8px 20px;
+  border: none;
+}
