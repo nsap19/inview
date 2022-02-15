@@ -1,31 +1,24 @@
 <template>
-  <!-- <div class="stars-wrapper">
-    <div id='stars'></div>
-    <div id='stars2'></div>
-    <div id='stars3'></div> -->
-    <div class="home text-center">
-      <div class="logo-wrapper">
-        <img alt="INVIEW logo" src="../assets/logo.png" class="logo">
-      </div>
-      <!-- <p style="font-size: 18px;" class="m-4 p-4">찾으시는 어쩌구 어쩌구를 입력하세요!</p> -->
-      <div class="search-bar">
-        <SearchBar style="box-shadow: 0px 8px 20px rgb(0 0 0 / 6%);" />
+  <div class="home text-center">
+    <div class="logo-wrapper">
+      <img alt="INVIEW logo" src="../assets/logo.png" class="logo">
+    </div>
+    <div class="search-bar">
+      <SearchBar style="box-shadow: 0px 8px 20px rgb(0 0 0 / 6%);" />
+    </div>
+  </div>
+  <div class="container recent-result">
+    <h4>최근 만들어진 방</h4>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div 
+        v-for="meeting in meetings.slice(0, 10)" 
+        :key="meeting.id" 
+        class="col"
+      > 
+        <MeetingCard :meeting="meeting" />
       </div>
     </div>
-    <div class="container recent-result">
-      <h4>최근 개설 방</h4>
-      <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div 
-          v-for="meeting in meetings.slice(0, 10)" 
-          :key="meeting.id" 
-          class="col"
-        > 
-          <MeetingCard :meeting="meeting" />
-        </div>
-      </div>
-    </div>
-  <!-- </div> -->
-  
+  </div>
 </template>
 
 <script lang="ts">
@@ -56,9 +49,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
-@import "./../style/home.scss";
-
+<style scoped>
 .logo-wrapper {
   background-color: #F9F9F9;
   padding-top: 7rem;
