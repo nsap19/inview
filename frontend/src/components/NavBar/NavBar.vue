@@ -42,7 +42,7 @@
         <div v-else>
           <el-button class="m-1" round @click="openLoginDialog=true" plain type="primary">로그인</el-button>
         </div>
-        <UpdateUser v-model="openUpdateUserDialog" v-on:outUser="[openUpdateUserDialog=true, openOutUserDialog=false]"/>
+        <UpdateUser v-model="openUpdateUserDialog" v-on:outUser="[openUpdateUserDialog=false, openOutUserDialog=true]"/>
         <OutUser v-model="openOutUserDialog" v-on:updateUser="[openUpdateUserDialog=true, openOutUserDialog=false]" />
         <Login v-model="openLoginDialog" v-on:signup="[openSignupDialog=true, openLoginDialog=false]" />
         <Register v-model="openSignupDialog" v-on:login="[openSignupDialog=false, openLoginDialog=true]" />
