@@ -1,31 +1,51 @@
 <template>
-  <el-dialog 
-    v-model="openDialog"
-    width="320px"
-  >
-    <el-form 
+  <el-dialog v-model="openDialog" width="320px">
+    <el-form
       ref="ruleFormRef"
       :model="ruleForm"
       :rules="rules"
       size="large"
       :hide-required-asterisk="true"
       v-loading="loading"
-     >
-      <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3">
+    >
+      <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3" />
       <el-form-item prop="nickname" :error="nicknameError">
-        <el-input v-model="ruleForm.nickname" autocomplete="off" @input="inputNickname" placeholder="닉네임"></el-input>
+        <el-input
+          v-model="ruleForm.nickname"
+          autocomplete="off"
+          @input="inputNickname"
+          placeholder="닉네임"
+        ></el-input>
       </el-form-item>
-      <el-form-item  prop="password">
-        <el-input type="password" v-model="ruleForm.password" autocomplete="off" placeholder="비밀번호"></el-input>
+      <el-form-item prop="password">
+        <el-input
+          type="password"
+          v-model="ruleForm.password"
+          autocomplete="off"
+          placeholder="비밀번호"
+        ></el-input>
       </el-form-item>
       <el-form-item prop="passwordCheck">
-        <el-input type="password" v-model="ruleForm.passwordCheck" autocomplete="off" placeholder="비밀번호 확인"></el-input>
+        <el-input
+          type="password"
+          v-model="ruleForm.passwordCheck"
+          autocomplete="off"
+          placeholder="비밀번호 확인"
+        ></el-input>
       </el-form-item>
-      <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
-        <el-button type="primary" round @click="ChangeInfo()">수정</el-button>
+      <div
+        class="d-flex flex-column align-self-center"
+        style="margin: 10px auto"
+      >
+        <el-button type="primary" round @click="ChangeInfo(ruleFormRef)"
+          >수정</el-button
+        >
       </div>
-      <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
-        <el-button type="text" @click="$emit('outUser')">회원탈퇴</el-button>
+      <div
+        class="d-flex flex-column align-self-center"
+        style="margin: 10px auto"
+      >
+        <el-button type="text" @click="outUser()">회원탈퇴</el-button>
       </div>
     </el-form>
   </el-dialog>
@@ -43,7 +63,7 @@ export default defineComponent({
   props: {
     modelValue: Boolean,
   },
-  emits: ['outUser', 'update:modelValue'],
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
     const openDialog = computed({
 
@@ -56,7 +76,7 @@ export default defineComponent({
     })
 
     const resetInfoForm = () =>{
-        //infoChangeForm.nickname =''
+        infoChangeForm.nickname = nickname
         infoChangeForm.password =''
         infoChangeForm.passwordCheck =''
     }
@@ -120,34 +140,20 @@ export default defineComponent({
     const infoChangeForm = reactive({
         password: '',
         passwordCheck: '',
-        nickname: nickname
+        nickname: ''
     })
-        
-    const infoChangeErrorMessage = ref('')
 
-    const openOutUserDialog = ref(false)
-
-    const ChangeInfo = ()=>{
-        const {nickname, password, passwordCheck } = infoChangeForm
-        if(password == "" || passwordCheck == ""){
-               infoChangeErrorMessage.value = "빈칸을 모두 입력해주세요."
-        }
-        else if (password != passwordCheck) {
-            infoChangeErrorMessage.value = '비밀번호가 같지 않습니다.'
-        }
-        else {
-            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
-            if(passwordPattern.test(password) === false){
-                infoChangeErrorMessage.value = '비밀번호는 8자를 넘어야 하며 숫자, 영문 대문자, 특수 문자를 포함해야 합니다'
-            }
-            else{
-              infoChangeErrorMessage.value = ''
+    const ChangeInfo = (formEl: InstanceType<typeof ElForm> | undefined) => {
+      if (!formEl) return
+      formEl.validate((valid) => {
+      if (valid) {
+          const { nickname, password } = ruleForm
                 axios.put( `/users/${store.state.user.id}`, {
                     nickname: nickname,
                     password: password,
                 },
                     {
-                      headers: 
+                      headers:
                         {
                             Authorization: `Bearer ${localStorage.getItem("token")}`,
                         }
@@ -155,24 +161,46 @@ export default defineComponent({
                 ).then((res: any) => {
                     console.log('SUCCESS!!');
                     console.log(res)
-                        
+
                     resetInfoForm()
-                        
+
                 }).catch((err: any) => {
                     console.log('FAILURE!!');
                     console.log(err.response)
-                        
-                });  
+                })
                     //reset
-            }
-
+        } else {
+          // console.log('error submit!')
+          return false
         }
+      })
+    } 
+
+    const outUser = () => {
+      var result = confirm("회원탈퇴시 개인정보가 즉시 삭제 처리되며, <br>재가입시 복원되지 않습니다. 탈퇴신청을 하시겠습니까?");
+      if(result) {
+        axios.delete(`/users/${store.state.user.id}`, {params: {password: password.value}}).then((res: any) => {
+              console.log('SUCCESS!!');
+              console.log(res)
+
+              localStorage.removeItem("token");
+              router.push("/")
+
+              password.value = ""
+
+        }).catch((err: any) => {
+              console.log('FAILURE!!');
+              console.log(err.response)
+              alert("회원탈퇴 실패");
+
+        });
+      }
     }
 
-    return { 
-      openDialog, ruleFormRef, ruleForm, rules, 
+    return {
+      openDialog, ruleFormRef, ruleForm, rules,
       nicknameError, inputNickname, loading,
-      password, openOutUserDialog, ChangeInfo,
+      password, ChangeInfo,
       infoChangeForm
     }
   },
@@ -180,89 +208,87 @@ export default defineComponent({
 </script>
 
 <style>
-
 .wrap {
-    max-width: 1000px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  max-width: 1000px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .card-1 {
-    width: 400px;
-    min-height: 350px;
-    margin-top: 50px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    position: relative;
+  width: 400px;
+  min-height: 350px;
+  margin-top: 50px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  position: relative;
 }
 
 .card-2 {
-    margin-top: 100px;
-    width: 400px;
-    min-height: 200px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    position: relative;
+  margin-top: 100px;
+  width: 400px;
+  min-height: 200px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  position: relative;
 }
 
 .card-3 {
-    margin-top: 100px;
-    width: 400px;
-    min-height: 400px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    position: relative;
+  margin-top: 100px;
+  width: 400px;
+  min-height: 400px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  position: relative;
 }
 
 .card-body2 {
-    padding: 10px;
+  padding: 10px;
 }
 
 .card-header2 {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 2%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2%;
 }
 
 .card-header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
 .card-body1 {
-    padding: 2%;
+  padding: 2%;
 }
 
 .change {
-    position: absolute;
-    right: 10px;
+  position: absolute;
+  right: 10px;
 }
 
 #change {
-    justify-self: end;
+  justify-self: end;
 }
 
 #box {
-    margin: 10px;
+  margin: 10px;
 }
 
 #btn_submit {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 80px;
-    height: 30px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 80px;
+  height: 30px;
 }
 
 #err_msg1 {
-    color: red;
-    text-align: center;
+  color: red;
+  text-align: center;
 }
-
 </style>

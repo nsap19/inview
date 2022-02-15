@@ -43,8 +43,7 @@
         <div v-else>
           <el-button class="m-1" round @click="openLoginDialog=true" plain type="primary">로그인</el-button>
         </div>
-        <UpdateUser v-model="openUpdateUserDialog" v-on:outUser="[openUpdateUserDialog=false, openOutUserDialog=true]"/>
-        <OutUser v-model="openOutUserDialog" v-on:updateUser="[openUpdateUserDialog=true, openOutUserDialog=false]" />
+        <UpdateUser v-model="openUpdateUserDialog"/>
         <Login v-model="openLoginDialog" v-on:signup="[openSignupDialog=true, openLoginDialog=false]" />
         <Register v-model="openSignupDialog" v-on:login="[openSignupDialog=false, openLoginDialog=true]" />
       </div>
@@ -61,14 +60,13 @@ import CreateMeeting from "@/components/NavBar/CreateMeeting.vue"
 import Login from "@/components/NavBar/Login.vue"
 import Register from "@/components/NavBar/Register.vue"
 import UpdateUser from "@/components/NavBar/UpdateUser.vue"
-import OutUser from "@/components/NavBar/OutUser.vue"
 import { useStore } from 'vuex'
 
 export default defineComponent({
   name: "NavBar",
   components: {
     Search, CreateMeeting,
-    Login, Register, UpdateUser, OutUser
+    Login, Register, UpdateUser
   },
   setup() {
     const openCreateMeetingDialog = ref(false)
