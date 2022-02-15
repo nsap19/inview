@@ -1,20 +1,8 @@
 <template>
   <div class="container">
     <div class="large-12 medium-12 small-12 cell">
-      <a :href="`https://kauth.kakao.com/oauth/authorize?client_id=`+KAKAO_API_KEY+`&redirect_uri=`+KAKAO_REDIRECT_URI+`&response_type=code`">
-        <img src="@/assets/kakao_login_medium_wide.png" class="w-100">
-      </a>
+      <img src="@/assets/kakao_login_medium_wide.png" class="w-100" @click="kakoLoginBtn">
     </div>
-    <ul>
-      <li @click="kakaoLogin">
-        <a href="javascript:void(0)">
-          <span>카카오 로그인</span>
-        </a>
-      </li>
-      <li @click="kakoLoginBtn">
-        <span>카카오 로그인2</span>
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -23,28 +11,24 @@ import axios from "axios";
 
 export default {
   name: "App",
-  created() {
-    console.log(process.env); // true
-    console.log(process.env.VUE_APP_KAKAO_API_KEY);
-  },
-  mounted: function () {
-    this.$nextTick(function () {
-      // Code that will run only after the
-      // entire view has been rendered
-      if (this.kakaoInfo != "") {
-        var data = JSON.parse(this.kakaoInfo);
+  // mounted: function () {
+  //   this.$nextTick(function () {
+  //     // Code that will run only after the
+  //     // entire view has been rendered
+  //     if (this.kakaoInfo != "") {
+  //       var data = JSON.parse(this.kakaoInfo);
 
-        alert("카카오로그인 성공 \n accessToken : " + data["accessToken"]);
-        alert(
-          "user : \n" +
-            "email : " +
-            data["email"] +
-            "\n nickname : " +
-            data["nickname"]
-        );
-      }
-    });
-  },
+  //       alert("카카오로그인 성공 \n accessToken : " + data["accessToken"]);
+  //       alert(
+  //         "user : \n" +
+  //           "email : " +
+  //           data["email"] +
+  //           "\n nickname : " +
+  //           data["nickname"]
+  //       );
+  //     }
+  //   });
+  // },
   data() {
     return {
       kakaoInfo: "",
@@ -72,7 +56,6 @@ export default {
         .catch();
     },
 
-    //https://archijude.tistory.com/425
     kakoLoginBtn() {
       var self = this; //다른 method 사용하기 위해 사용
       window.Kakao.init("08176443547157e6d25360abeded1e0b"); //처음에 카카오 로그인 세션을 없애준다.
@@ -96,9 +79,17 @@ export default {
             url: "/v2/user/me",
             data: { property_keys: ["kakao_account.email"] },
             success: async function (response) {
-              const user_join_type = "k";
-              console.log(response);
-              const kakaoemail = response.kakao_account.email;
+              await axios.post('http://localhost:8080/api/oauth/login/kakao', response)
+              .then(res=>{
+                console.log(res.data)
+                localStorage.setItem("token", res.data.token);
+                this.$store.dispatch('setUser', { nickname: res.data.nickname, id: res.data.userId });
+              }).catch(e=>{
+                console.log(e);
+              })
+              // console.log(response);
+              // const kakaoemail = response.kakao_account.email;
+              // console.log(response.kakao_account.email);
             },
             fail: function (error) {
               console.log(error);
