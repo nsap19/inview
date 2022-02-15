@@ -32,7 +32,8 @@ services:
     environment:
       MYSQL_DATABASE: inview
       MYSQL_ROOT_PASSWORD: ssafy
-      MYSQL_ROOT_HOST: '%' #외부  접근 가능
+      MYSQL_USER: ssafy
+      MYSQL_PASSWORD: ssafy
       TZ: Asia/Seoul
     privileged: true
     volumes: #앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
@@ -60,6 +61,8 @@ services:
     working_dir: /tmp # RUN, CMD, ADD, COPY등이 이루어질 기본 디렉토리를 설정합니다.
     volumes: # 컨테이너 외부에 파일시스템을 마운트 할 때 사용합니다. 반드시 지정하지 않아도 마운트 할 수 있지만, 기본적으로 지정하는 것이 좋습니다.
       - ./:/tmp
+      - /etc/localtime:/etc/localtime
+      - /usr/share/zoneinfo/Aisa/Seoul:/etc/timezone
 
   spring-boot: 
     build: 
@@ -75,9 +78,11 @@ services:
       # SPRING_DATASOURCE_USERNAME: root
       # SPRING_DATASOURCE_PASSWORD: ssafy
       # DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
-      TZ: "Asia/Seoul"
       JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
       server.address: 0.0.0.0
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /usr/share/zoneinfo/Aisa/Seoul:/etc/timezone
     depends_on:
       - db
       - kurento
