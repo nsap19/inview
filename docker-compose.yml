@@ -80,9 +80,7 @@ services:
       # DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
       JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
       server.address: 0.0.0.0
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /usr/share/zoneinfo/Aisa/Seoul:/etc/timezone
+      TZ: Asia/Seoul
     depends_on:
       - db
       - kurento
