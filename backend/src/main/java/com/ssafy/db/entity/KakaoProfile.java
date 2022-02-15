@@ -1,56 +1,46 @@
 package com.ssafy.db.entity;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class KakaoProfile {
-	@SerializedName("id")
-	@Expose
+	@JsonProperty("id")
 	public Integer id;
-	@SerializedName("connected_at")
-	@Expose
+	@JsonProperty("connected_at")
 	public String connectedAt;
-	@SerializedName("properties")
-	@Expose
+	@JsonProperty("properties")
 	public Properties properties;
-	@SerializedName("kakao_account")
-	@Expose
+	@JsonProperty("kakao_account")
 	public KakaoAccount kakaoAccount;
 
 	@Getter
 	@Setter
 	@ToString
-	@NoArgsConstructor
+//	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 	public class KakaoAccount {
-		@SerializedName("profile_nickname_needs_agreement")
-		@Expose
+		@JsonProperty("profile_nickname_needs_agreement")
 		public Boolean profileNicknameNeedsAgreement;
-		@SerializedName("profile")
-		@Expose
+		@JsonProperty("profile")
 		public Profile profile;
-		@SerializedName("has_email")
-		@Expose
+		@JsonProperty("has_email")
 		public Boolean hasEmail;
-		@SerializedName("email_needs_agreement")
-		@Expose
+		@JsonProperty("email_needs_agreement")
 		public Boolean emailNeedsAgreement;
-		@SerializedName("is_email_valid")
-		@Expose
+		@JsonProperty("is_email_valid")
 		public Boolean isEmailValid;
-		@SerializedName("is_email_verified")
-		@Expose
+		@JsonProperty("is_email_verified")
 		public Boolean isEmailVerified;
-		@SerializedName("email")
-		@Expose
+		@JsonProperty("email")
 		public String email;
 
 	}
@@ -58,20 +48,18 @@ public class KakaoProfile {
 	@Getter
 	@Setter
 	@ToString
-	@NoArgsConstructor
+//	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 	public class Profile {
-		@SerializedName("nickname")
-		@Expose
+		@JsonProperty("nickname")
 		public String nickname;
 	}
 
 	@Getter
 	@Setter
 	@ToString
-	@NoArgsConstructor
+//	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 	public class Properties {
-		@SerializedName("nickname")
-		@Expose
+		@JsonProperty("nickname")
 		public String nickname;
 	}
 }

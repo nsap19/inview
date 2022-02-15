@@ -88,7 +88,8 @@ public class OAuthController {
 			@ApiResponse(code = 400, message = "회원가입/ 로그인 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> registerAndLogin(@RequestBody KakaoProfile kakaoProfile) throws Exception {
-		System.out.println(kakaoProfile.toString());		
+		System.out.println(kakaoProfile.toString());
+
 		ResponseEntity<? extends BaseResponseBody> response = oauthService.registerAndLogin(kakaoProfile);
 		
 		return response;
