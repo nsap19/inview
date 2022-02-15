@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -33,7 +35,7 @@ public class LastMeetingRepositorySupport {
 	QMeetingCompany qMeetingCompany = QMeetingCompany.meetingCompany;
 	QCompany qCompany = QCompany.company;
 
-	public List<LastMeetingRes> findMeetingById(int userId, Pageable pageable) {
+	public Page<LastMeetingRes> findMeetingById(int userId, Pageable pageable) {
 
 		List<Meeting> meetingList = jpaQueryFactory.select(qMeeting).from(qMeeting).leftJoin(qMeetingCompany)
 				.on(qMeeting.eq(qMeetingCompany.meeting)).fetchJoin().leftJoin(qParticipant)
@@ -51,7 +53,7 @@ public class LastMeetingRepositorySupport {
 						.collect(Collectors.toList()))
 				.build()).collect(Collectors.toList());
 
-		return ret;
+		return new PageImpl<>(ret, pageable, ret.size());
 	}
 
 	public LastMeetingDetailRes findMeetingDetailById(int userId, int meetingId) {

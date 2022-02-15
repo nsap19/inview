@@ -1,8 +1,7 @@
 package com.ssafy.api.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class MyPageServiceImpl implements MyPageService {
 	}
 
 	@Override
-	public List<LastMeetingRes> searchMeeting(int userId, int page) {
+	public Page<LastMeetingRes> searchMeeting(int userId, int page) {
 		PageRequest pageable = PageRequest.of(page - 1, 6);
 
 		userRepository.findById(userId).orElseThrow(() -> new NotExistsUserException());
