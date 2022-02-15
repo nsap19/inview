@@ -42,6 +42,27 @@ public class OAuthServiceImpl implements OAuthService {
 	PasswordEncoder passwordEncoder;
 
 	@Override
+	public String getKakaoUrl() {
+		return "https://kauth.kakao.com/oauth/authorize?" + KAKAO_CLIENT_ID + "&redirect_uri="+ KAKAO_REDIRECT_URI + "&response_type=code";
+	}
+	
+	public ResponseEntity<String> getKakao() {
+		RestTemplate rt = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("authorize", KAKAO_CLIENT_ID);
+		params.add("redirect_uri", KAKAO_REDIRECT_URI);
+		params.add("response_type", "code");
+
+		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+		ResponseEntity<String> response = rt.exchange("https://kauth.kakao.com/oauth", HttpMethod.GET,
+				kakaoTokenRequest, String.class);
+
+		return response;
+	}
+	
+	@Override
 	public ResponseEntity<String> getKakaoToken(String code) {
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -136,4 +157,6 @@ public class OAuthServiceImpl implements OAuthService {
 		userRepository.save(user);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원가입 성공"));
 	}
+
+
 }

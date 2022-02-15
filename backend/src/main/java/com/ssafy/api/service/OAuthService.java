@@ -8,6 +8,8 @@ import com.ssafy.db.entity.KakaoProfile;
 import com.ssafy.db.entity.OAuthToken;
 
 public interface OAuthService {
+	String getKakaoUrl();
+	ResponseEntity<String> getKakao();
 	ResponseEntity<String> getKakaoToken(String code);
 	ResponseEntity<String> getKakaoUserData(OAuthToken oauthToken);
 	ResponseEntity<? extends BaseResponseBody> createUser(UserRegisterPostReq userRegisterInfo);

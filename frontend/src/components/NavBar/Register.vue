@@ -110,11 +110,11 @@ export default defineComponent({
 
     // eslint-disable-next-line
     const validatePassword = (rule: any, value: any, callback: any) => {
-      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+      const passwordPattern = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z]).{8,}$/;
       if (ruleForm.password === '') {
         callback(new Error('비밀번호를 입력해주세요'))
       } else if (passwordPattern.test(ruleForm.password) === false) {
-        callback(new Error('비밀번호는 8자를 넘으며 숫자, 영문 대문자, 특수 문자를 포함해야 합니다'))
+        callback(new Error('8자 이상으로 영문, 숫자, 특수문자를 포함시켜 주세요'))
       } else {
         callback()
       }

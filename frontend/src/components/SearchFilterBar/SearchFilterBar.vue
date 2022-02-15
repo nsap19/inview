@@ -1,5 +1,5 @@
 <template>
-  <el-card class="search-filter-bar">
+  <div class="search-filter-bar">
     <el-form 
       size="large"
       label-position="top"
@@ -7,7 +7,7 @@
     >
       <div class="container">
         <div class="row justify-content-center pt-3">
-          <div class="col-12 col-lg-10">
+          <div class="col-12 col-lg-10 w-100" style="max-width: 1000px;">
             <div class="row row-cols-1 row-cols-md-3">
               <el-form-item label="제목" class="col">
                 <el-input v-model="title" placeholder="제목을 입력해주세요"></el-input>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </el-form>
-  </el-card>
+  </div>
 </template>
 
 <script lang="ts">

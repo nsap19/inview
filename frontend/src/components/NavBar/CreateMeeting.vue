@@ -2,12 +2,13 @@
   <el-dialog
     v-model="openDialog"
     title="방 만들기"
+    width="450px"
   >
     <el-form 
       ref="ruleFormRef"
       :model="ruleForm"
       :rules="rules"
-      label-width="80px"
+      label-width="90px"
       class="demo-ruleForm"
       size="large"
     >
@@ -59,10 +60,10 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
-      <el-form-item>
+      <div class="d-flex justify-content-center">
         <el-button type="primary" @click="submitForm(ruleFormRef)">생성</el-button>
         <el-button @click="openDialog=false">취소</el-button>
-      </el-form-item>
+      </div>
     </el-form>
   </el-dialog>
 </template>

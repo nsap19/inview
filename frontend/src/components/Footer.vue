@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.$route.path.startsWith('/meeting')">
+  <div id="footer" v-if="!this.$route.path.startsWith('/meeting')">
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-light text-muted">
       <!-- Section: Social media -->
