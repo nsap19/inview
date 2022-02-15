@@ -1,16 +1,27 @@
 version: "3.8"
 services:
-  vue:
-    image: node:16.13.0
-    working_dir: ./frontend
-    command: sh -c "npm install && npm start"
+  # vue:
+  #   image: node:16.13.0
+  #   working_dir: ./frontend
+  #   command: sh -c "npm install && npm start"
+  #   ports:
+  #     - 3000:3000
+  #   container_name: frontend_ssafy_app
+  #   depends_on:
+  #     - spring-boot
+  #   networks:
+  #     - frontend
+  nginx:
+    image: nginx:latest
+    container_name: nginx    
     ports:
-      - 3000:3000
-    container_name: frontend_ssafy_app
+      - "80:80"
+    volumes:
+      - /home/jenkins/workspace/INVIEW/frontend/default.conf:/etc/nginx/conf.d/default.conf
+      - /home/jenkins/workspace/INVIEW/frontend/dist:/usr/share/nginx/html
+    restart: "always"
     depends_on:
       - spring-boot
-    networks:
-      - frontend
 
   db:
     image: mysql:5.7
@@ -21,12 +32,14 @@ services:
     environment:
       MYSQL_DATABASE: inview
       MYSQL_ROOT_PASSWORD: ssafy
-      MYSQL_ROOT_HOST: '%' #외부  접근 가능
+      MYSQL_USER: ssafy
+      MYSQL_PASSWORD: ssafy
       TZ: Asia/Seoul
     privileged: true
-    volumes:
-      - ./db/initdb.d:/docker-entrypoint-initdb.d #: 앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
-      - ./db/conf.d:/etc/mysql/conf.d
+    volumes: #앞이 로컬 파일시스템 경로, 뒤쪽이 컨테이너 내부 경로
+      - /home/jenkins/workspace/INVIEW/db/initdb.d:/docker-entrypoint-initdb.d 
+      - /home/jenkins/workspace/INVIEW/db/conf.d:/etc/mysql/conf.d
+      - /home/systemv/mysql/data:/var/lib/mysql
     networks:
       - backend
 
@@ -63,16 +76,16 @@ services:
       # SPRING_DATASOURCE_USERNAME: root
       # SPRING_DATASOURCE_PASSWORD: ssafy
       # DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
-      TZ: "Asia/Seoul"
       JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
       server.address: 0.0.0.0
+      TZ: Asia/Seoul
     depends_on:
       - db
       - kurento
     networks:
       - backend
-      - frontend
+      # - frontend
 networks:
   backend: 
-  frontend:
+  # frontend:
         
