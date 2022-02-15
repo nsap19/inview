@@ -131,9 +131,6 @@ public class StompInterceptor implements ChannelInterceptor {
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.DISCONNECT)
 					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
 					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
-			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.PARTICIPANT)
-					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
-					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
 
 			if (host != null && host.getSessionId().equals(sessionId)) {
 				// 미팅종료 전 방장이 나간 경우, 새로운 방장을 선출한다.
@@ -146,6 +143,10 @@ public class StompInterceptor implements ChannelInterceptor {
 							.sender(String.valueOf(host.getUser().getUserId())).message(host.getUser().getNickname()).build(), host.getSessionId());
 				}
 			}
+			
+			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.PARTICIPANT)
+					.meetingId(participant.getMeetingId()).sessionId(participant.getSessionId())
+					.sender(participant.getUser().getNickname().toString()).message("").build(), sessionId);
 			break;
 		default:
 			break;
