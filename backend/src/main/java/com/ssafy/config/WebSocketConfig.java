@@ -31,7 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/stomp-chat").setAllowedOrigins("http://localhost:3000").withSockJS();
+		registry.addEndpoint("/stomp-chat").setAllowedOrigins("http://i6a201.p.ssafy.io:8080", "http://localhost:3000").withSockJS();
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://localhost:3000").withSockJS();
+		registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://i6a201.p.ssafy.io:8080", "http://localhost:3000").withSockJS();
 
 	}
 

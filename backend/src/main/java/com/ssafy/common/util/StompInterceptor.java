@@ -117,7 +117,7 @@ public class StompInterceptor implements ChannelInterceptor {
 
 			chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.HOST)
 					.meetingId(host.getMeetingId()).sessionId(host.getSessionId())
-					.sender(host.getUser().getNickname().toString()).message("").build(), host.getSessionId());
+					.sender(String.valueOf(host.getUser().getUserId())).message(host.getUser().getNickname()).build(), host.getSessionId());
 			break;
 		case UNSUBSCRIBE: // 유저가 Websocket으로 UNSUBSCRIBE() 를 한 뒤 호출됨
 		case DISCONNECT:
@@ -143,7 +143,7 @@ public class StompInterceptor implements ChannelInterceptor {
 					System.out.println("새 호스트!! : " + host.toString());
 					chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.HOST)
 							.meetingId(host.getMeetingId()).sessionId(host.getSessionId())
-							.sender(host.getUser().getNickname().toString()).message("").build(), host.getSessionId());
+							.sender(String.valueOf(host.getUser().getUserId())).message(host.getUser().getNickname()).build(), host.getSessionId());
 				}
 			}
 			break;

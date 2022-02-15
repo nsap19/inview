@@ -151,7 +151,6 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			message.setMessage(setReadyMessage(meetingId, sessionId, ""));
 			break;
 		case HOST:
-			message.setMessage(message.getSender() + "님이 방장입니다!");
 			break;
 		default:
 			message.setMessage("명령어 오류");
