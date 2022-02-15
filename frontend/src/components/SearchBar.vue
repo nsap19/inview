@@ -4,8 +4,7 @@
     placeholder="검색어를 입력하세요"
     size="large"
     @keyup.enter="goToSearchResult"
-    :suffix-icon="Search"
-    style="max-width: 300px;"
+    style="max-width: 400px;"
   >
     <template #prepend>
       <el-select v-model="selectedCategory" placeholder="제목" style="width: 80px">
@@ -13,6 +12,9 @@
         <el-option label="직군" value="industry"></el-option>
         <el-option label="회사" value="company"></el-option>
       </el-select>
+    </template>
+    <template #append>
+      <el-button :icon="Search" @click="goToSearchResult"></el-button>
     </template>
   </el-input>
 </template>
@@ -55,4 +57,7 @@ export default defineComponent({
 <style scoped>
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css");
 
+.el-input__inner{
+  border: none;
+}
 </style>
