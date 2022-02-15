@@ -79,6 +79,17 @@ public class MeetingController {
 				meetingService.joinMeeting(meetingId, password, CurrentUser.getUserId())));
 	}
 
+	@DeleteMapping("/{meetingId}/cancel")
+	@ApiOperation(value = "미팅 참가 신청 취소", notes = "미팅 시작 전 참가 신청 취소")
+	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 참가 신청 취소 성공"),
+			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 존재하지 않는 유저입니다. \n 참가하지 않은 유저입니다. \n 이미 시작된 미팅입니다."),
+			@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<? extends BaseResponseBody> cancelParticipation(@PathVariable("meetingId") int meetingId) {
+
+		meetingService.cancelParticipation(meetingId, CurrentUser.getUserId());
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "미팅 참가 신청 취소 성공"));
+	}
+
 	@ApiModel
 	private class MeetingRegisterClass extends AdvancedResponseBody<MeetingRegisterRes> {
 	}
