@@ -11,7 +11,6 @@ import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
 import com.ssafy.api.response.MeetingJoinRes;
 import com.ssafy.api.response.MeetingRegisterRes;
 import com.ssafy.common.exception.handler.AlreadyFullParticipantException;
-import com.ssafy.common.exception.handler.AlreadyJoinMeetingException;
 import com.ssafy.common.exception.handler.AlreadyRunningMeetingException;
 import com.ssafy.common.exception.handler.NotEqualPasswordException;
 import com.ssafy.common.exception.handler.NotExistsCompanyException;
@@ -19,6 +18,7 @@ import com.ssafy.common.exception.handler.NotExistsIndustryException;
 import com.ssafy.common.exception.handler.NotExistsMeetingException;
 import com.ssafy.common.exception.handler.NotExistsUserException;
 import com.ssafy.common.exception.handler.NotHostException;
+import com.ssafy.common.exception.handler.NotParticipantException;
 import com.ssafy.db.entity.Company;
 import com.ssafy.db.entity.Industry;
 import com.ssafy.db.entity.MeetingCompany;
@@ -129,10 +129,10 @@ public class meetingServiceImpl implements MeetingService {
 
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotExistsUserException());
 
-		boolean isAlreadyParticipant = participantRepository.findByMeeting(meeting).stream()
-				.anyMatch(p -> p.getUser().equals(user));
+		boolean isParticipant = participantRepository.findByMeeting(meeting).stream()
+				.anyMatch(p -> p.getUser().getUserId() == user.getUserId());
 
-		if (meeting.getUser().getUserId() == user.getUserId() || isAlreadyParticipant)
+		if (meeting.getUser().getUserId() == user.getUserId() || isParticipant)
 			return MeetingJoinRes.builder().url(meeting.getUrl()).build();
 		else if (meeting.getPassword() != null && !meeting.getPassword().equals(password))
 			throw new NotEqualPasswordException();
@@ -141,6 +141,27 @@ public class meetingServiceImpl implements MeetingService {
 			return MeetingJoinRes.builder().url(meeting.getUrl()).build();
 		}
 
+	}
+
+	@Override
+	public void cancelParticipation(int meetingId, int userId) {
+		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
+
+		List<Participant> participantList = participantRepository.findByMeeting(meeting);
+
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotExistsUserException());
+
+		boolean isParticipant = participantRepository.findByMeeting(meeting).stream()
+				.anyMatch(p -> p.getUser().getUserId() == userId);
+
+		if (!isParticipant)
+			throw new NotParticipantException();
+		else if (Status.RUNNING.equals(meeting.getStatus()))
+			throw new AlreadyRunningMeetingException();
+		else {
+			participantRepository.deleteByMeetingIdAndUserId(meeting.getMeetingId(), user.getUserId());
+			return;
+		}
 	}
 
 	@Override

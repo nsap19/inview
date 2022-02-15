@@ -18,4 +18,6 @@ public interface MeetingService {
 	MeetingJoinRes joinMeeting(int meetingId, String password, int userId);
 
 	Meeting getMeetingById(int meetingId);
+
+	void cancelParticipation(int meetingId, int userId);
 }
