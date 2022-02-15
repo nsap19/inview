@@ -1,15 +1,7 @@
 <template>
   <div class="container">
     <div class="large-12 medium-12 small-12 cell">
-      <a
-        :href="
-          `https://kauth.kakao.com/oauth/authorize?client_id=` +
-          KAKAO_API_KEY +
-          `&redirect_uri=` +
-          KAKAO_REDIRECT_URI +
-          `&response_type=code`
-        "
-      >
+      <a :href="`https://kauth.kakao.com/oauth/authorize?client_id=`+KAKAO_API_KEY+`&redirect_uri=`+KAKAO_REDIRECT_URI+`&response_type=code`">
         <img src="@/assets/kakao_login_medium_wide.png" class="w-100">
       </a>
     </div>
