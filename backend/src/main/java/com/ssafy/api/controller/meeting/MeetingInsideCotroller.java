@@ -90,14 +90,27 @@ public class MeetingInsideCotroller {
 	}
 
 	@DeleteMapping("/{meetingId}/users/{userId}")
+	@ApiOperation(value = "참가자 퇴장")
+	@ApiResponses({ @ApiResponse(code = 200, message = "참가자 퇴장 성공"),
+			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 존재하지 않는 유저입니다."),
+			@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<? extends BaseResponseBody> quit(@PathVariable("meetingId") int meetingId,
+			@PathVariable("userId") int userId) {
+
+		meetingInsideService.quitParticipant(meetingId, userId);
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "참가자 퇴장 성공"));
+	}
+	
+	@DeleteMapping("/{meetingId}/users/{userId}/forcedExit")
 	@ApiOperation(value = "참가자 강제 퇴장")
 	@ApiResponses({ @ApiResponse(code = 200, message = "참가자 강제 퇴장 성공"),
 			@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 존재하지 않는 유저입니다."),
 			@ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<? extends BaseResponseBody> kick(@PathVariable("meetingId") int meetingId,
+	public ResponseEntity<? extends BaseResponseBody> forcedExit(@PathVariable("meetingId") int meetingId,
 			@PathVariable("userId") int userId) {
 
-		meetingInsideService.kickParticipant(meetingId, userId);
+		meetingInsideService.forcedExit(meetingId, userId);
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "참가자 강제 퇴장 성공"));
 	}

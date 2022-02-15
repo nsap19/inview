@@ -52,7 +52,7 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 
 	@Override
 	@Transactional
-	public void kickParticipant(int meetingId, int userId) {
+	public void quitParticipant(int meetingId, int userId) {
 		// DB에서 userId 삭제
 		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
@@ -68,14 +68,14 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 		return participant;
 	}
 
-//	@Override
-//	public void forcedExit(int meetingId, int userId) {
-//		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
-//
-//		Participant participant = this.checkParticipant(meetingId, userId);
-//		
-//		participant.setForcedExit(1);
-//	}
+	@Override
+	public void forcedExit(int meetingId, int userId) {
+		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
+
+		Participant participant = this.checkParticipant(meetingId, userId);
+		
+		participant.setForcedExit(1);
+	}
 
 	@Override
 	public int getMeetingIdByUrl(String meetingUrl) {
