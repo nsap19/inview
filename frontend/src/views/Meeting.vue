@@ -266,6 +266,7 @@ export default defineComponent({
 			register()
 		})
 		watch(endSignal, (oldVal) => {
+			console.log('종료신호받고 비디오 나가야하는데 안함?')
 			leaveRoom()
 		})
 

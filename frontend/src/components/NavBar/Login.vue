@@ -18,10 +18,12 @@
       <el-form-item prop="password" :error="errorMessage">
         <el-input type="password" v-model="ruleForm.password" autocomplete="off" @input="clearErrorMessage" placeholder="비밀번호"></el-input>
       </el-form-item>
-      <Kakao />
 
       <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
         <el-button type="primary" round @click="login(ruleFormRef)">로그인</el-button>
+        <div class="mt-2">
+          <Kakao />
+        </div>
         <!-- <el-button @click="openDialog=false">취소</el-button> -->
       </div>
       <div class="d-flex flex-row justify-content-center">

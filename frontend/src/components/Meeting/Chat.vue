@@ -153,7 +153,7 @@ export default {
       }
     },    
     connect() {
-      const serverURL = `${process.env.VUE_APP_API_URL}/stomp-chat`
+      const serverURL = `${process.env.VUE_APP_API_URL}stomp-chat`
       let socket = new SockJS(serverURL);
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()}
       this.stompClient = Stomp.over(socket, options);
