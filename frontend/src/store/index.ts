@@ -36,6 +36,7 @@ export default createStore({
     },
     SET_PARTICIPANTS(state, data) {
       state.participants = data
+      console.log(data)
     },
     SET_NEW_HOST(state, data) {
       state.meeting.hostId = data

@@ -131,8 +131,12 @@ export default defineComponent({
     let userNickname = store.state.user.nickname
     let meetingId = store.state.meeting.id
     watch(() => store.state.meeting, (newValue, oldValue) => {
+      // console.log('평가지좀올려', newValue, oldValue)
       userNickname = userNickname || store.state.user.nickname
       meetingId = newValue.id || oldValue.id
+      if( !newValue.id ) {
+        createHtmlFile(meetingId)
+      }
     })
 
     const makeHtml = function () {
@@ -168,11 +172,11 @@ export default defineComponent({
         }
       )
       .then(res => {
-        console.log('SUCCESS!!');
+        console.log('평가지 업로드 SUCCESS!!');
         console.log(res)
       })
       .catch(err => {
-        console.log('FAILURE!!');
+        console.log('평가지 업로드 FAILURE!!');
         console.log(err.response)
       });
       
@@ -183,14 +187,14 @@ export default defineComponent({
       // a.click();
     }
 
-    watch(()=>props.endSignal, () => {
-      console.log("평가에서 신호 안받음?", props.endSignal)
-      if (props.endSignal == true) {
-        // createHtmlFile()
-        console.log('평가에서 종료신호 받음')
-        createHtmlFile(meetingId)
-      }
-    })
+    // watch(()=>props.endSignal, () => {
+    //   console.log("평가에서 신호 안받음?", props.endSignal)
+    //   if (props.endSignal == true) {
+    //     // createHtmlFile()
+    //     console.log('평가에서 종료신호 받음')
+    //     createHtmlFile(meetingId)
+    //   }
+    // })
     return { questions, evaluations, currentPage, paginate, createHtmlFile }
   }
 })
