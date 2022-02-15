@@ -35,7 +35,7 @@
           </el-dropdown>
           </div>
           <div v-else>
-            <el-button class="m-1" round @click="openLoginDialog=true" plain type="primary">로그인</el-button>
+            <el-button class="m-1" round @click="openLoginDialog=true" plain size="large">로그인</el-button>
           </div>
           <Login v-model="openLoginDialog" v-on:signup="[openSignupDialog=true, openLoginDialog=false]" />
           <Register v-model="openSignupDialog" v-on:login="[openSignupDialog=false, openLoginDialog=true]" />
