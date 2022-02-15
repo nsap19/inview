@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.util.ArchiveUtil;
 import com.ssafy.common.util.MeetingParticipant;
 import com.ssafy.common.util.bean.ChattingParticipant;
@@ -27,9 +26,6 @@ public class ChatMessageServiceImple implements ChatMessageService {
 	static boolean subscribe = false;
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
-
-	@Autowired
-	MeetingInsideService meetingInsideService;
 
 	@Autowired
 	ArchiveService arhciveService;
@@ -135,28 +131,46 @@ public class ChatMessageServiceImple implements ChatMessageService {
 		case CONNECT:
 			message.setMessage(message.getSender() + "님이 입장하였습니다.");
 			break;
-		case DISCONNECT:
-			LocalDate today = LocalDate.now();
-			LocalTime localTime = LocalTime.now();
-			String date = today.getYear() + "년" + String.format("%02d", today.getMonthValue()) + "월"
-					+ String.format("%02d", today.getDayOfMonth()) + "일 "
-					+ today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
-			String time = String.format("%02d", localTime.getHour()) + ":"
-					+ String.format("%02d", localTime.getMinute());
-			message.setDate(date);
-			message.setTime(time);
+		case DISCONNECT:	
+			message.setDate(getDate());
+			message.setTime(getTime());
 			message.setMessage(message.getSender() + "님이 퇴장하였습니다.");
 			break;
 		case PARTICIPANT:
 			message.setMessage(setReadyMessage(meetingId, sessionId, ""));
 			break;
 		case HOST:
+			// 위임받은 방장은 바로 준비상태에 진입한다.
+			meetingParticipant.setReadyParticipantByMeetingId(meetingId, sessionId, "T");
+			break;
+		case OUT:
+			// 유저 강퇴
+			// 해당 유저를 참가자 명단에서 제거한다.. 서비스에서 함수 call & 참가자 명단을 다시 보내준다
+			message.setDate(getDate());
+			message.setTime(getTime());
+			message.setMessage(message.getSender() + "님이 강퇴되었습니다.");
 			break;
 		default:
 			message.setMessage("명령어 오류");
 			break;
 		}
 		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId(), message);
+	}
+
+	
+	private String getTime() {
+		LocalTime localTime = LocalTime.now();
+		String time = String.format("%02d", localTime.getHour()) + ":"
+				+ String.format("%02d", localTime.getMinute());
+		return time;
+	}
+
+	private String getDate() {
+		LocalDate today = LocalDate.now();
+		String date = today.getYear() + "년" + String.format("%02d", today.getMonthValue()) + "월"
+				+ String.format("%02d", today.getDayOfMonth()) + "일 "
+				+ today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+		return date;
 	}
 
 	private String setReadyMessage(String meetingId, String sessionId, String ready) {

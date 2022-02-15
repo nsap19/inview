@@ -83,7 +83,7 @@ export default {
   watch: {
     endSignal: function() {
       console.log("채팅에서 종료신호 받음")
-      this.disconnect()
+      // this.disconnect()
     },
     readySignal: function(newValue, oldValue) {
       console.log("ㄹㄷㄹㄷ", newValue, oldValue)
@@ -209,7 +209,7 @@ export default {
               this.$emit('start')
             } else if (command === "HOST") {
               console.log('HOST!!!')
-              this.$store.dispatch('setNewHost', 3)
+              this.$store.dispatch('setNewHost', parseInt(JSON.parse(res.body).sender))
             } else if (command === null || command === "DISCONNECT") {
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               this.recvList.push(JSON.parse(res.body))

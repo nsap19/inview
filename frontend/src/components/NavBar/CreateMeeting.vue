@@ -204,7 +204,7 @@ export default defineComponent({
           console.log(res.data)
           openDialog.value = false
           store.dispatch('setMeeting', res.data.data.id)
-          store.dispatch('setParticipants', [{nickname: store.state.user.nickname, ready: true}])
+          store.dispatch('setParticipants', [{id: store.state.user.id, nickname: store.state.user.nickname, ready: true}])
           // joinMeeting(res.data.data.id)
           router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
         }).catch(err => {
