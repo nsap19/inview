@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `inview` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `inview`;
 -- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: inview
@@ -196,6 +198,7 @@ CREATE TABLE `participant` (
   `participantId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `meetingId` int(11) NOT NULL,
+  `forcedExit` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`participantId`),
   KEY `participant_userid_fk_idx` (`userId`),
   KEY `participant_meetingid_fk_idx` (`meetingId`),
@@ -210,7 +213,7 @@ CREATE TABLE `participant` (
 
 LOCK TABLES `participant` WRITE;
 /*!40000 ALTER TABLE `participant` DISABLE KEYS */;
-INSERT INTO `participant` VALUES (1,1,3),(2,1,4),(3,2,1),(4,2,4),(5,3,2),(6,3,4),(7,4,2),(8,4,3),(9,5,3),(10,5,4);
+INSERT INTO `participant` VALUES (1,1,3,0),(2,1,4,0),(3,2,1,0),(4,2,4,0),(5,3,2,0),(6,3,4,0),(7,4,2,0),(8,4,3,0),(9,5,3,0),(10,5,4,0);
 /*!40000 ALTER TABLE `participant` ENABLE KEYS */;
 UNLOCK TABLES;
 
