@@ -32,17 +32,17 @@ public class MeetingController {
 	@Autowired
 	MeetingService meetingService;
 
-	// @PostMapping
-	// @ApiOperation(value = "미팅 생성")
-	// @ApiResponses({ @ApiResponse(code = 200, message = "미팅 생성 성공", response = MeetingRegisterClass.class),
-	// 		@ApiResponse(code = 400, message = "존재하지 않는 유저입니다. \n 존재하지 않는 직군입니다. \n 존재하지 않는 기업명입니다."),
-	// 		@ApiResponse(code = 500, message = "서버 오류") })
-	// public ResponseEntity<? extends BaseResponseBody> register(
-	// 		@RequestBody @ApiParam(value = "미팅생성 정보", required = true) MeetingRegisterPostReq registerInfo) {
+	@PostMapping
+	@ApiOperation(value = "미팅 생성")
+	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 생성 성공", response = MeetingRegisterClass.class),
+			@ApiResponse(code = 400, message = "존재하지 않는 유저입니다. \n 존재하지 않는 직군입니다. \n 존재하지 않는 기업명입니다."),
+			@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<? extends BaseResponseBody> register(
+			@RequestBody @ApiParam(value = "미팅생성 정보", required = true) MeetingRegisterPostReq registerInfo) {
 
-	// 	return ResponseEntity.status(200).body(AdvancedResponseBody.of(200, "미팅 생성 성공",
-	// 			meetingService.createMeeting(registerInfo, CurrentUser.getUserId())));
-	// }
+		return ResponseEntity.status(200).body(AdvancedResponseBody.of(200, "미팅 생성 성공",
+				meetingService.createMeeting(registerInfo, CurrentUser.getUserId())));
+	}
 
 	@DeleteMapping("/{meetingId}")
 	@ApiOperation(value = "미팅 소멸", notes = "미팅 시작 전 미팅실 삭제")
