@@ -182,7 +182,7 @@ export default defineComponent({
     } 
 
     const outUser = () => {
-      var result = confirm("회원탈퇴시 개인정보가 즉시 삭제 처리되며, <br>재가입시 복원되지 않습니다. 탈퇴신청을 하시겠습니까?");
+      var result = confirm("회원탈퇴시 개인정보가 즉시 삭제 처리되며, 재가입시 복원되지 않습니다. 탈퇴신청을 하시겠습니까?");
       if(result) {
         axios.delete(`/users/${store.state.user.id}`, {params: {password: password.value}}).then((res: any) => {
               console.log('SUCCESS!!');
@@ -205,7 +205,7 @@ export default defineComponent({
     return {
       openDialog, ruleFormRef, ruleForm, rules,
       nicknameError, inputNickname, loading,
-      password, ChangeInfo,
+      password, ChangeInfo,outUser,
       infoChangeForm
     }
   },
