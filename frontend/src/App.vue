@@ -5,18 +5,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import NavBar from "./components/NavBar/NavBar.vue"
 import Footer from "./components/Footer.vue"
+import { useRouter } from "vue-router"
+import { useStore } from "vuex"
+
 export default defineComponent({
   name: 'App',
   components: {
     NavBar, Footer,
   },
   setup() {
-    const openCreateMeetingDialog = ref(false)
+    const router = useRouter()
+    const store = useStore()
+    if (router.currentRoute.value.name !== "Meeting") {
+      // store.dispatch('deleteMeeting')
+      // store.dispatch('setParticipants', [])
+    }
 
-    return { openCreateMeetingDialog }
   }
 })
 </script>
@@ -50,6 +57,7 @@ export default defineComponent({
 }
 
 #body {
+  overflow: overlay;
   /* background: linear-gradient(to bottom, rgba(206, 229, 208, 0.5) 0%, rgba(243, 240, 215, 0.5) 20%, rgba(224, 192, 151, 0.5), 80%, rgba(255, 120, 120, 0.5) 100%); */
   /* font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; */
   /* background: linear-gradient(-45deg, #cee5d0, #f3f0d7, #e0c097, #ff7878);
@@ -72,14 +80,20 @@ export default defineComponent({
 
 *::-webkit-scrollbar {
     width: 16px;
+    visibility: hidden;
+}
+
+*::-webkit-scrollbar:hover {
+    visibility: visible; 
 }
 
 *::-webkit-scrollbar-track {
     border-radius: 8px;
+    background-color: rgba(0,0,0,0);
 }
 
 *::-webkit-scrollbar-thumb {
-    height: 56px;
+    height: 30px;
     border-radius: 8px;
     border: 4px solid transparent;
     background-clip: content-box;

@@ -10,7 +10,7 @@ export default createStore({
   state: {
     user: {},
     searchResult: [],
-    meeting: {},
+    meeting: {hostId: Number},
     participants: []
   },
   mutations: {
@@ -31,12 +31,15 @@ export default createStore({
       state.meeting = data
     },
     DELETE_MEETING(state) {
-      state.meeting = {}
+      state.meeting = {hostId: Number}
       state.participants = []
     },
     SET_PARTICIPANTS(state, data) {
       state.participants = data
-    }
+    },
+    SET_NEW_HOST(state, data) {
+      state.meeting.hostId = data
+    },
   },
   actions: {
     setUser({ commit }, payload) {
@@ -84,6 +87,9 @@ export default createStore({
     },
     setParticipants({ commit }, participants) {
       commit('SET_PARTICIPANTS', participants)
+    },
+    setNewHost({ commit }, hostId) {
+      commit('SET_NEW_HOST', hostId)
     }
   },
   modules: {},

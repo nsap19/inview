@@ -27,6 +27,7 @@ const PARTICIPANT_CLASS = "participant";
  * @return
  */
 function Participant(userId, userNickname) {
+  console.log('participant에서 받은', userId, userNickname)
   this.userId = userId;
   var container = document.createElement("div");
   container.className = isPresentMainParticipant()
