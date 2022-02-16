@@ -20,13 +20,12 @@ var participants = {};
 var userId;
 
 // 음소거, 카메라 on/off 기능
-let myStream;
 let muted = false;
 let cameraOff = false;
 
 function handleMuteClick(){
 	var participant = participants[userId];
-
+	const myStream = participant.getVideoElement().captureStream();
 	myStream.getAudioTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(!muted){ //마이크 끄기
 		document.getElementById("micOn").style.display = 'none'
@@ -42,7 +41,7 @@ function handleMuteClick(){
 }
 function handleCameraClick(){
 	var participant = participants[userId];
-
+	const myStream = participant.getVideoElement().captureStream();
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
 		document.getElementById("cameraOn").style.display = 'block'
@@ -58,8 +57,8 @@ function handleCameraClick(){
 }
 
 
-const serverURL = "http://i6a201.p.ssafy.io:8080/api/groupcall";
-// const serverURL = "http://localhost:8080/api/groupcall";
+// const serverURL = "http://i6a201.p.ssafy.io:8080/api/groupcall";
+const serverURL = "http://localhost:8080/api/groupcall";
 let ws = new SockJS(serverURL);
 
 window.onbeforeunload = function() {
@@ -187,16 +186,13 @@ function onExistingParticipants(msg) {
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 
-	//음소거, 카메라 전환	
-	getMedia(userId);
-	
 	var options = {
-	      localVideo: myStream,
+	      localVideo: video,
 	      mediaConstraints: constraints,
 	      onicecandidate: participant.onIceCandidate.bind(participant),
 		  configuration: {
 			iceServers: [{
-				"urls": 'turn:172-26-1-220:3478?transport=udp',
+				"urls": 'turn:172.26.1.220:3478?transport=udp',
 				"username": 'myuser',
 				"credential": 'mypassword'
 			}]
@@ -219,13 +215,12 @@ function onExistingParticipants(msg) {
 }
 
 async function getMedia(userId) {
-	let myVideo = document.getElementById("video-" + userId);
 	try {
 	  myStream = await navigator.mediaDevices.getUserMedia({
 		audio: true,
 		video: true,
 	  });
-	  myVideo.srcObject = myStream;
+	  video.srcObject = myStream;
 	} catch (e) {
 	  console.log(e);
 	}
@@ -251,13 +246,13 @@ function receiveVideo(userId, nickname) {
 	var participant = new Participant(userId, nickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
-
+		
 	var options = {
       remoteVideo: video,
       onicecandidate: participant.onIceCandidate.bind(participant),
 	  configuration: {
 		iceServers: [{
-			"urls": 'turn:172-26-1-220:3478?transport=udp',
+			"urls": 'turn:172.26.1.220:3478?transport=udp',
 			"username": 'myuser',
 			"credential": 'mypassword'
 		}]
