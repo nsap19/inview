@@ -29,7 +29,6 @@ services:
   certbot:
     container_name: certbot
     image: certbot/certbot:v0.36.0
-    command: sh -c "./init-letsencrypt.sh"
     restart: always
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt

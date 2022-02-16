@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=({domain}) // 각자 등록한 도메인
+domains=(www.i6a201.p.ssafy.io) // 각자 등록한 도메인
 rsa_key_size=4096
 data_path="./data/certbot"
 email="{email}" # Adding a valid address is strongly recommended
