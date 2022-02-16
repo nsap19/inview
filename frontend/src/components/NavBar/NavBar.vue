@@ -29,7 +29,7 @@
                 <el-dropdown-menu>
                   <router-link to="/myproject" class="text-decoration-none"><el-dropdown-item>회의 목록 조회</el-dropdown-item></router-link>
                   <el-dropdown-item @click="UpdateUserModal">회원 정보 수정</el-dropdown-item>
-                <el-dropdown-item  @click="this.$store.dispatch('logout')">로그아웃</el-dropdown-item>
+                <el-dropdown-item  @click="logoutMessage">로그아웃</el-dropdown-item>
               </el-dropdown-menu>
               </template>
           </el-dropdown>
@@ -58,6 +58,7 @@ import Register from "@/components/NavBar/Register.vue"
 import { useStore } from 'vuex'
 import UpdateUser from './UpdateUser.vue'
 import FindPassword from "@/components/NavBar/FindPassword.vue"
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: "NavBar",
@@ -74,10 +75,21 @@ export default defineComponent({
 
     const store = useStore()
     const user = computed(() => store.state.user)
- const UpdateUserModal = function(){
+    const UpdateUserModal = function(){
       openUserUpdateDialog.value = true
     }
-    return { UpdateUserModal,openFindPasswordDialog,openUserUpdateDialog, SearchIcon, Plus, Avatar, openCreateMeetingDialog, openLoginDialog, openSignupDialog, user }
+    const logoutMessage = function () {
+      store.dispatch('logout')
+      ElMessage({
+        message: '로그아웃이 완료되었습니다.',
+        type: 'success',
+      })
+    }
+    return { 
+      UpdateUserModal, logoutMessage,
+      openFindPasswordDialog,openUserUpdateDialog, openCreateMeetingDialog, openLoginDialog, openSignupDialog, user,
+      SearchIcon, Plus, Avatar,  
+    }
   }
 })
 </script>

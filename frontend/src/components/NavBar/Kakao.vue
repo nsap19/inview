@@ -8,6 +8,7 @@
 
 <script>
 import axios from "axios";
+import { mapActions } from 'vuex';
 
 export default {
   name: "App",
@@ -37,6 +38,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions([
+      'setUser', 
+    ]),
     kakaoLogin() {
       axios
         .get("/oauth/login/kakao")
@@ -79,11 +83,12 @@ export default {
             url: "/v2/user/me",
             data: { property_keys: ["kakao_account.email"] },
             success: async function (response) {
-              await axios.post('http://localhost:8080/api/oauth/login/kakao', response)
+              await axios.post('oauth/login/kakao', response)
               .then(res=>{
+                console.log(res)
                 console.log(res.data)
                 localStorage.setItem("token", res.data.token);
-                this.$store.dispatch('setUser', { nickname: res.data.nickname, id: res.data.userId });
+                this.setUser({ nickname: res.data.nickname, id: res.data.userId })
               }).catch(e=>{
                 console.log(e);
               })

@@ -57,6 +57,11 @@ export default defineComponent({
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)
+        ElMessage({
+          type: 'success',
+          message: '삭제되었습니다.',
+        })
+        store.dispatch('deleteMeeting')
         router.push({ name: 'Home'})
       }).catch(err => {
         console.log(err.response)
@@ -74,11 +79,6 @@ export default defineComponent({
         }
       )
         .then(() => {
-          store.dispatch('deleteMeeting')
-          ElMessage({
-            type: 'success',
-            message: '삭제되었습니다.',
-          })
           deleteMeeting()
         })
         .catch(() => {
@@ -90,7 +90,7 @@ export default defineComponent({
     }
 
     const leaveMeeting = function () {
-      axios.delete(`/meeting/${store.state.meeting.id}/users/${store.state.user.id}`, 
+      axios.delete(`/meeting/${store.state.meeting.id}/cancle`, 
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)

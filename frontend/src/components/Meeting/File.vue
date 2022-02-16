@@ -98,6 +98,9 @@ export default defineComponent({
         fileUrl.setAttribute('download', fileName.slice(0, fileName.length - 1));
         document.body.appendChild(fileUrl);
         fileUrl.click();
+      }).catch(err => {
+        console.log(err)
+        console.log(err.response)
       })
     }
     const handleExceed = (files: FileList) => {

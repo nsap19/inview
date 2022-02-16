@@ -149,6 +149,7 @@ export default defineComponent({
     }
 
     const clickEnter = function () {
+      store.dispatch('setMeeting', props.meeting.id)
       router.push({ name: 'Meeting', params: { meetingUrl: props.meeting.url } })
     }
     
