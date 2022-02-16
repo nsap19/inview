@@ -4,8 +4,8 @@
       <span class="fw-bold fs-4 ps-2">{{ this.$store.state.meeting.title }}</span>
     </div>
     <div v-if="startSignal">
-      <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickCloseMeeting">종료</el-button>
-      <el-button type="danger" @click="clickLeaveMeeting">나가기</el-button>
+      <!-- <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickCloseMeeting">종료</el-button> -->
+      <el-button type="danger" @click="clickLeaveMeeting">종료</el-button>
     </div>
   </div>
 </template>
@@ -66,12 +66,13 @@ export default defineComponent({
           })
         })
     }
+    
     const clickLeaveMeeting = function () {
       ElMessageBox.confirm(
-        '방을 나가시겠습니까?',
-        '방 나가기',
+        '면접 연습을 종료하시겠습니까?',
+        '면접 연습 종료',
         {
-          confirmButtonText: '나가기',
+          confirmButtonText: '종료',
           cancelButtonText: '취소',
           type: 'warning',
         }

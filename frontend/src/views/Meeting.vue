@@ -127,7 +127,8 @@ export default defineComponent({
 			document.getElementById('debug').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
-			document.getElementById('record').onclick=function(){play(); return false;};
+			document.getElementById('record').onclick=function(){start(); return false;};
+			document.getElementById('stopRecording').onclick=function(){stop(); return false;};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
@@ -287,6 +288,11 @@ export default defineComponent({
 		const leaveSignal = ref(false)
 		watch(startSignal, (oldVal) => {
 			register()
+		})
+		watch(leaveSignal, (oldVal) => {
+			if (startSignal) {
+				leaveRoom()
+			}
 		})
 		watch(endSignal, (oldVal) => {
 			console.log('종료신호받고 비디오 나가야하는데 안함?')
