@@ -193,7 +193,14 @@ function onExistingParticipants(msg) {
 	var options = {
 	      localVideo: myStream,
 	      mediaConstraints: constraints,
-	      onicecandidate: participant.onIceCandidate.bind(participant)
+	      onicecandidate: participant.onIceCandidate.bind(participant),
+		  configuration: {
+			iceServers: [{
+				"urls": 'turn:172-26-1-220:3478?transport=udp',
+				"username": 'myuser',
+				"credential": 'mypassword'
+			}]
+		}
 	    }
 	participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
 		function (error) {
@@ -247,7 +254,14 @@ function receiveVideo(userId, nickname) {
 
 	var options = {
       remoteVideo: video,
-      onicecandidate: participant.onIceCandidate.bind(participant)
+      onicecandidate: participant.onIceCandidate.bind(participant),
+	  configuration: {
+		iceServers: [{
+			"urls": 'turn:172-26-1-220:3478?transport=udp',
+			"username": 'myuser',
+			"credential": 'mypassword'
+		}]
+	}
     }
 
 	participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
