@@ -108,20 +108,15 @@ export default defineComponent({
       })
     }
 
-    let user ='';
-
-    // for (let v of props.tableDatas.user){
-    //   user = user + v.nickname+ " ";
-    // }
 
     const tableData = ref([
       {
         category: '직군',
-        content: props.tableDatas.industry.industryName,
+        content: props.tableDatas.industryName,
       },
       {
         category: '회사',
-        content: props.tableDatas.company,
+        content: props.tableDatas.companyNameList,
       },
       {
         category: '시작 시간',
@@ -133,7 +128,7 @@ export default defineComponent({
       },
       {
         category: '참가자',
-        content: user,
+        content: props.tableDatas.participantNicknameList,
       },
       {
         category: '다운로드 유효 기간',
