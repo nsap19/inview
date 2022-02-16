@@ -70,15 +70,14 @@ export default defineComponent({
     }
 
     const download = function (type){
-      axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.meetingId}`).then(res=>{
+      axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.id}`).then(res=>{
         for ( let v of res.data.data.archives){
           console.log(v.archiveType, type)
           if(v.archiveType == type){
             if( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
               alert("다운로드 유효 기간이 지났습니다.")
             }else{
-            console.log("s", v)
-            axios.get(`/download/meeting/${props.tableDatas.meetingId}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
+            axios.get(`/download/meeting/${props.tableDatas.id}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
               headers: 
                             {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -94,7 +93,6 @@ export default defineComponent({
         document.body.appendChild(fileUrl);
         fileUrl.click();
 
-              console.log(res)
             })
             }
             

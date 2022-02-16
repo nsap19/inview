@@ -209,8 +209,7 @@ export default defineComponent({
 
     const outUser = () => {
       console.log(ruleForm.password)
-      axios.delete(`/users/${store.state.user.id}`, {
-        data: {password: ruleForm.password},
+      axios.delete(`/users/${store.state.user.id}?password=${ruleForm.password}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       }).then((res: any) => {
         console.log('SUCCESS!!');
