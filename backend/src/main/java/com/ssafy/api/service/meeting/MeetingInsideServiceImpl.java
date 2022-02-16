@@ -2,9 +2,10 @@ package com.ssafy.api.service.meeting;
 
 import java.time.LocalDateTime;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.common.exception.handler.NotExistsMeetingException;
@@ -69,12 +70,15 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 	}
 
 	@Override
+	@Transactional
+	@Modifying
 	public void forcedExit(int meetingId, int userId) {
 		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
 		Participant participant = this.checkParticipant(meetingId, userId);
 		
 		participant.setForcedExit(1);
+		participantRepository.updateForcedExit(meetingId, userId);
 	}
 
 	@Override
