@@ -37,9 +37,9 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 		// 미팅 종료 시간 삽입 및 상태 변경
 		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
-		if (meeting.getUser().getUserId() != hostId) {
-			throw new NotHostException();
-		}
+//		if (meeting.getUser().getUserId() != hostId) {
+//			throw new NotHostException();
+//		}
 
 		meeting.setCloseTime(LocalDateTime.now());
 		meeting.setStatus(Status.CLOSING);
