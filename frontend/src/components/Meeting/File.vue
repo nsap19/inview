@@ -84,7 +84,7 @@ export default defineComponent({
 
     const downloadFile = function (fileId: number) {
       axios({
-        url: `/download/meeting/${meetingId.value}/user/${userId.value}/${fileId}?archive-type=file`, // File URL Goes Here
+        url: `/download/meeting/${meetingId.value}/users/${userId.value}/${fileId}?archive-type=file`, // File URL Goes Here
         method: 'GET',
         responseType: 'blob',
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
