@@ -89,6 +89,7 @@ import { CloseBold, } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import axios from "axios"
 
 export default defineComponent({
 	name: 'Meeting',
@@ -115,6 +116,7 @@ export default defineComponent({
 				})
 			} catch(e){
 				console.log(e);
+				getMedia();
 			}
 		}
 		getMedia();
@@ -293,6 +295,14 @@ export default defineComponent({
 		const closeSignal = ref(false)  // 미팅 CLOSE
 		watch(startSignal, (oldVal) => {
 			register()
+			axios.post(`meeting/${meetingId.value}/start`, null ,
+				{ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
+			).then(res => {
+				console.log(res)
+			}).catch(err => {
+				console.log(err.response)
+			})
+
 		})
 		watch(leaveSignal, (oldVal) => {
 			if (startSignal) {

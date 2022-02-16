@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +13,7 @@ import com.ssafy.api.response.LastMeetingDetailRes;
 import com.ssafy.api.response.LastMeetingRes;
 import com.ssafy.common.exception.handler.NotExistsUserException;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.repository.LastMeetingRepositorySupport;
 import com.ssafy.db.repository.UserRepository;
 
@@ -37,6 +40,10 @@ public class MyPageServiceImpl implements MyPageService {
 			user.setPassword(passwordEncoder.encode(userUpdateInfo.getPassword())); // 패스워드 암호화하여 db에 저장
 
 		userRepository.save(user);
+	}
+	
+	public List<Meeting> searchFutureMeeting(int userId){
+		return lastMeetingRepositorySupport.findFutureMeetingById(userId);
 	}
 
 	@Override
