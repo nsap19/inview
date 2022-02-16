@@ -1,16 +1,16 @@
 version: "3.8"
 services:
-  # vue:
-  #   image: node:16.13.0
-  #   working_dir: ./frontend
-  #   command: sh -c "npm install && npm start"
-  #   ports:
-  #     - 3000:3000
-  #   container_name: frontend_ssafy_app
-  #   depends_on:
-  #     - spring-boot
-  #   networks:
-  #     - frontend
+  vue:
+    image: node:16.13.0
+    working_dir: ./frontend
+    command: sh -c "npm install && npm start"
+    ports:
+      - 80:3000
+    container_name: frontend_ssafy_app
+    depends_on:
+      - spring-boot
+    networks:
+      - frontend
   # nginx:
   #   image: nginx:latest
   #   container_name: nginx    
@@ -22,7 +22,6 @@ services:
   #   restart: "always"
   #   depends_on:
   #     - spring-boot
-
   db:
     image: mysql:5.7
     container_name: backend_db
@@ -84,8 +83,8 @@ services:
       - kurento
     networks:
       - backend
-      # - frontend
+      - frontend
 networks:
   backend: 
-  # frontend:
+  frontend:
         
