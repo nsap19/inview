@@ -15,12 +15,15 @@
       </div>
       <div class="w-100 d-flex flex-row">
         <div class="col waiting-participant">
+          <el-button round style="margin: 0 auto;" type="text" @click="clickLeave">
+            <span class="fs-5 fw-bold">나가기</span>
+          </el-button>
           <el-button round style="margin: 0 auto;" type="text"
             v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="clickDeleteMeeting">
             <span class="fs-5 fw-bold">방 삭제</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text" v-else @click="clickLeaveMeeting">
-            <span class="fs-5 fw-bold">나가기</span>
+            <span class="fs-5 fw-bold">참가 취소</span>
           </el-button>
         </div>
         <div class="col waiting-participant">
@@ -105,10 +108,10 @@ export default defineComponent({
 
     const clickLeaveMeeting = function () {
       ElMessageBox.confirm(
-        '방을 나가시겠습니까?',
-        '방 나가기',
+        '참가 신청을 철회하시겠습니까?',
+        '참가 신청 철회',
         {
-          confirmButtonText: '나가기',
+          confirmButtonText: '참가 철회',
           cancelButtonText: '취소',
           type: 'warning',
         }
@@ -117,6 +120,32 @@ export default defineComponent({
           router.push({ name: 'Home'})
           leaveMeeting()
           // store.dispatch('deleteMeeting')
+          emit('leave')
+          ElMessage({
+            type: 'success',
+            message: '참가를 취소하셨습니다.',
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '취소되었습니다.',
+          })
+        })
+    }
+
+    const clickLeave = function () {
+      ElMessageBox.confirm(
+        '방을 나가시겠습니까? 참가 기록은 유지되며 이후 다시 입장하실 수 있습니다.',
+        '나가기',
+        {
+          confirmButtonText: '나가기',
+          cancelButtonText: '취소',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          router.push({ name: 'Home'})
           emit('leave')
           ElMessage({
             type: 'success',
@@ -150,7 +179,7 @@ export default defineComponent({
     }
 
 
-    return { participants, clickDeleteMeeting, clickLeaveMeeting, emitReadySignal, startMeeting }
+    return { participants, clickDeleteMeeting, clickLeaveMeeting, emitReadySignal, startMeeting, clickLeave }
   }
 })
 </script>

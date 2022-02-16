@@ -68,6 +68,7 @@ import type { ElForm } from 'element-plus'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: 'MeetingCard',
@@ -141,10 +142,17 @@ export default defineComponent({
     }
     const passwordError = ref('')
     const clickJoin = function () {
-      if (props.meeting.isLock) {
-        passwordFormVisible.value = true
+      if (store.state.user.id) {
+        if (props.meeting.isLock) {
+          passwordFormVisible.value = true
+        } else {
+          joinMeeting(props.meeting.id)
+        }
       } else {
-        joinMeeting(props.meeting.id)
+        ElMessage({
+          message: '로그인이 필요합니다.',
+          type: 'warning',
+        })
       }
     }
 

@@ -93,8 +93,8 @@ export default {
       console.log("start!!!!!! in chat.vue", newValue, oldValue)
       this.start()
     },
-    leaveSignal: function() {
-      console.log("나감")
+    leaveSignal: function(newValue, oldValue) {
+      console.log("나감", newValue, oldValue)
       this.disconnect()
     },
     recvList: () => {

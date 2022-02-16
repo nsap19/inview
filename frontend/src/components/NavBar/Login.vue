@@ -111,7 +111,7 @@ export default defineComponent({
             localStorage.setItem("token", res.data.token);
             store.dispatch('setUser', { nickname: res.data.nickname, id: res.data.userId });
             ElMessage({
-              message: '로그인이 완료되었습니다.',
+              message: '로그인 되었습니다.',
               type: 'success',
             })
           }).catch(err => {
