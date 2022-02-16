@@ -87,7 +87,7 @@ export default defineComponent({
         .then(() => {
           if (closeSignal) {
             console.log("마지막 남은 사람도 나왔습니다")
-            closeMeeting();
+            closeMeeting()
           }
           emit('leaveMeeting')
           store.dispatch('deleteMeeting')
