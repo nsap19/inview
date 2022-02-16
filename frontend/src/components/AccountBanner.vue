@@ -2,8 +2,8 @@
   <div class="banner">
     <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center h-100">
       <div class="d-flex flex-column justify-content-center">
-        <p class="fs-1 m-0"><span style="font-family: TmoneyRoundWindExtraBold;">INVIEW</span>를 통해</p>
-        <p class="fs-1">서로를 만나보세요.</p>
+        <p class="fs-3 m-0">{{ this.$store.state.user.nickname }}님, 어쩌구저쩌구에 예정된</p>
+        <p class="fs-3">참가 예정 면접 연습이 있습니다.</p>
         <el-button round plain size="large" @click="openCreateMeetingDialog=true" style="width: 90%">
           면접 연습방 만들기 <span class="px-2"></span> <i class="bi bi-chevron-right"></i>
         </el-button>
@@ -23,7 +23,7 @@ import CreateMeeting from "@/components/NavBar/CreateMeeting.vue"
 import { ref } from 'vue'
 
 export default {
-  name: 'Banner',
+  name: 'AccountBanner',
   components: {
     Vue3Lottie, CreateMeeting
   },
