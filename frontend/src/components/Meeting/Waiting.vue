@@ -16,20 +16,20 @@
       <div class="w-100 d-flex flex-md-row flex-column">
         <div class="col waiting-participant">
           <el-button round style="margin: 0 auto;" type="text" @click="clickLeave">
-            <span class="fs-5 fw-bold">나가기</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-door-open-fill pe-1"></i>나가기</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text"
             v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="clickDeleteMeeting">
-            <span class="fs-5 fw-bold">방 삭제</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-trash-fill pe-1"></i>방 삭제</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text" v-else @click="clickLeaveMeeting">
-            <span class="fs-5 fw-bold">참가 취소</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-x-circle-fill pe-1"></i>참가 취소</span>
           </el-button>
         </div>
         <div class="col waiting-participant">
           <el-button round style="margin: 0 auto;" type="text" 
             v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="startMeeting">
-            <span class="fs-5 fw-bold">시작</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-play-circle-fill pe-1"></i>시작</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text" v-else @click="$emit('ready')">
             <span class="fs-5 fw-bold">준비</span>
@@ -93,13 +93,15 @@ export default defineComponent({
     }
 
     const leaveMeeting = function () {
-      axios.delete(`/meeting/${store.state.meeting.id}/cancle`, 
+      axios.delete(`/meeting/${store.state.meeting.id}/users/${store.state.user.id}`, 
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)
-        axios.get(`/meeting/${store.state.meeting.id}`).then(res => {
-          console.log("새 미팅 정보")
-          console.log(res)
+        router.push({ name: 'Home'})
+        // store.dispatch('deleteMeeting')
+        ElMessage({
+          type: 'success',
+          message: '참가를 취소하셨습니다.',
         })
       }).catch(err => {
         console.log(err.response)
@@ -121,10 +123,6 @@ export default defineComponent({
           leaveMeeting()
           // store.dispatch('deleteMeeting')
           emit('leave')
-          ElMessage({
-            type: 'success',
-            message: '참가를 취소하셨습니다.',
-          })
         })
         .catch(() => {
           ElMessage({

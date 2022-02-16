@@ -19,7 +19,7 @@
         <IndustrySearchBar v-model="ruleForm.industryName" />
       </el-form-item>
       <el-form-item label="회사">
-        <CompanySearchBar v-model="ruleForm.companyName" />
+        <CompanySearchBar v-model="companyName" />
       </el-form-item>
       <el-form-item label="참가 인원">
         <el-radio-group v-model="ruleForm.userLimit">
@@ -234,7 +234,7 @@ export default defineComponent({
       })
     }
 
-    return { ruleFormRef, ruleForm, rules, submitForm, validateStartTime, openDialog }
+    return {companyName, ruleFormRef, ruleForm, rules, submitForm, validateStartTime, openDialog }
   }
 })
 </script>
