@@ -1,0 +1,11 @@
+$font-size-base: 10px; // this changes the font-size throughout bootstrap
+
+@media (min-width: 0px) and (max-width: 350px) {
+  $font-size-base: 4px;
+  // 이제 문서 내 모든 rem 단위가 영향을 받습니다.
+}
+
+@media (min-width: 351px) and (max-width: 760px) {
+  $font-size-base: 8px;
+  // 이제 문서 내 모든 rem 단위가 영향을 받습니다.
+}
