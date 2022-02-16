@@ -89,6 +89,8 @@ export default defineComponent({
     const validateNickname = (rule: any, value: any, callback: any) => {
       if (ruleForm.nickname === '') {
         callback(new Error('닉네임을 입력해주세요'))
+      } else if (ruleForm.nickname.length > 10) {
+        callback(new Error('10자 이하로 입력해주세요'))
       } else if (ruleForm.nickname.indexOf(' ') > -1) {
         callback(new Error('닉네임에 공백이 포함될 수 없습니다'))
       } else {

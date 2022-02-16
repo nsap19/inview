@@ -9,7 +9,7 @@
         background 
         layout="prev, pager, next" 
         :page-count="evaluations.length"
-        :pager-count="9"
+        :pager-count="5"
         :current-page="currentPage"
         @current-change="paginate"
         :small="true"
@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, watch } from 'vue'
+import { computed, defineComponent, ref, Ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 
@@ -49,6 +49,7 @@ export default defineComponent({
   name: 'Evaluation',
   props: {
     endSignal: Boolean,
+    startSignal: Boolean,
     participantNickname: String
   },
   setup(props) {
@@ -130,11 +131,12 @@ export default defineComponent({
     const store = useStore()
     let userNickname = store.state.user.nickname
     let meetingId = store.state.meeting.id
+    const startSignal = computed(() => props.startSignal)
     watch(() => store.state.meeting, (newValue, oldValue) => {
-      // console.log('평가지좀올려', newValue, oldValue)
+      console.log('평가지좀올려', newValue, oldValue, props.startSignal)
       userNickname = userNickname || store.state.user.nickname
       meetingId = newValue.id || oldValue.id
-      if( !newValue.id ) {
+      if( !newValue.id && startSignal ) {
         createHtmlFile(meetingId)
       }
     })

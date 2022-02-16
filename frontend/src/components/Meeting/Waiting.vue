@@ -2,18 +2,18 @@
   <div class="waiting">
     <div class="d-flex flex-column justify-content-between align-items-center h-100 w-100">
       <div class="w-100">
-        <!-- {{participants}} -->
         <div class="waiting-participant" v-for="(participant, index) in participants" :key="index">
-          <span class="fw-bold">{{ participant.nickname }}</span>
+          <span class="fw-bold">
+            <i v-if="parseInt(participant.id) === this.$store.state.meeting.hostId" style="color: rgb(255, 120, 120);" class="bi bi-star-fill pe-2"></i> 
+            {{ participant.nickname }}
+          </span>
           <div class="w-25 text-end">
             <img v-if="participant.ready" alt="ready" src="@/assets/ready.png" class="w-100 ready">
             <img v-else alt="unready" src="@/assets/unready.png" class="w-100 ready">
           </div>
-          <!-- <el-button round class="" type="text">
-          </el-button> -->
         </div>  
       </div>
-      <div class="w-100 d-flex flex-row">
+      <div class="w-100 d-flex flex-md-row flex-column">
         <div class="col waiting-participant">
           <el-button round style="margin: 0 auto;" type="text" @click="clickLeave">
             <span class="fs-5 fw-bold">나가기</span>
@@ -60,12 +60,12 @@ export default defineComponent({
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)
+        router.push({ name: 'Home'})
         ElMessage({
           type: 'success',
           message: '삭제되었습니다.',
         })
         store.dispatch('deleteMeeting')
-        router.push({ name: 'Home'})
       }).catch(err => {
         console.log(err.response)
       })

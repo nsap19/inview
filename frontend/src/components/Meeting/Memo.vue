@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <el-input
-      v-model="textarea"
-      type="textarea"
-      placeholder="작성하신 메모는 면접 종료 후 다운로드 받을 수 있습니다."
-      resize="none"
-      class="textarea p-2"
-    />
+  <el-input
+    v-model="textarea"
+    type="textarea"
+    placeholder="작성하신 메모는 면접 종료 후 다운로드 받을 수 있습니다."
+    resize="none"
+    class="textarea p-2"
+  />
 
-    <!-- 디버그용 서버 업로드 버튼 -->
-    <!-- 이후 div와 함께 삭제할 것 -->
-    <!-- <button @click="createHtmlFile">sda</button> -->
-  </div>
+  <!-- 디버그용 서버 업로드 버튼 -->
+  <!-- 이후 div와 함께 삭제할 것 -->
+  <!-- <button @click="createHtmlFile">sda</button> -->
 </template>
 
 <script lang="ts">

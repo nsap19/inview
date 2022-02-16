@@ -35,12 +35,12 @@
 
 :root {
   --el-color-primary: #4E7351;
+  --el-color-primary-light-2: hsl(125, 19%, 48%);
   --el-color-primary-light-7: #CEE5D0;
   --el-color-primary-light-9: #F2F8F2;
   --el-button-border-color: transparent;
 
-  /* 검색바 보더 색 */
-  /* --el-border-color-base: transparent;   */
+  --bs-body-font-family: 'Nunito', TmoneyRoundWindRegular, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 }
 
 .el-button--primary.is-plain.is-disabled, .el-button--primary.is-plain.is-disabled:active, .el-button--primary.is-plain.is-disabled:focus, .el-button--primary.is-plain.is-disabled:hover {
@@ -141,4 +141,8 @@ video {
 
 .el-button {
   border-color: transparent;
+}
+
+.el-pagination.is-background .btn-next:disabled, .el-pagination.is-background .btn-prev:disabled {
+  background-color: transparent;
 }
