@@ -26,13 +26,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/meeting/:meetingUrl',
     name: 'Meeting',
     component: () => import(/* webpackChunkName: "create" */ '@/views/Meeting.vue'),
-    beforeEnter: function (to, from, next) {
-      try {
-        joinMeeting(to.params.meetingUrl);
-      } finally{
-        next();
-      }
-    }
+    // beforeEnter: function (to, from, next) {
+    //   try {
+    //     joinMeeting(to.params.meetingUrl);
+    //   } finally{
+    //     next();
+    //   }
+    // }
   },
   {
     path: '/result/:userName/:meetingId',
@@ -81,7 +81,7 @@ const joinMeeting = function (meetingUrl: unknown) {
       console.log(res);
     })
     .catch((err) => {
-      // console.log(err.response.data.message);
+      console.log(err.response);
       router.push({ name: 'Home' })
       return false;
     });

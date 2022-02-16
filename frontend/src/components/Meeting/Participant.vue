@@ -6,8 +6,8 @@
       class="d-flex flex-row justify-content-between align-items-center py-2 px-3 waiting-participant"
     >
       <span class="fw-bold">
-        <i v-if="parseInt(participant.id) === this.$store.state.meeting.hostId" style="color: rgb(255, 120, 120);" class="bi bi-star-fill pe-2"></i> 
         {{ participant.nickname }}
+        <i v-if="parseInt(participant.id) === this.$store.state.meeting.hostId" class="host bi bi-star-fill ps-1"></i> 
       </span>
       <div>
         <!-- <i class="bi bi-mic-mute-fill p-2"></i>
@@ -106,5 +106,9 @@ export default defineComponent({
   flex-direction: row;
   justify-content: space-between;
   line-height: 2;
+}
+
+.host {
+  color: rgb(255, 120, 120);
 }
 </style>

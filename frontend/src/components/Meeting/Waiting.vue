@@ -4,8 +4,8 @@
       <div class="w-100">
         <div class="waiting-participant" v-for="(participant, index) in participants" :key="index">
           <span class="fw-bold">
-            <i v-if="parseInt(participant.id) === this.$store.state.meeting.hostId" style="color: rgb(255, 120, 120);" class="bi bi-star-fill pe-2"></i> 
             {{ participant.nickname }}
+            <i v-if="parseInt(participant.id) === this.$store.state.meeting.hostId" style="color: rgb(255, 120, 120);" class="bi bi-star-fill ps-1"></i> 
           </span>
           <div class="w-25 text-end">
             <img v-if="participant.ready" alt="ready" src="@/assets/ready.png" class="w-100 ready">

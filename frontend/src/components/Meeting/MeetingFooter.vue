@@ -10,8 +10,11 @@
         <i class="bi bi-camera-video" id ="cameraOn"></i>
         <i class="bi bi-camera-video-off" id ="cameraOff" style="display: none"></i>
       </el-button>
-      <el-button type="primary" id ="record" size="large" circle >
-        녹화
+      <el-button type="primary" id ="record" size="large" circle v-show="!record" @click="record=true">
+        녹
+      </el-button>
+      <el-button type="primary" id ="stopRecording" size="large" circle v-show="record" @click="record=false">
+        화
       </el-button>
       <el-button type="primary" id ="debug" size="large" circle >
         비디오
@@ -63,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { ChatDotSquare, MoreFilled, List, VideoCamera, Microphone, Mute } from '@element-plus/icons-vue'
 import { useStore } from 'vuex'
 
@@ -83,8 +86,10 @@ export default defineComponent({
     const store = useStore()
     const participants = computed(() => store.state.participants)
     const startSignal = computed(() => props.startSignal)
+
+    const record = ref(false)
     return { 
-      openAside, asideCategory, participants, startSignal,
+      openAside, asideCategory, participants, startSignal, record,
       ChatDotSquare, MoreFilled, List, VideoCamera, Microphone, Mute,
     }
   }
