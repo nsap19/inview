@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/:pathMatch(.*)*",
     name: '404',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/PageNotFound.vue')
+    component: () => import(/* webpackChunkName: "create" */ '@/views/Page404.vue')
   },
   {
     path: '/account',
