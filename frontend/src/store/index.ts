@@ -67,6 +67,7 @@ export default createStore({
           }
         }).catch(err => {
           console.log(err)
+          console.log(err.response)
         })
     },
     setMeeting ( { commit }, meetingId ) {

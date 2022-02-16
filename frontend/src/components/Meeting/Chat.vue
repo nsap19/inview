@@ -210,7 +210,7 @@ export default {
             } else if (command === "HOST") {
               console.log('HOST!!!')
               this.$store.dispatch('setNewHost', parseInt(JSON.parse(res.body).sender))
-            } else if (command === null || command === "DISCONNECT") {
+            } else if (command === null) {
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               this.recvList.push(JSON.parse(res.body))
             }

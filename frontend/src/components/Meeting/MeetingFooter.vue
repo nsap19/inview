@@ -10,6 +10,12 @@
         <i class="bi bi-camera-video" id ="cameraOn"></i>
         <i class="bi bi-camera-video-off" id ="cameraOff" style="display: none"></i>
       </el-button>
+      <el-button type="primary" id ="record" size="large" circle >
+        녹화
+      </el-button>
+      <el-button type="primary" id ="debug" size="large" circle >
+        비디오
+      </el-button>
       <!-- <el-button type="primary" id ="cameraOff" size="large" circle style="display: none"></el-button> -->
       <input type="button" name="commit" value="비디오 참가" id="joinButton" style="display: none" />
       <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" />

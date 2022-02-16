@@ -39,9 +39,9 @@ public class MeetingSearchServiceImpl implements MeetingSearchService {
 	MeetingRepositorySupport meetingRepositorySupport;
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public Page<MeetingRes> selectMeeting(String title, List<String> industries, List<String> companies, int page) {
-		PageRequest pageable = PageRequest.of(page - 1, 9);
+		PageRequest pageable = PageRequest.of(page - 1, 6);
 
 		if (industries != null)
 			industries.stream().forEach(i -> industryRepository.findByIndustryName(i)

@@ -9,7 +9,7 @@
   </div>
   <div class="container recent-result">
     <h4>최근 만들어진 방</h4>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div 
         v-for="meeting in meetings.slice(0, 10)" 
         :key="meeting.id" 

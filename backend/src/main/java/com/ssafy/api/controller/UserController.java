@@ -168,7 +168,7 @@ public class UserController {
         @ApiResponse(code = 400, message = "존재하지 않는 유저입니다."),
         @ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> deleteUser(@PathVariable("userId") int userId, String password) {
+	public ResponseEntity<? extends BaseResponseBody> deleteUser(@PathVariable("userId") int userId, @RequestBody String password) {
 		if(!passwordEncoder.matches(password, userService.getUserById(userId).getPassword())) // 패스워드 일치 확인
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "잘못된 비밀번호"));
 		userService.deleteUser(userId);

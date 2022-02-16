@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, watch, computed } from 'vue'
+import { defineComponent, ref, onMounted, watch, computed, onUnmounted } from 'vue'
 import ChooseQuestion from '@/components/Meeting/ChooseQuestion.vue';
 import Participant from '@/components/Meeting/Participant.vue';
 import Evaluation from '@/components/Meeting/Evaluation.vue';
@@ -122,8 +122,10 @@ export default defineComponent({
 
 		onMounted(() => {
 			document.getElementById('joinButton').onclick=function(){register(); return false;};
+			document.getElementById('debug').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
+			document.getElementById('record').onclick=function(){play(); return false;};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
@@ -161,7 +163,26 @@ export default defineComponent({
 				windowWidth.value = window.innerWidth
 			})
 		})
-
+    onUnmounted(() => {
+      window.removeEventListener('resize', function () {
+				// console.log('window 크기 변경 resize좀 제발')
+				// const width = document.getElementById('container').offsetWidth
+				let width =  openAside.value ? window.innerWidth - 420 : document.getElementById('container').offsetWidth
+				// let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
+				if (window.innerWidth < 600) {
+					width = window.innerWidth
+				}
+				const height = document.getElementById('container').offsetHeight
+				resize(width, height)
+				// if (wholeVideosWrapper.value) {
+				// 	width.value = wholeVideosWrapper.value.offsetWidth
+				// 	height.value = wholeVideosWrapper.value.offsetHeight
+				// 	resize(width.value, height.value)
+				// 	windowWidth.value = window.innerWidth
+				// }
+				windowWidth.value = window.innerWidth
+			})
+    })
 		const ratio = 9 / 16  // 비디오 화면 비율 (16: 9)
 		const setMargin = 10  // 비디오 margin
 		let maxWidth = ref(0)  // 비디오 최대 넓이

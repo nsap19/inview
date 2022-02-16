@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 	public CallHandler groupCallHandler() {
 		return new CallHandler();
 	}
-	
+
 	@Bean
 	public StompInterceptor stompInterceptor() {
 		return new StompInterceptor();
@@ -31,7 +31,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/stomp-chat").setAllowedOrigins("http://i6a201.p.ssafy.io:8080", "http://localhost:3000").withSockJS();
+		registry.addEndpoint("/stomp-chat").setAllowedOrigins("http://i6a201.p.ssafy.io",
+				"http://i6a201.p.ssafy.io:8080", "http://i6a201.p.ssafy.io:8080/api", "http://localhost:3000")
+				.withSockJS()
+				.setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");;
 	}
 
 	@Override
@@ -42,11 +45,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://i6a201.p.ssafy.io:8080", "http://localhost:3000").withSockJS();
+		registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://i6a201.p.ssafy.io",
+				"http://i6a201.p.ssafy.io:8080", "http://i6a201.p.ssafy.io:8080/api", "http://localhost:3000")
+				.withSockJS()
+				.setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");;
 
 	}
 
 	public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(stompInterceptor());
-    }
+		registration.interceptors(stompInterceptor());
+	}
 }

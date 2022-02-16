@@ -138,3 +138,7 @@ video {
   box-shadow: rgb(0 0 0 / 6%) 0px 8px 20px;
   border: none;
 }
+
+.el-button {
+  border-color: transparent;
+}
