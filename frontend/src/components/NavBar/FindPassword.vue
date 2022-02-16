@@ -3,13 +3,13 @@
     v-model="openDialog"
     width="320px"
   >
+  <el-form v-loading="loading">
     <el-form 
       ref="ruleFormRef"
       :model="ruleForm"
       :rules="rules"
       size="large"
       :hide-required-asterisk="true"
-      v-loading="loading"
       style="margin-bottom: 40px"
      >
      <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3">
@@ -26,7 +26,6 @@
       :rules="rules2"
       size="large"
       :hide-required-asterisk="true"
-      v-loading="loading"
      >
       <el-form-item prop="code" :error="codeError">
         <el-input v-model="ruleForm2.code" autocomplete="off" @input="inputCode" placeholder="인증코드"></el-input>
@@ -36,7 +35,7 @@
 
       </div>
     </el-form>
-
+</el-form>
   </el-dialog>
 </template>
 
@@ -115,14 +114,19 @@ export default defineComponent({
     const emailCertificationCode = ref('')
 
    const email = function(){
+               loading.value = true
           axios.post( `/users/findpw`, ruleForm
                     ).then((res: any) => {
-                       alert("이메일로 코드가 전송되었습니다.")
+                        loading.value = false
+
+
+                        alert("이메일로 코드가 전송되었습니다.")
                         console.log('SUCCESS!!');
                         console.log(res.data)
                         codeServer.value = res.data.code
 
                     }).catch((err: any) => {
+                                     loading.value = false
                         console.log('FAILURE!!');
                         alert(err.response.data.message)
                         console.log(err.response)
@@ -131,13 +135,16 @@ export default defineComponent({
 
     const code = function(){
         if(codeServer.value == ruleForm2.code){
+          loading.value = true
             axios.post( `/users/findpw/email-certi`, ruleForm
                     ).then((res: any) => {
+                        loading.value = false
                         alert("이메일로 임시 비밀번호가 전송되었습니다.")
                         console.log('SUCCESS!!');
                         emit('password')
 
                     }).catch((err: any) => {
+                        loading.value = false
                         console.log('FAILURE!!');
                         console.log(err.response)
                     });  
