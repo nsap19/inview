@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -168,7 +169,7 @@ public class UserController {
         @ApiResponse(code = 400, message = "존재하지 않는 유저입니다."),
         @ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> deleteUser(@PathVariable("userId") int userId, String password) {
+	public ResponseEntity<? extends BaseResponseBody> deleteUser(@PathVariable("userId") int userId, @RequestParam("password") String password) {
 		if(!passwordEncoder.matches(password, userService.getUserById(userId).getPassword())) // 패스워드 일치 확인
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "잘못된 비밀번호"));
 		userService.deleteUser(userId);

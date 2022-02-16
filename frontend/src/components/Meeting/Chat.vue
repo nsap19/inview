@@ -78,6 +78,7 @@ export default {
       message: "",
       recvList: [],
       subscribeId: "",
+      socketConnected: false,
     }
   },
   watch: {
@@ -95,15 +96,26 @@ export default {
     },
     leaveSignal: function(newValue, oldValue) {
       console.log("나감", newValue, oldValue)
-      this.disconnect()
+      if (this.socketConnected) {
+        console.log("소켓좀끝")
+        this.disconnect()
+      }
     },
     recvList: () => {
       this.scrollToEnd()
     },
     meeting: function(newValue, oldValue) {
       console.log("연결안할꺼냐", newValue, oldValue)
-      this.connect()
-    }
+      if (newValue.id) {
+        this.connect()
+      }
+    },
+    $route: function(to, form) {
+      console.log(to, form)
+      if (to.name !== "Meeting") {
+        this.disconnect()
+      }
+    },
   },
   mounted() {
     console.log("소켓아", this.$store.state.meeting)
@@ -164,6 +176,7 @@ export default {
         frame => {
           // 소켓 연결 성공
           this.connected = true;
+          this.socketConnected = true
           console.log('소켓 연결 성공', frame);
 
           const current_datetime = new Date()
@@ -202,16 +215,20 @@ export default {
               });
               // console.log(participants)
               this.$store.dispatch('setParticipants', participants)
-              // if (command === "UNREADY" || command === "READY") {
-              // }
+
+              // RUNNING 상태에서 참가자가 1명 남은 경우 이 참가자가 나갈 때 미팅 STATUS 변경
+              if (command === "PARTICIPANT") {
+                if (this.startSignal && participants.length === 1) {
+                  console.log("마지막 한명")
+                  this.$emit('close')
+                }
+              }
             } else if (command === "START") {
-              console.log('start!!!')
               this.$emit('start')
             } else if (command === "HOST") {
               console.log('HOST!!!')
               this.$store.dispatch('setNewHost', parseInt(JSON.parse(res.body).sender))
             } else if (command === null) {
-              // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               this.recvList.push(JSON.parse(res.body))
             }
             
@@ -221,6 +238,7 @@ export default {
           // 소켓 연결 실패
           console.log('소켓 연결 실패', error);
           this.connected = false;
+          this.socketConnected = false
         }
       );        
     },

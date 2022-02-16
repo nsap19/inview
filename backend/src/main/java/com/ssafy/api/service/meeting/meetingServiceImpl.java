@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,9 +96,7 @@ public class meetingServiceImpl implements MeetingService {
 	public void deleteMeeting(int meetingId, int hostId) {
 		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
-		if (meeting.getUser().getUserId() != hostId) {
-			throw new NotHostException();
-		} else if (!Status.WAITING.equals(meeting.getStatus())) {
+		if (!Status.WAITING.equals(meeting.getStatus())) {
 			throw new AlreadyRunningMeetingException();
 		} else {
 			meetingRepository.deleteById(meetingId);
@@ -106,6 +105,7 @@ public class meetingServiceImpl implements MeetingService {
 
 	@Override
 	@Transactional
+	@Modifying
 	public void updateMeeting(int meetingId, String title, int hostId) {
 		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 

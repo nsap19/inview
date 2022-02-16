@@ -2,34 +2,34 @@
   <div class="waiting">
     <div class="d-flex flex-column justify-content-between align-items-center h-100 w-100">
       <div class="w-100">
-        <!-- {{participants}} -->
         <div class="waiting-participant" v-for="(participant, index) in participants" :key="index">
-          <span class="fw-bold">{{ participant.nickname }}</span>
+          <span class="fw-bold">
+            {{ participant.nickname }}
+            <i v-if="parseInt(participant.id) === this.$store.state.meeting.hostId" style="color: rgb(255, 120, 120);" class="bi bi-star-fill ps-1"></i> 
+          </span>
           <div class="w-25 text-end">
             <img v-if="participant.ready" alt="ready" src="@/assets/ready.png" class="w-100 ready">
             <img v-else alt="unready" src="@/assets/unready.png" class="w-100 ready">
           </div>
-          <!-- <el-button round class="" type="text">
-          </el-button> -->
         </div>  
       </div>
-      <div class="w-100 d-flex flex-row">
+      <div class="w-100 d-flex flex-md-row flex-column">
         <div class="col waiting-participant">
           <el-button round style="margin: 0 auto;" type="text" @click="clickLeave">
-            <span class="fs-5 fw-bold">나가기</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-door-open-fill pe-1"></i>나가기</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text"
             v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="clickDeleteMeeting">
-            <span class="fs-5 fw-bold">방 삭제</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-trash-fill pe-1"></i>방 삭제</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text" v-else @click="clickLeaveMeeting">
-            <span class="fs-5 fw-bold">참가 취소</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-x-circle-fill pe-1"></i>참가 취소</span>
           </el-button>
         </div>
         <div class="col waiting-participant">
           <el-button round style="margin: 0 auto;" type="text" 
             v-if="this.$store.state.meeting.hostId === this.$store.state.user.id" @click="startMeeting">
-            <span class="fs-5 fw-bold">시작</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-play-circle-fill pe-1"></i>시작</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text" v-else @click="$emit('ready')">
             <span class="fs-5 fw-bold">준비</span>
@@ -60,12 +60,12 @@ export default defineComponent({
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)
+        router.push({ name: 'Home'})
         ElMessage({
           type: 'success',
           message: '삭제되었습니다.',
         })
         store.dispatch('deleteMeeting')
-        router.push({ name: 'Home'})
       }).catch(err => {
         console.log(err.response)
       })
@@ -93,13 +93,15 @@ export default defineComponent({
     }
 
     const leaveMeeting = function () {
-      axios.delete(`/meeting/${store.state.meeting.id}/cancle`, 
+      axios.delete(`/meeting/${store.state.meeting.id}/users/${store.state.user.id}`, 
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)
-        axios.get(`/meeting/${store.state.meeting.id}`).then(res => {
-          console.log("새 미팅 정보")
-          console.log(res)
+        router.push({ name: 'Home'})
+        // store.dispatch('deleteMeeting')
+        ElMessage({
+          type: 'success',
+          message: '참가를 취소하셨습니다.',
         })
       }).catch(err => {
         console.log(err.response)
@@ -121,10 +123,6 @@ export default defineComponent({
           leaveMeeting()
           // store.dispatch('deleteMeeting')
           emit('leave')
-          ElMessage({
-            type: 'success',
-            message: '참가를 취소하셨습니다.',
-          })
         })
         .catch(() => {
           ElMessage({

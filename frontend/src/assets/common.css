@@ -35,12 +35,12 @@
 
 :root {
   --el-color-primary: #4E7351;
+  --el-color-primary-light-2: hsl(125, 19%, 48%);
   --el-color-primary-light-7: #CEE5D0;
   --el-color-primary-light-9: #F2F8F2;
   --el-button-border-color: transparent;
 
-  /* 검색바 보더 색 */
-  /* --el-border-color-base: transparent;   */
+  --bs-body-font-family: 'Nunito', TmoneyRoundWindRegular, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 }
 
 .el-button--primary.is-plain.is-disabled, .el-button--primary.is-plain.is-disabled:active, .el-button--primary.is-plain.is-disabled:focus, .el-button--primary.is-plain.is-disabled:hover {
@@ -141,4 +141,34 @@ video {
 
 .el-button {
   border-color: transparent;
+}
+
+.el-pagination.is-background .btn-next:disabled, .el-pagination.is-background .btn-prev:disabled {
+  background-color: transparent;
+}
+
+.meeting-footer .el-button {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.522) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
+}
+
+.meeting-footer .el-button:hover {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+.waiting-participant .el-button {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(78, 115, 81, 1) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.close-button .el-button {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
+}
+
+.close-button .el-button:hover {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 1) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
 }

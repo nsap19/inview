@@ -24,7 +24,7 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<MeetingNavBar :startSignal="startSignal" @leaveMeeting="endSignal=true" />
+		<MeetingNavBar :startSignal="startSignal" :closeSignal="closeSignal" @leaveMeeting="endSignal=true" />
 
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
@@ -49,6 +49,7 @@
 					<Evaluation 
 						:participantNickname="participant.nickname" 
 						:endSignal="endSignal" 
+						:startSignal="startSignal" 
 						v-show="asideCategory === 'evaluation' + participant.nickname" />
 				</div>
 				<Chat 
@@ -57,6 +58,7 @@
 					:startSignal="startSignal" 
 					:leaveSignal="leaveSignal"
 					@start="startSignal=true" 
+					@close="closeSignal=true"
 					v-show="asideCategory === 'chat'" 
 				/>
 				<Memo :endSignal="endSignal" v-show="asideCategory === 'memo'" />
@@ -84,6 +86,7 @@ import MeetingFooter from '@/components/Meeting/MeetingFooter.vue'
 import { CloseBold, } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
 	name: 'Meeting',
@@ -125,7 +128,8 @@ export default defineComponent({
 			document.getElementById('debug').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
-			document.getElementById('record').onclick=function(){play(); return false;};
+			document.getElementById('record').onclick=function(){start(); return false;};
+			document.getElementById('stopRecording').onclick=function(){stop(); return false;};
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
@@ -280,22 +284,38 @@ export default defineComponent({
 		}
 
 		const endSignal = ref(false)  
-		const startSignal = ref(false)
-		const readySignal = ref(false)
-		const leaveSignal = ref(false)
+		const startSignal = ref(false)  // 미팅 시작
+		const readySignal = ref(false)  // 미팅 준비
+		const leaveSignal = ref(false)  // 미팅 나가기
+		const closeSignal = ref(false)  // 미팅 CLOSE
 		watch(startSignal, (oldVal) => {
 			register()
 		})
+		watch(leaveSignal, (oldVal) => {
+			if (startSignal) {
+				leaveRoom()
+			}
+		})
 		watch(endSignal, (oldVal) => {
 			console.log('종료신호받고 비디오 나가야하는데 안함?')
-			leaveRoom()
+			if (readySignal) {
+				leaveRoom()
+			}
 		})
 
 		const store = useStore()
 		const participants = computed(() => store.state.participants)
-
+		const router = useRouter()
+		router.beforeEach((to, from) => {
+			console.log("라우터", to, from)
+			if (to.name !== "Meeting") {
+				store.dispatch('deleteMeeting')
+				console.log("뒤로간다")
+				// leaveSignal.value = true
+			}
+		})
 		return { 
-			CloseBold, readySignal, leaveSignal,
+			CloseBold, readySignal, leaveSignal, closeSignal,
 			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
 			handleClose,

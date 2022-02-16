@@ -19,8 +19,9 @@ import com.ssafy.db.repository.UserRepositorySupport;
 
 @Component
 public class ArchiveUtil {
+	private final String fileSeparator = File.separator;
 	private final String dir = System.getProperty("user.dir");
-	private final String src = dir + "\\files\\";
+	private final String src = dir + "files" + fileSeparator;
 
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
@@ -32,12 +33,14 @@ public class ArchiveUtil {
 	ArchiveService arhciveService;
 
 	public String getSavepath(ArchiveType archiveType, String meetingId) {
+
 		if (archiveType.equals(ArchiveType.VIDEO)) {
 			// docker path
-			return "file:///tmp/files/" + meetingId + "/" + String.valueOf(archiveType).toLowerCase();
+			return "file:///tmp" + fileSeparator + "files" + fileSeparator + meetingId + fileSeparator
+					+ String.valueOf(archiveType).toLowerCase();
 		}
 
-		return src + meetingId + "\\" + String.valueOf(archiveType).toLowerCase();
+		return src + meetingId + File.separator + String.valueOf(archiveType).toLowerCase();
 	}
 
 	public String getFilename(ArchiveType archiveType, User user, String option, String extension) {
@@ -77,9 +80,9 @@ public class ArchiveUtil {
 	public String getFilepath(ArchiveType archiveType, String savepath, String filename) {
 		if (archiveType.equals(ArchiveType.VIDEO)) {
 			// docker 내 저장으로 경로명 상이
-			return savepath + "/" + filename;
+			return savepath + fileSeparator + filename;
 		}
-		return savepath + "\\" + filename;
+		return savepath + fileSeparator + filename;
 	}
 
 	public String getOsFilepath(ArchiveType archiveType, String path) {

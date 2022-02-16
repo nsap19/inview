@@ -30,4 +30,9 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
 	@Modifying
 	@Query(value = "delete from Participant where meetingId=:meetingId and userId=:userId", nativeQuery = true)
 	void deleteByMeetingIdAndUserId(@Param("meetingId") int meetingId, @Param("userId") int userId);
+	
+	@Transactional
+	@Modifying
+	@Query(value="update Participant set forcedExit=1 where meetingId=:meetingId and userId=:userId")
+	void updateForcedExit(@Param("meetingId") int meetingId, @Param("userId") int userId);
 }

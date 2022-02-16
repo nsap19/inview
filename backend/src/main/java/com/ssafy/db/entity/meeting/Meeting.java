@@ -18,6 +18,7 @@ import javax.validation.constraints.Max;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.db.entity.Industry;
 import com.ssafy.db.entity.MeetingCompany;
 import com.ssafy.db.entity.Participant;
@@ -76,9 +77,11 @@ public class Meeting {
 	@ColumnDefault("0")
 	Status status;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
 	List<Participant> participants = new ArrayList<Participant>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
 	List<MeetingCompany> meetingCompanies = new ArrayList<MeetingCompany>();
 }
