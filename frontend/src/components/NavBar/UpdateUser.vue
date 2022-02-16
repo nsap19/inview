@@ -9,6 +9,7 @@
       v-loading="loading"
     >
       <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3" />
+      <p>닉네임과 비밀번호를 수정하실 수 있습니다.</p>
       <el-form-item prop="nickname" :error="nicknameError">
         <el-input
           v-model="ruleForm.nickname"
@@ -114,11 +115,11 @@ export default defineComponent({
 
     // eslint-disable-next-line
     const validatePassword = (rule: any, value: any, callback: any) => {
-      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+      const passwordPattern = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z]).{8,}$/;
       if (ruleForm.password === '') {
         callback(new Error('비밀번호를 입력해주세요'))
       } else if (passwordPattern.test(ruleForm.password) === false) {
-        callback(new Error('비밀번호는 8자를 넘으며 숫자, 영문 대문자, 특수 문자를 포함해야 합니다'))
+        callback(new Error('8자 이상으로 영문, 숫자, 특수문자를 포함시켜 주세요'))
       } else {
         callback()
       }
@@ -184,20 +185,20 @@ export default defineComponent({
     const outUser = () => {
       var result = confirm("회원탈퇴시 개인정보가 즉시 삭제 처리되며, 재가입시 복원되지 않습니다. 탈퇴신청을 하시겠습니까?");
       if(result) {
+        console.log(password.value)
         axios.delete(`/users/${store.state.user.id}`, {params: {password: password.value}}).then((res: any) => {
-              console.log('SUCCESS!!');
-              console.log(res)
+            console.log('SUCCESS!!');
+            console.log(res)
 
-              localStorage.removeItem("token");
-              router.push("/")
+            localStorage.removeItem("token");
+            router.push("/")
 
-              password.value = ""
+            password.value = ""
 
         }).catch((err: any) => {
-              console.log('FAILURE!!');
-              console.log(err.response)
-              alert("회원탈퇴 실패");
-
+            console.log('FAILURE!!');
+            console.log(err.response)
+            alert("회원탈퇴 실패");
         });
       }
     }
