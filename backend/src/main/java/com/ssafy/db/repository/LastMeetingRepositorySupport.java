@@ -42,7 +42,7 @@ public class LastMeetingRepositorySupport {
 				.on(qParticipant.meeting.eq(qMeeting)).fetchJoin().leftJoin(qUser).on(qUser.eq(qParticipant.user))
 				.fetchJoin().leftJoin(qCompany).on(qCompany.eq(qMeetingCompany.company)).fetchJoin().leftJoin(qIndustry)
 				.on(qIndustry.eq(qMeeting.industry)).fetchJoin().groupBy(qMeeting).where(qUser.userId.eq(userId))
-				.offset(pageable.getOffset()).limit(pageable.getPageSize()).orderBy(qMeeting.meetingId.desc()).fetch();
+				.offset(pageable.getOffset()).limit(pageable.getPageSize()).orderBy(qMeeting.startTime.desc()).fetch();
 
 		List<LastMeetingRes> ret = meetingList.stream().map(m -> LastMeetingRes.builder().id(m.getMeetingId())
 				.title(m.getTitle()).startTime(m.getStartTime()).endTime(m.getEndTime())
