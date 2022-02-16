@@ -12,7 +12,7 @@
 export default {
   name: "PageNotFound",
   setup() {
-    window.onload = function(){
+      window.onload = function(){
     }
   }
 }

@@ -5,14 +5,14 @@ import axios from "axios";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
-    name: 'Home',
-    component: Home
-  },
-  {
     path: '/',
     name: 'Landing',
     component: Landing
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home
   },
   {
     path: '/search',
@@ -39,10 +39,15 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Result',
     component: () => import(/* webpackChunkName: "create" */ '@/views/Result.vue')
   },
+  // {
+  //   path: "/:pathMatch(.*)*",
+  //   name: '404',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/views/PageNotFound.vue')
+  // },
   {
     path: "/:pathMatch(.*)*",
     name: '404',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/PageNotFound.vue')
+    component: () => import(/* webpackChunkName: "create" */ '@/views/Page404.vue')
   },
   {
     path: '/account',
