@@ -3,9 +3,12 @@
     <div 
       v-for="participant in participants" 
       :key="participant.pk" 
-      class="d-flex flex-row justify-content-between align-items-center py-2 px-3"
+      class="d-flex flex-row justify-content-between align-items-center py-2 px-3 waiting-participant"
     >
-      <span class="fw-bold">{{ participant.nickname }}</span>
+      <span class="fw-bold">
+        <i v-if="parseInt(participant.id) === this.$store.state.meeting.hostId" style="color: rgb(255, 120, 120);" class="bi bi-star-fill pe-2"></i> 
+        {{ participant.nickname }}
+      </span>
       <div>
         <!-- <i class="bi bi-mic-mute-fill p-2"></i>
         <i class="bi bi-camera-video-off-fill p-2"></i> -->
@@ -88,6 +91,20 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
+.waiting-participant {
+  box-shadow: inset 3px 3px 8px 0 rgba(0, 0, 0, 0.2),
+              inset -6px -6px 10px 0 rgba(255, 255, 255, 0.5);
 
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  border-radius: 10px;
+  margin: 10px;
+  padding: 18px;
+  /* width: 100%; */
+  /* height: 100%; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  line-height: 2;
+}
 </style>

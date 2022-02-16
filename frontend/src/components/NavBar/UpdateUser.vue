@@ -1,55 +1,68 @@
 <template>
-  <el-dialog v-model="openDialog" width="320px">
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      :rules="rules"
-      size="large"
-      :hide-required-asterisk="true"
-      v-loading="loading"
-    >
-      <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3" />
-      <p>닉네임과 비밀번호를 수정하실 수 있습니다.</p>
-      <el-form-item prop="nickname" :error="nicknameError">
-        <el-input
-          v-model="ruleForm.nickname"
-          autocomplete="off"
-          @input="inputNickname"
-          placeholder="닉네임"
-        ></el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input
-          type="password"
-          v-model="ruleForm.password"
-          autocomplete="off"
-          placeholder="비밀번호"
-        ></el-input>
-      </el-form-item>
-      <el-form-item prop="passwordCheck">
-        <el-input
-          type="password"
-          v-model="ruleForm.passwordCheck"
-          autocomplete="off"
-          placeholder="비밀번호 확인"
-        ></el-input>
-      </el-form-item>
-      <div
-        class="d-flex flex-column align-self-center"
-        style="margin: 10px auto"
+  <div>
+    <el-dialog v-model="openDialog" width="320px" :title="korTitle[updateWhat]">
+      <div v-if="updateWhat === 'delete'">
+        <p class="text-center m-0">회원 탈퇴시 개인정보가 즉시 삭제 처리되며,</p>
+        <p class="text-center m-0">재가입시 복원되지 않습니다. </p>
+        <p class="text-center">탈퇴를 원하신다면 비밀번호를 입력해주세요.</p>
+      </div>
+      <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        :rules="rules"
+        size="large"
+        :hide-required-asterisk="true"
+        v-loading="loading"
       >
-        <el-button type="primary" round @click="ChangeInfo(ruleFormRef)"
-          >수정</el-button
+        <!-- <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3" /> -->
+        <el-form-item prop="nickname" :error="nicknameError" v-if="updateWhat === 'nickname'">
+          <el-input
+            v-model="ruleForm.nickname"
+            autocomplete="off"
+            @input="inputNickname"
+            placeholder="새로운 닉네임을 입력하세요"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            type="password"
+            v-model="ruleForm.password"
+            autocomplete="off"
+            :placeholder="updateWhat === 'nickname' || updateWhat === 'delete' ? '비밀번호를 입력해주세요' : '새로운 비밀번호를 입력해주세요'"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="passwordCheck" v-if="updateWhat === 'password'">
+          <el-input
+            type="password"
+            v-model="ruleForm.passwordCheck"
+            autocomplete="off"
+            placeholder="비밀번호를 다시 입력해주세요"
+          ></el-input>
+        </el-form-item>
+        <div
+          class="d-flex flex-column align-self-center"
+          style="margin: 10px auto"
         >
-      </div>
-      <div
-        class="d-flex flex-column align-self-center"
-        style="margin: 10px auto"
-      >
-        <el-button type="text" @click="outUser()">회원탈퇴</el-button>
-      </div>
-    </el-form>
-  </el-dialog>
+          <el-button plain round type="primary" @click="outUser" v-if="updateWhat === 'delete'"
+          >탈퇴</el-button>
+          <el-button plain round type="primary" @click="ChangeInfo(ruleFormRef)" v-else
+          >수정</el-button>
+        </div>
+        <el-divider></el-divider>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="mb-1" v-if="updateWhat === 'password' || updateWhat==='delete'">
+            <el-button plain round type="primary" @click="updateWhat='nickname'">닉네임 수정</el-button>
+          </div>
+          <div class="" v-if="updateWhat === 'nickname' || updateWhat==='delete'">
+            <el-button plain round type="primary" @click="updateWhat='password'">비밀번호 수정</el-button>
+          </div>
+          <div class="row">
+            <el-button type="text" @click="updateWhat='delete'" v-if="updateWhat!=='delete'">회원 탈퇴</el-button>
+          </div>
+        </div>
+      </el-form>
+    </el-dialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -58,6 +71,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import type { ElForm } from 'element-plus'
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: "UpdateUser",
@@ -67,7 +81,6 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const openDialog = computed({
-
       get: () => props.modelValue,
       set: (value) => {
         ruleForm.password = '',
@@ -76,26 +89,32 @@ export default defineComponent({
       },
     });
 
-    watch(() => props.modelValue, (newValue, oldValue) => {
-      console.log('props.visible 의 변이가 감지되었을 때 ', {newValue, oldValue})
+    const store = useStore()
+    const updateWhat = ref("nickname")
+    watch(updateWhat, (val) => {
+      resetInfoForm()
     })
 
+    const korTitle = {
+      "nickname": "닉네임 변경",
+      "password": "비밀번호 변경",
+      "delete": "회원 탈퇴"
+    }
     const resetInfoForm = () =>{
-        infoChangeForm.nickname = nickname
-        infoChangeForm.password =''
-        infoChangeForm.passwordCheck =''
+      ruleForm.nickname = ""
+      ruleForm.password =''
+      ruleForm.passwordCheck =''
     }
 
     const loading = ref(false)
-    const store = useStore()
     const router = useRouter()
 
     const password = ref('')
-    const nickname = ref(store.state.user.nickname)
 
     const ruleFormRef = ref<InstanceType<typeof ElForm>>()
+
     const ruleForm = reactive({
-      nickname: store.state.user.nickname,
+      nickname: "",
       password:"",
       passwordCheck:""
     })
@@ -106,7 +125,11 @@ export default defineComponent({
 
     // eslint-disable-next-line
     const validateNickname = (rule: any, value: any, callback: any) => {
-      if (ruleForm.nickname.indexOf(' ') > -1) {
+      if (ruleForm.nickname === '') {
+        callback(new Error('닉네임을 입력해주세요'))
+      } else if (ruleForm.nickname.length > 10) {
+        callback(new Error('10자 이하로 입력해주세요'))
+      } else if (ruleForm.nickname.indexOf(' ') > -1) {
         callback(new Error('닉네임에 공백이 포함될 수 없습니다'))
       } else {
         callback()
@@ -142,39 +165,41 @@ export default defineComponent({
       passwordCheck: [{ validator: validatePasswordCheck, trigger: 'blur' }],
     }
 
-    const infoChangeForm = reactive({
-        password: '',
-        passwordCheck: '',
-        nickname: ''
-    })
-
     const ChangeInfo = (formEl: InstanceType<typeof ElForm> | undefined) => {
+      if (updateWhat.value === "nickname") {
+        ruleForm.passwordCheck = ruleForm.password
+      } else {
+        ruleForm.nickname = store.state.user.nickname
+      }
       if (!formEl) return
       formEl.validate((valid) => {
       if (valid) {
-          const { nickname, password } = ruleForm
-                axios.put( `/users/${store.state.user.id}`, {
-                    nickname: nickname,
-                    password: password,
-                },
-                    {
-                      headers:
-                        {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        }
-                    }
-                ).then((res: any) => {
-                    console.log('SUCCESS!!');
-                    console.log(res)
-                    confirm('회원 정보가 수정되었습니다.')
-                    resetInfoForm()
-
-                }).catch((err: any) => {
-                    console.log('FAILURE!!');
-                    console.log(err.response)
-                    confirm('회원 정보 수정에 실패했습니다.')
+        const { nickname, password } = ruleForm
+          axios.put( `/users/${store.state.user.id}`, 
+            { nickname: nickname, password: password },
+            { headers: {Authorization: `Bearer ${localStorage.getItem("token")}`} }
+          ).then((res: any) => {
+              console.log('SUCCESS!!');
+              console.log(res)
+              ElMessage({
+                message: '회원 정보가 수정되었습니다.',
+                type: 'success',
+              })
+              resetInfoForm()
+              store.dispatch('setUser', { nickname: nickname, id: store.state.user.id });
+              openDialog.value = false
+          }).catch((err: any) => {
+              console.log('FAILURE!!');
+              console.log(err.response)
+              if (err.response.data.message === "이미 등록된 닉네임입니다.") {
+                nicknameError.value = "이미 등록된 닉네임입니다"
+              } else {
+                ElMessage({
+                  message: '오류가 발생했습니다. 다시 시도해주세요.',
+                  type: 'warning',
                 })
-                    //reset
+              }
+          })
         } else {
           // console.log('error submit!')
           return false
@@ -183,31 +208,27 @@ export default defineComponent({
     } 
 
     const outUser = () => {
-      var result = confirm("회원탈퇴시 개인정보가 즉시 삭제 처리되며, 재가입시 복원되지 않습니다. 탈퇴신청을 하시겠습니까?");
-      if(result) {
-        console.log(password.value)
-        axios.delete(`/users/${store.state.user.id}`, {params: {password: password.value}}).then((res: any) => {
-            console.log('SUCCESS!!');
-            console.log(res)
+      console.log(ruleForm.password)
+      axios.delete(`/users/${store.state.user.id}`, {
+        data: {password: ruleForm.password},
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      }).then((res: any) => {
+        console.log('SUCCESS!!');
+        console.log(res)
 
-            localStorage.removeItem("token");
-            router.push("/")
+        localStorage.removeItem("token");
+        router.push("/")
 
-            password.value = ""
-
-        }).catch((err: any) => {
-            console.log('FAILURE!!');
-            console.log(err.response)
-            alert("회원탈퇴 실패");
-        });
-      }
+      }).catch((err: any) => {
+        console.log(err.response)
+      });
     }
 
     return {
       openDialog, ruleFormRef, ruleForm, rules,
       nicknameError, inputNickname, loading,
       password, ChangeInfo,outUser,
-      infoChangeForm
+      updateWhat, korTitle
     }
   },
 })

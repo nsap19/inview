@@ -78,6 +78,7 @@ export default {
       message: "",
       recvList: [],
       subscribeId: "",
+      socketConnected: false,
     }
   },
   watch: {
@@ -95,15 +96,26 @@ export default {
     },
     leaveSignal: function(newValue, oldValue) {
       console.log("나감", newValue, oldValue)
-      this.disconnect()
+      if (this.socketConnected) {
+        console.log("소켓좀끝")
+        this.disconnect()
+      }
     },
     recvList: () => {
       this.scrollToEnd()
     },
     meeting: function(newValue, oldValue) {
       console.log("연결안할꺼냐", newValue, oldValue)
-      this.connect()
-    }
+      if (newValue.id) {
+        this.connect()
+      }
+    },
+    $route: function(to, form) {
+      console.log(to, form)
+      if (to.name !== "Meeting") {
+        this.disconnect()
+      }
+    },
   },
   mounted() {
     console.log("소켓아", this.$store.state.meeting)
@@ -164,6 +176,7 @@ export default {
         frame => {
           // 소켓 연결 성공
           this.connected = true;
+          this.socketConnected = true
           console.log('소켓 연결 성공', frame);
 
           const current_datetime = new Date()
@@ -221,6 +234,7 @@ export default {
           // 소켓 연결 실패
           console.log('소켓 연결 실패', error);
           this.connected = false;
+          this.socketConnected = false
         }
       );        
     },

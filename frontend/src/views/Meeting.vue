@@ -49,6 +49,7 @@
 					<Evaluation 
 						:participantNickname="participant.nickname" 
 						:endSignal="endSignal" 
+						:startSignal="startSignal" 
 						v-show="asideCategory === 'evaluation' + participant.nickname" />
 				</div>
 				<Chat 
@@ -84,6 +85,7 @@ import MeetingFooter from '@/components/Meeting/MeetingFooter.vue'
 import { CloseBold, } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
 	name: 'Meeting',
@@ -288,12 +290,22 @@ export default defineComponent({
 		})
 		watch(endSignal, (oldVal) => {
 			console.log('종료신호받고 비디오 나가야하는데 안함?')
-			leaveRoom()
+			if (readySignal) {
+				leaveRoom()
+			}
 		})
 
 		const store = useStore()
 		const participants = computed(() => store.state.participants)
-
+		const router = useRouter()
+		router.beforeEach((to, from) => {
+			console.log("라우터", to, from)
+			if (to.name !== "Meeting") {
+				store.dispatch('deleteMeeting')
+				console.log("뒤로간다")
+				// leaveSignal.value = true
+			}
+		})
 		return { 
 			CloseBold, readySignal, leaveSignal,
 			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
