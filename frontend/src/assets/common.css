@@ -164,11 +164,21 @@ video {
 }
 
 .close-button .el-button {
-  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 0.5) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
   border: none;
 }
 
 .close-button .el-button:hover {
-  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 1) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 0.7) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
+}
+
+.create-button .el-button {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 0.5) -10%, rgba(255, 120, 120, 0.5) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
+}
+
+.create-button .el-button:hover {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 0.7) -10%, rgba(255, 120, 120, 0.7) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
   border: none;
 }

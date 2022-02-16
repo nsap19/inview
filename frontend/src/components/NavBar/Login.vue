@@ -21,6 +21,7 @@
 
       <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
         <el-button type="primary" round @click="login(ruleFormRef)">로그인</el-button>
+        <el-divider></el-divider>
         <div class="mt-2">
           <Kakao />
         </div>

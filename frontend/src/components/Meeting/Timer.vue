@@ -1,39 +1,60 @@
 <template>
-  <div class="container">
-    <div class="row">
+  <div style="margin: auto 0;">
+    <div class="row custom-row-cols g-2">
+      <div class="col">
+        <div class="row timer-wrapper" v-show="counting[0]">
+            <div class="col d-flex flex-column justify-content-center align-items-center">
+              <Vue3Lottie ref="timer1" :animationData="TimerImg" :width="100" :autoPlay="false" />
+              <div class="timer">
+                <span>{{ time[0] }}</span>
+              </div>
+            </div>
+        </div>
+        <div class="row timer-wrapper" v-if="!counting[0]"> 
+          <div class="d-flex flex-row justify-content-center align-items-center fw-bold fs-5">
+            30초
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row timer-wrapper" v-show="counting[1]">
+          <div class="col d-flex flex-column justify-content-center align-items-center">
+            <Vue3Lottie ref="timer2" :animationData="TimerImg" :width="100" :autoPlay="false" />
+            <div class="timer">
+              <span>{{ time[1] }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row timer-wrapper" v-if="!counting[1]"> 
+          <div class="d-flex flex-row justify-content-center align-items-center fw-bold fs-5">
+            60초
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="d-flex flex-column timer-wrapper" v-show="-1 < counting[2]">
+          <div class="col d-flex flex-column justify-content-center align-items-center">
+            <Vue3Lottie ref="timer3" :animationData="TimerImg" :width="100" :autoPlay="false" />
+            <div class="timer">
+              <span>{{ time[2] }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row timer-wrapper" v-if="!counting[2]"> 
+          <div class="d-flex flex-row justify-content-center align-items-center fw-bold fs-5">
+            90초
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center" style="transform: translateY(-30%);">
       <Vue3Lottie
         @click="startCountdown"
         :disabled="counting[0]"
         :animationData="StartImg"
-        :width="300"
+        :height="200"
       />
-    </div>
-    <div class="row">
-      <div v-show="counting[0]">
-          <div class="col">
-              <Vue3Lottie ref="timer1" :animationData="TimerImg" :width="100" :autoPlay="false" />
-          </div>
-          <div class="col">
-              {{ time[0] }}
-          </div>
-      </div>
-      <span v-if="!counting[0]"> finish!!</span>
-    </div>
-    <div class="row">
-      <div v-show="counting[1]">
-        <Vue3Lottie ref="timer2" :animationData="TimerImg" :width="100" :autoPlay="false" /> Time
-        Remaining:
-        {{ time[1] }}
-      </div>
-      <span v-if="!counting[1]"> finish!!</span>
-    </div>
-    <div class="row">
-      <div v-show="counting[2]">
-        <Vue3Lottie ref="timer3" :animationData="TimerImg" :width="100" :autoPlay="false" />Time
-        Remaining:
-        {{ time[2] }}
-      </div>
-      <span v-if="!counting[2]"> finish!!</span>
+        <!-- :width="200" -->
     </div>
   </div>
 </template>
@@ -108,4 +129,41 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.timer {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: calc(1.275rem + .3vw);
+  font-weight: 700;
+  transform: translateY(-50%);
+}
+
+.timer-wrapper {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.522) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  margin: 10px;
+  border-radius: 20px;
+  width: 50%;
+  margin: 0 auto;
+  height: 135px;
+}
+
+.custom-row-cols > * {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+  .timer-wrapper {
+    width: 80%;
+    margin-top: 50px;
+  }
+  .custom-row-cols > * {
+    flex: 0 0 auto;
+    width: 33.3333333333%;
+  }
+}
+
+</style>
