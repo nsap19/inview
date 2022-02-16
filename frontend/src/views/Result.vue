@@ -70,15 +70,14 @@ export default defineComponent({
     }
 
     const download = function (type){
-      axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.meetingId}`).then(res=>{
+      axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.id}`).then(res=>{
         for ( let v of res.data.data.archives){
           console.log(v.archiveType, type)
           if(v.archiveType == type){
             if( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
               alert("다운로드 유효 기간이 지났습니다.")
             }else{
-            console.log("s", v)
-            axios.get(`/download/meeting/${props.tableDatas.meetingId}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
+            axios.get(`/download/meeting/${props.tableDatas.id}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
               headers: 
                             {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -94,7 +93,6 @@ export default defineComponent({
         document.body.appendChild(fileUrl);
         fileUrl.click();
 
-              console.log(res)
             })
             }
             
@@ -108,20 +106,15 @@ export default defineComponent({
       })
     }
 
-    let user ='';
-
-    // for (let v of props.tableDatas.user){
-    //   user = user + v.nickname+ " ";
-    // }
 
     const tableData = ref([
       {
         category: '직군',
-        content: props.tableDatas.industry.industryName,
+        content: props.tableDatas.industryName,
       },
       {
         category: '회사',
-        content: props.tableDatas.company,
+        content: props.tableDatas.companyNameList,
       },
       {
         category: '시작 시간',
@@ -133,7 +126,7 @@ export default defineComponent({
       },
       {
         category: '참가자',
-        content: user,
+        content: props.tableDatas.participantNicknameList,
       },
       {
         category: '다운로드 유효 기간',

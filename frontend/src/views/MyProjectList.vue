@@ -1,67 +1,74 @@
 <template>
     <div class="wrap">
+        <template v-if="tableDatas.length == 0">
+        <Vue3Lottie :animationData="NoResults2JSON" :width="300"  style="margin: 20px 0px 0px 0px"/>
+        <p style="margin: 0 auto 50px auto">회의 목록이 존재하지 않아요</p>
+        </template>
+        <template v-else>
         <Result :tableDatas="v" v-for="(v, i) in tableDatas" :key="i"></Result>
         <div class="example-pagination-block">
-            <el-pagination  background @current-change="handleCurrentChange" layout="prev, pager, next" :total="table.length" :page-size="4"></el-pagination>
+            <el-pagination  background @current-change="handleCurrentChange" layout="prev, pager, next" :total="table.totalElements" :page-size="6"></el-pagination>
         </div>
+        </template>
     </div>
 </template>
 
-<script lang="ts">
+<script>
 
 import axios from 'axios'
 
-import { defineComponent, reactive,ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router';
+import { defineComponent,ref } from 'vue'
+
 import { useStore } from 'vuex'
+import Vue3Lottie from 'vue3-lottie'
 
 import Result from "./Result.vue"
+import NoResults2JSON from '@/assets/lottie_json/no_results2.json'
 
 export default defineComponent({
 	name: 'MyProjectList',
     components: {
-        Result
+        Result,Vue3Lottie
     },
 
     setup(){
         const store = useStore()
       const tableDatas = ref([])
 
+      const pageNumber = ref(1)
+
       const table = ref([])
-        onMounted(() => {
-            axios.get(`/users/${store.state.user.id}/meeting`,{
+            axios.get(`/users/${store.state.user.id}/meeting?page=${pageNumber.value}`,{
+                         headers: 
+                            {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                            }
+                        }).then(res=>{
+                            if(res.data.data){
+                                tableDatas.value = res.data.data.content;
+                                table.value = res.data.data
+                            }
+                            
+            })
+
+         const handleCurrentChange = function(val){
+             pageNumber.value = val
+              axios.get(`/users/${store.state.user.id}/meeting?page=${pageNumber.value}`,{
                          headers: 
                             {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                             }
                         }).then(res=>{
 
-                            table.value = res.data.data;
-                            tableDatas.value = [];
-                            
-                            tableDatas.value = [];
-                            for (let i = 0; i < 4; i++){
-                                 if(table.value[i]){
-                                     tableDatas.value.push(table.value[i])
-                                    }              
-                                 }
+                           tableDatas.value = res.data.data.content;
+                           table.value = res.data.data
                             
             })
-
-         })
-         const handleCurrentChange = function(val: number){
-            console.log("adad",table.value, tableDatas.value,val)
-            tableDatas.value = [];
-            for (let i = (val-1)*4; i < (val-1)*4 + 4; i++){
-                if(table.value[i]){
-                    tableDatas.value.push(table.value[i])
-                }
-            }
-            console.log("tableDatas: ", tableDatas.value)
+             
          }
 
 
-        return {handleCurrentChange, table,tableDatas}
+        return {NoResults2JSON,handleCurrentChange, table,tableDatas}
     }
 
 
