@@ -150,7 +150,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			// 해당 유저를 참가자 명단에서 제거한다.. 서비스에서 함수 call & 참가자 명단을 다시 보내준다
 			message.setDate(getDate());
 			message.setTime(getTime());
-			message.setMessage(message.getSender() + "님이 강퇴되었습니다.");
+			message.setMessage(setReadyMessage(meetingId, sessionId, ""));
 			break;
 		default:
 			message.setMessage("명령어 오류");
