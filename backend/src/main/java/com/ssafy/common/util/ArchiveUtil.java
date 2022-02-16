@@ -21,7 +21,7 @@ import com.ssafy.db.repository.UserRepositorySupport;
 public class ArchiveUtil {
 	private final String fileSeparator = File.separator;
 	private final String dir = System.getProperty("user.dir");
-	private final String src = dir + fileSeparator + "files" + fileSeparator;
+	private final String src = dir + "files" + fileSeparator;
 
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
