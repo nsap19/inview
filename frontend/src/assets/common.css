@@ -146,3 +146,29 @@ video {
 .el-pagination.is-background .btn-next:disabled, .el-pagination.is-background .btn-prev:disabled {
   background-color: transparent;
 }
+
+.meeting-footer .el-button {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.522) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
+}
+
+.meeting-footer .el-button:hover {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+.waiting-participant .el-button {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(78, 115, 81, 1) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.close-button .el-button {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
+}
+
+.close-button .el-button:hover {
+  background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(255, 120, 120, 1) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
+  border: none;
+}

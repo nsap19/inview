@@ -215,16 +215,20 @@ export default {
               });
               // console.log(participants)
               this.$store.dispatch('setParticipants', participants)
-              // if (command === "UNREADY" || command === "READY") {
-              // }
+
+              // RUNNING 상태에서 참가자가 1명 남은 경우 이 참가자가 나갈 때 미팅 STATUS 변경
+              if (command === "PARTICIPANT") {
+                if (this.startSignal && participants.length === 1) {
+                  console.log("마지막 한명")
+                  this.$emit('close')
+                }
+              }
             } else if (command === "START") {
-              console.log('start!!!')
               this.$emit('start')
             } else if (command === "HOST") {
               console.log('HOST!!!')
               this.$store.dispatch('setNewHost', parseInt(JSON.parse(res.body).sender))
             } else if (command === null) {
-              // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               this.recvList.push(JSON.parse(res.body))
             }
             

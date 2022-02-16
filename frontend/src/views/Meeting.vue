@@ -24,7 +24,7 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<MeetingNavBar :startSignal="startSignal" @leaveMeeting="endSignal=true" />
+		<MeetingNavBar :startSignal="startSignal" :closeSignal="closeSignal" @leaveMeeting="endSignal=true" />
 
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
@@ -58,6 +58,7 @@
 					:startSignal="startSignal" 
 					:leaveSignal="leaveSignal"
 					@start="startSignal=true" 
+					@close="closeSignal=true"
 					v-show="asideCategory === 'chat'" 
 				/>
 				<Memo :endSignal="endSignal" v-show="asideCategory === 'memo'" />
@@ -283,9 +284,10 @@ export default defineComponent({
 		}
 
 		const endSignal = ref(false)  
-		const startSignal = ref(false)
-		const readySignal = ref(false)
-		const leaveSignal = ref(false)
+		const startSignal = ref(false)  // 미팅 시작
+		const readySignal = ref(false)  // 미팅 준비
+		const leaveSignal = ref(false)  // 미팅 나가기
+		const closeSignal = ref(false)  // 미팅 CLOSE
 		watch(startSignal, (oldVal) => {
 			register()
 		})
@@ -313,7 +315,7 @@ export default defineComponent({
 			}
 		})
 		return { 
-			CloseBold, readySignal, leaveSignal,
+			CloseBold, readySignal, leaveSignal, closeSignal,
 			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
 			handleClose,

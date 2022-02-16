@@ -3,9 +3,9 @@
     <div>
       <span class="fw-bold fs-4 ps-2">{{ this.$store.state.meeting.title }}</span>
     </div>
-    <div v-if="startSignal">
+    <div v-if="startSignal" class="close-button">
       <!-- <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickCloseMeeting">종료</el-button> -->
-      <el-button type="danger" @click="clickLeaveMeeting">종료</el-button>
+      <el-button type="danger" round @click="clickLeaveMeeting">종료</el-button>
     </div>
   </div>
 </template>
@@ -21,9 +21,14 @@ export default defineComponent({
   name: 'MeetingNavBar',
   props: {
     startSignal: Boolean,
+    closeSignal: Boolean,
   },
   setup(props, { emit }) {
     const startSignal = computed(() => props.startSignal)
+    const closeSignal = computed({
+      get: () => props.closeSignal,
+      set: (value) => emit("update:modelValue", value),
+    });
     const store = useStore()
     const router = useRouter()
     const meetingId = computed(() => store.state.meeting.id)
@@ -66,7 +71,7 @@ export default defineComponent({
           })
         })
     }
-    
+
     const clickLeaveMeeting = function () {
       ElMessageBox.confirm(
         '면접 연습을 종료하시겠습니까?',
@@ -78,6 +83,9 @@ export default defineComponent({
         }
       )
         .then(() => {
+          if (closeSignal) {
+            console.log("마지막 남은 사람도 나왔습니다")
+          }
           emit('leaveMeeting')
           store.dispatch('deleteMeeting')
           router.push({ name: 'Home'})
@@ -93,7 +101,7 @@ export default defineComponent({
           })
         })
     }
-    return { clickCloseMeeting, clickLeaveMeeting, startSignal }
+    return { clickCloseMeeting, clickLeaveMeeting, startSignal, closeSignal }
   }
 })
 </script>
