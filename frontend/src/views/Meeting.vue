@@ -63,6 +63,7 @@
 				/>
 				<Memo :endSignal="endSignal" v-show="asideCategory === 'memo'" />
 				<File v-if="asideCategory === 'file'" />
+				<Timer v-if="asideCategory === 'timer'" />
 			</div>
 		</div>
 
@@ -79,6 +80,7 @@ import Evaluation from '@/components/Meeting/Evaluation.vue';
 import Chat from '@/components/Meeting/Chat.vue';
 import Memo from '@/components/Meeting/Memo.vue';
 import File from '@/components/Meeting/File.vue';
+import Timer from '@/components/Meeting/Timer.vue';
 import MeetingNavBar from '@/components/Meeting/MeetingNavBar.vue'
 import Video from '@/components/Meeting/Video.vue'
 import Waiting from '@/components/Meeting/Waiting.vue'
@@ -87,6 +89,7 @@ import { CloseBold, } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import axios from "axios"
 
 export default defineComponent({
 	name: 'Meeting',
@@ -100,7 +103,8 @@ export default defineComponent({
 		File,
 		Video,
 		Waiting,
-		MeetingFooter
+		MeetingFooter,
+		Timer
 	},
 	setup() {
 		//카메라, 마이크 접근 권한을 받기 위한 처리
@@ -112,6 +116,7 @@ export default defineComponent({
 				})
 			} catch(e){
 				console.log(e);
+				getMedia();
 			}
 		}
 		getMedia();
@@ -290,6 +295,14 @@ export default defineComponent({
 		const closeSignal = ref(false)  // 미팅 CLOSE
 		watch(startSignal, (oldVal) => {
 			register()
+			axios.post(`meeting/${meetingId.value}/start`, null ,
+				{ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
+			).then(res => {
+				console.log(res)
+			}).catch(err => {
+				console.log(err.response)
+			})
+
 		})
 		watch(leaveSignal, (oldVal) => {
 			if (startSignal) {

@@ -2,7 +2,7 @@
     <div class="wrap">
         <template v-if="tableDatas.length == 0">
         <Vue3Lottie :animationData="NoResults2JSON" :width="300"  style="margin: 20px 0px 0px 0px"/>
-        <p style="margin: 0 auto 50px auto">회의 목록이 존재하지 않아요</p>
+        <p style="margin: 0 auto 50px auto">지난 면접 연습 목록이 존재하지 않습니다.</p>
         </template>
         <template v-else>
         <Result :tableDatas="v" v-for="(v, i) in tableDatas" :key="i"></Result>
@@ -14,14 +14,10 @@
 </template>
 
 <script>
-
 import axios from 'axios'
-
 import { defineComponent,ref } from 'vue'
-
 import { useStore } from 'vuex'
 import Vue3Lottie from 'vue3-lottie'
-
 import Result from "./Result.vue"
 import NoResults2JSON from '@/assets/lottie_json/no_results2.json'
 
@@ -33,11 +29,11 @@ export default defineComponent({
 
     setup(){
         const store = useStore()
-      const tableDatas = ref([])
+        const tableDatas = ref([])
 
-      const pageNumber = ref(1)
+        const pageNumber = ref(1)
 
-      const table = ref([])
+        const table = ref([])
             axios.get(`/users/${store.state.user.id}/meeting?page=${pageNumber.value}`,{
                          headers: 
                             {

@@ -72,6 +72,9 @@ public class meetingServiceImpl implements MeetingService {
 		List<Company> companyList = registerInfo.getCompanyNameList().stream()
 				.map(c -> companyRepository.findByCompanyName(c).orElseThrow(() -> new NotExistsCompanyException()))
 				.collect(Collectors.toList());
+//		List<Company> companyList = registerInfo.getCompanyNameList().stream()
+//				.map(c -> companyRepository.findByCompanyName(c).orElse(new Company()))
+//				.collect(Collectors.toList());
 
 		// 비밀번호가 빈문자열이면 제거
 		if (registerInfo.getPassword().trim().length() == 0)

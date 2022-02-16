@@ -25,7 +25,7 @@
       <div v-loading="loading" class="loading" element-loading-background="#F9F9F9">
       </div>
       <div ref="createButton" class="create-button">
-        <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" size="large" style="background: linear-gradient(140deg, rgba(243, 240, 215, 0.7) 10%, rgba(255, 120, 120, 0.7) 120%), url(https://grainy-gradients.vercel.app/noise.svg); background-color: white; border: none;"
+        <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" size="large"
         >방 만들기</el-button>   
         <CreateMeeting v-model="openCreateMeetingDialog" />
       </div>

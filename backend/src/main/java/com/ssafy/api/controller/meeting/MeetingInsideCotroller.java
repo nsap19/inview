@@ -42,6 +42,17 @@ public class MeetingInsideCotroller {
 	@Autowired
 	ArchiveUtil archiveUtil;
 
+	@PostMapping("/{meetingId}/start")
+	@ApiOperation(value = "미팅 시작")
+	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 시작 성공"),
+		@ApiResponse(code = 400, message = "존재하지 않는 미팅입니다. \n 이미 종료된 미팅입니다. \n 호스트가 아닙니다."),
+		@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<? extends BaseResponseBody> start(@PathVariable("meetingId") int meetingId) {
+		meetingInsideService.startMeeting(meetingId, CurrentUser.getUserId());
+		
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "미팅 시작 성공"));
+	}
+	
 	@PostMapping("/{meetingId}/close")
 	@ApiOperation(value = "미팅 종료")
 	@ApiResponses({ @ApiResponse(code = 200, message = "미팅 종료 성공"),

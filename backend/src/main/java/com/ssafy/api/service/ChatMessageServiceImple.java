@@ -53,6 +53,8 @@ public class ChatMessageServiceImple implements ChatMessageService {
 		String date = message.getDate();
 		String time = message.getTime();
 		List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
+		if (participantList == null)
+			return;
 		if (ope.equals("send")) {
 			for (User user : participantList) {
 				saveFile(meetingId, user, receiver,
@@ -131,7 +133,7 @@ public class ChatMessageServiceImple implements ChatMessageService {
 		case CONNECT:
 			message.setMessage(message.getSender() + "님이 입장하였습니다.");
 			break;
-		case DISCONNECT:	
+		case DISCONNECT:
 			message.setDate(getDate());
 			message.setTime(getTime());
 			message.setMessage(message.getSender() + "님이 퇴장하였습니다.");
@@ -157,11 +159,9 @@ public class ChatMessageServiceImple implements ChatMessageService {
 		this.template.convertAndSend("/subscribe/chat/room/" + message.getMeetingId(), message);
 	}
 
-	
 	private String getTime() {
 		LocalTime localTime = LocalTime.now();
-		String time = String.format("%02d", localTime.getHour()) + ":"
-				+ String.format("%02d", localTime.getMinute());
+		String time = String.format("%02d", localTime.getHour()) + ":" + String.format("%02d", localTime.getMinute());
 		return time;
 	}
 
