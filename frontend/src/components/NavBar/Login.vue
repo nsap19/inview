@@ -44,6 +44,7 @@ import { useStore } from 'vuex'
 import { defineComponent, computed, ref, reactive } from 'vue'
 import type { ElForm } from 'element-plus'
 import Kakao from './Kakao.vue'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: "Login",
@@ -67,9 +68,6 @@ export default defineComponent({
       email: '',
       password: '',
     })
-
-
-    
 
     const rules = {
       email: [
@@ -112,6 +110,10 @@ export default defineComponent({
             emit("update:modelValue", false)
             localStorage.setItem("token", res.data.token);
             store.dispatch('setUser', { nickname: res.data.nickname, id: res.data.userId });
+            ElMessage({
+              message: '로그인이 완료되었습니다.',
+              type: 'success',
+            })
           }).catch(err => {
             console.log(err.response)
             errorMessage.value = "이메일과 비밀번호를 확인해주세요"
