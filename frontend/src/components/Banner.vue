@@ -2,7 +2,7 @@
   <div class="banner">
     <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center h-100">
       <div class="d-flex flex-column justify-content-center">
-        <p class="fs-1 m-0">INVIEW를 통해</p>
+        <p class="fs-1 m-0"><span style="font-family: TmoneyRoundWindExtraBold;">INVIEW</span>를 통해</p>
         <p class="fs-1">서로를 만나보세요.</p>
         <el-button round plain size="large" @click="openCreateMeetingDialog=true" style="width: 90%">
           면접 연습방 만들기 <span class="px-2"></span> <i class="bi bi-chevron-right"></i>
