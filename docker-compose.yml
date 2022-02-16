@@ -2,7 +2,7 @@ version: "3.8"
 services:
   vue:
     image: node:16.13.0
-    working_dir: ./frontend
+    working_dir: /home/jenkins/workspace/INVIEW/frontend
     command: sh -c "npm install && npm start"
     ports:
       - 80:3000
