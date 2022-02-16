@@ -16,12 +16,25 @@ services:
     container_name: nginx    
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /home/jenkins/workspace/INVIEW/frontend/default.conf:/etc/nginx/conf.d/default.conf
       - /home/jenkins/workspace/INVIEW/frontend/dist:/usr/share/nginx/html
+      - /home/jenkins/workspace/INVIEW/certbot/conf:/etc/letsencrypt
+      - /home/jenkins/workspace/INVIEW/certbot/www:/var/www/certbot
     restart: "always"
     depends_on:
       - spring-boot
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:v0.36.0
+    command: sh -c "./init-letsencrypt.sh"
+    restart: always
+    volumes:
+      - /home/jenkins/workspace/INVIEW/certbot/conf:/etc/letsencrypt
+      - /home/jenkins/workspace/INVIEW/certbot/www:/var/www/certbot
+
   db:
     image: mysql:5.7
     container_name: backend_db
