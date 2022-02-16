@@ -2,15 +2,14 @@ package com.ssafy.api.service.meeting;
 
 import java.time.LocalDateTime;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.common.exception.handler.NotExistsMeetingException;
 import com.ssafy.common.exception.handler.NotExistsUserException;
-import com.ssafy.common.exception.handler.NotHostException;
+import com.ssafy.common.exception.handler.NotValidMeetingStatusException;
 import com.ssafy.db.entity.Participant;
 import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.entity.meeting.Status;
@@ -32,16 +31,36 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 
 	@Transactional
 	@Override
-	public void closeMeeting(int meetingId, int hostId) {
-
-		// 미팅 종료 시간 삽입 및 상태 변경
+	public void startMeeting(int meetingId, int hostId) {
+		// 미팅 시작 시간 삽입 및 상태 변경
 		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
 //		if (meeting.getUser().getUserId() != hostId) {
 //			throw new NotHostException();
 //		}
 
-		meeting.setCloseTime(LocalDateTime.now());
+		if (!meeting.getStatus().equals(Status.WAITING)) {
+			throw new NotValidMeetingStatusException();
+		}
+
+		meeting.setStartTime(LocalDateTime.now());
+		meeting.setStatus(Status.RUNNING);
+	}
+
+	@Transactional
+	@Override
+	public void closeMeeting(int meetingId, int hostId) {
+
+		// 미팅 종료 시간 삽입 및 상태 변경
+		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
+
+		if (!meeting.getStatus().equals(Status.RUNNING)) {
+			throw new NotValidMeetingStatusException();
+		}
+		
+		LocalDateTime localDateTime = LocalDateTime.now();
+		meeting.setEndTime(localDateTime);
+		meeting.setCloseTime(localDateTime);
 		meeting.setStatus(Status.CLOSING);
 	}
 
@@ -76,7 +95,7 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 		meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
 		Participant participant = this.checkParticipant(meetingId, userId);
-		
+
 		participant.setForcedExit(1);
 		participantRepository.updateForcedExit(meetingId, userId);
 	}
@@ -84,14 +103,15 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 	@Override
 	public int getMeetingIdByUrl(String meetingUrl) {
 		Meeting meeting = meetingRepository.findByUrl(meetingUrl).orElseThrow(() -> new NotExistsMeetingException());
-		
+
 		return meeting.getMeetingId();
 	}
 
 	@Override
 	public void checkForcedExit(int meetingId, int userId) {
 		Long count = participantRepository.findCountByMeetingIdAndUserId(meetingId, userId);
-		if(count!=0) new NotExistsUserException();
+		if (count != 0)
+			new NotExistsUserException();
 	}
 
 }
