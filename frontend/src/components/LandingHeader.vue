@@ -13,7 +13,7 @@
                 href="/"
                 class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none"
               >
-                <img src="./../assets/logo.png" width="180px" alt="Inview" />
+                <img src="./../assets/logo.png" style="width: 180px;" alt="Inview" />
               </a>
             </div>
             <div class="col">

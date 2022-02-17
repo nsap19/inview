@@ -106,9 +106,9 @@ export default defineComponent({
         }
       })
 
-      const footer = document.getElementById("footer")
-      console.log(footer.getBoundingClientRect())
-      console.log(createButton.value.getBoundingClientRect())
+      // const footer = document.getElementById("footer")
+      // console.log(footer.getBoundingClientRect())
+      // console.log(createButton.value.getBoundingClientRect())
     })
     const openCreateMeetingDialog = ref(false)
     const createButton = ref(null)
