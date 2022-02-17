@@ -22,6 +22,8 @@ public class QParticipant extends EntityPathBase<Participant> {
 
     public static final QParticipant participant = new QParticipant("participant");
 
+    public final NumberPath<Integer> forcedExit = createNumber("forcedExit", Integer.class);
+
     public final com.ssafy.db.entity.meeting.QMeeting meeting;
 
     public final NumberPath<Integer> participantId = createNumber("participantId", Integer.class);
