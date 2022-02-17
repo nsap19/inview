@@ -34,7 +34,7 @@
         <!-- 검색바 -->
         <div
           :style="{
-            visibility: this.$route.path !== '/home' ? 'visible' : 'hidden',
+            visibility: (this.$route.path !== '/search' && this.$route.path !== '/home') ? 'visible' : 'hidden',
           }"
           class="search-bar col text-center d-none d-sm-block"
         >

@@ -34,7 +34,7 @@
 }
 
 :root {
-  --el-color-primary: #4E7351;
+  --el-color-primary: #698767;
   --el-color-primary-light-2: hsl(125, 19%, 48%);
   --el-color-primary-light-7: #CEE5D0;
   --el-color-primary-light-9: #F2F8F2;
@@ -71,7 +71,7 @@
 }
 
 .result .el-divider__text {
-  background-color: #F9F9F9;
+  background-color: white;
 }
 
 video {
@@ -205,4 +205,57 @@ video {
 
 .el-date-editor {
   --el-date-editor-width: 100%;
+}
+
+.el-upload-list {
+  width: 100%;
+}
+
+.el-upload-dragger {
+  width: 240px
+}
+
+.el-message--success {
+  background-color: #CEE5D0;
+  border-color: #e1f3d8;
+  --el-message-text-color: #4E7351;
+  border-radius: 10px;
+}
+
+.el-message--warning {
+  background-color: #F3F0D7;
+  border-color: #faecd8;
+  --el-message-text-color: #857B28;
+  border-radius: 10px;
+}
+
+.el-message--info {
+  background-color: #ffffff;
+  border-color: #e9e9eb;
+  --el-message-text-color: var(--el-color-info);
+  border-radius: 10px;
+}
+
+.el-message--error {
+  background-color: #fef0f0;
+  border-color: #fde2e2;
+  --el-message-text-color: #FF7878;
+  border-radius: 10px;
+}
+
+
+.el-message--success .el-message__closeBtn {
+  color: #4E7351;
+}
+
+.el-message--warning .el-message__closeBtn {
+  color: #857B28;
+}
+
+.el-message--info .el-message__closeBtn {
+  color: var(--el-color-info);
+}
+
+.el-message--error .el-message__closeBtn {
+  color: #FF7878;
 }

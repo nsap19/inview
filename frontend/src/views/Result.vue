@@ -1,7 +1,7 @@
 <template>
-  <div class="result-container">
+  <el-card class="result-container">
     <div class="d-flex flex-column justify-content-between">
-      <p class="fs-5 fw-bold mb-0 mt-2">{{ props.tableDatas.title }}</p>
+      <p class="fs-5 fw-bold mb-0">{{ props.tableDatas.title }}</p>
     </div>
 
     <el-divider content-position="left" class="result mb-1">상세 내역</el-divider>
@@ -27,14 +27,14 @@
     <p class="text-end mb-1 mt-2" style="font-size: 14px;">유효 기간 | {{ expirationDate }}</p>
     <div>
       <div>
-        <el-button plain round type="primary" class="m-1" @click="download('VIDEO')">면접 영상</el-button>
-        <el-button plain round type="primary" class="m-1" @click="download('CHAT')">채팅</el-button>
-        <el-button plain round type="primary" class="m-1" @click="download('MEMO')">메모</el-button>
-        <el-button plain round type="primary" class="m-1" @click="download('FILE')">공유 파일</el-button>
-        <el-button plain round type="primary" class="m-1" @click="download('EVALUATION')">받은 면접 평가</el-button>
+        <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('VIDEO')">면접 영상</el-button>
+        <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('CHAT')">채팅</el-button>
+        <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('MEMO')">메모</el-button>
+        <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('FILE')">공유 파일</el-button>
+        <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('EVALUATION')">받은 면접 평가</el-button>
       </div>
     </div>
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -80,24 +80,21 @@ export default defineComponent({
           if(v.archiveType == type){
             if( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
               alert("다운로드 유효 기간이 지났습니다.")
-            }else{
-            axios.get(`/download/meeting/${props.tableDatas.id}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
-              headers: 
-                            {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                            }
-                        }).then(res=>{
-
-                          const FILE = window.URL.createObjectURL(new Blob([res.data]));
-        const fileName = res.headers['content-disposition'].slice(22)
-
-        const fileUrl = document.createElement('a');
-        fileUrl.href = FILE;
-        fileUrl.setAttribute('download', fileName.slice(0, fileName.length - 1));
-        document.body.appendChild(fileUrl);
-        fileUrl.click();
-
-            })
+            } else {
+              axios.get(`/download/meeting/${props.tableDatas.id}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
+                headers: 
+                  {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  }
+                }).then(res=>{
+                  const FILE = window.URL.createObjectURL(new Blob([res.data]));
+                  const fileName = res.headers['content-disposition'].slice(22)
+                  const fileUrl = document.createElement('a');
+                  fileUrl.href = FILE;
+                  fileUrl.setAttribute('download', fileName.slice(0, fileName.length - 1));
+                  document.body.appendChild(fileUrl);
+                  fileUrl.click();
+                })
             }
             
             // var element = document.createElement('a');
@@ -106,7 +103,6 @@ export default defineComponent({
             // element.click();
           }
         }
-
       })
     }
 
@@ -137,8 +133,9 @@ export default defineComponent({
       // },
     ]);
 
-    console.log("test",props.tableDatas, tableData.value)
-    return {download,  meetingId, userName, props, tableData, expirationDate, getExpirationDate }
+    // console.log("test",props.tableDatas, tableData.value)
+    const expired = dayjs().isAfter(getExpirationDate())
+    return {download,  meetingId, userName, props, tableData, expirationDate, getExpirationDate, expired }
   }
 })
 </script>
@@ -146,9 +143,9 @@ export default defineComponent({
 <style scoped>
 .result-container{
   border-radius: 10px;
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	padding: 20px;
   margin: 10px auto;
+  background-color: white;
 }
 
 @media screen and (min-width: 1200px) {

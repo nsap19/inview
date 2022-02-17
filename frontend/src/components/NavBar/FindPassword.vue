@@ -4,20 +4,23 @@
     width="320px"
   >
   <el-form v-loading="loading">
+    <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3">
     <el-form 
       ref="ruleFormRef"
       :model="ruleForm"
       :rules="rules"
       size="large"
       :hide-required-asterisk="true"
-      style="margin-bottom: 40px"
+      v-if="!showCodeInput"
      >
-     <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3">
+      <div class="d-flex flex-column align-items-center">
+          <p>입력하신 이메일로 인증번호가 발송됩니다.</p>
+      </div>
       <el-form-item prop="email" :error="emailError">
-        <el-input v-model="ruleForm.email" autocomplete="off" @input="inputEmail" placeholder="이메일"></el-input>
+        <el-input v-model="ruleForm.email" autocomplete="off" @input="inputEmail" placeholder="이메일을 입력하세요"></el-input>
       </el-form-item>
       <div class="d-flex flex-row justify-content-center">
-        <el-button  style="width:100%" round type="primary" @click="email">이메일 코드 요청</el-button>
+        <el-button round type="primary" @click="email">인증 번호 요청</el-button>
       </div>
     </el-form>
       <el-form 
@@ -26,12 +29,16 @@
       :rules="rules2"
       size="large"
       :hide-required-asterisk="true"
+      v-else
      >
+      <div class="d-flex flex-column align-items-center">
+          <p>이메일로 발송된 인증코드를 입력해주세요.</p>
+      </div>
       <el-form-item prop="code" :error="codeError">
-        <el-input v-model="ruleForm2.code" autocomplete="off" @input="inputCode" placeholder="인증코드"></el-input>
+        <el-input v-model="ruleForm2.code" autocomplete="off" @input="inputCode" placeholder="인증코드을 입력하세요"></el-input>
       </el-form-item>
       <div class="d-flex flex-row justify-content-center">
-        <el-button  style="width:100%" round type="primary" @click="code">코드 인증 하기</el-button>
+        <el-button round type="primary" @click="code">임시 비밀번호 발급</el-button>
 
       </div>
     </el-form>
@@ -43,6 +50,7 @@
 import { defineComponent, computed, ref, reactive, watch } from 'vue'
 import type { ElForm } from 'element-plus'
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: "FindPassword",
@@ -113,55 +121,48 @@ export default defineComponent({
     const showEmailCertification = ref(false)
     const emailCertificationCode = ref('')
 
-   const email = function(){
-               loading.value = true
-          axios.post( `/users/findpw`, ruleForm
-                    ).then((res: any) => {
-                        loading.value = false
-
-
-                        alert("이메일로 코드가 전송되었습니다.")
-                        console.log('SUCCESS!!');
-                        console.log(res.data)
-                        codeServer.value = res.data.code
-
-                    }).catch((err: any) => {
-                                     loading.value = false
-                        console.log('FAILURE!!');
-                        alert(err.response.data.message)
-                        console.log(err.response)
-                    });  
-   }
+    const email = function(){
+      loading.value = true
+      axios.post( `/users/findpw`, ruleForm
+        ).then((res: any) => {
+            loading.value = false
+            console.log(res.data)
+            codeServer.value = res.data.code
+            showCodeInput.value = true
+        }).catch((err: any) => {
+            loading.value = false
+            console.log(err.response)
+        });  
+    }
 
     const code = function(){
-        if(codeServer.value == ruleForm2.code){
-          loading.value = true
-            axios.post( `/users/findpw/email-certi`, ruleForm
-                    ).then((res: any) => {
-                        loading.value = false
-                        alert("이메일로 임시 비밀번호가 전송되었습니다.")
-                        console.log('SUCCESS!!');
-                        emit('password')
-
-                    }).catch((err: any) => {
-                        loading.value = false
-                        console.log('FAILURE!!');
-                        console.log(err.response)
-                    });  
-        }else{
-            alert("코드가 일치하지 않습니다.")
-        }
-        
-   }
-
+      if(codeServer.value == ruleForm2.code){
+        loading.value = true
+        axios.post( `/users/findpw/email-certi`, ruleForm
+          ).then((res: any) => {
+              loading.value = false
+              ElMessage({
+                type: 'success',
+                message: '이메일로 임시 비밀번호가 전송되었습니다.',
+              })
+              console.log('SUCCESS!!');
+              emit('password')
+          }).catch((err: any) => {
+              loading.value = false
+              console.log(err.response)
+          });  
+      } else {
+        ElMessage.error('인증번호가 일치하지 않습니다.')
+      }
+    }
+    
+    const showCodeInput = ref(false)
 
     return { 
-codeError,inputCode, email,
-        ruleForm, ruleForm2,rules,
-      openDialog, ruleFormRef ,rules2
-      , nicnknameError, inputNickname, emailError, inputEmail,
+      codeError,inputCode, email, ruleForm, ruleForm2,rules,
+      openDialog, ruleFormRef ,rules2, nicnknameError, inputNickname, emailError, inputEmail,
       showEmailCertification, emailCertificationCode, loading,
-      code
+      code, showCodeInput
     }
   },
 })

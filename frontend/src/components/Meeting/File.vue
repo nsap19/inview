@@ -3,22 +3,23 @@
     <!-- 업로드 -->
     <div class="p-2">
       <div class="d-flex flex-row justify-content-between align-items-center">
-        <span>공유할 파일을 올려주세요.</span>
-        <el-button v-on:click="submitFile()">전송</el-button>
+        <span>공유할 파일을 올리고 전송을 눌러주세요</span>
+        <el-button v-on:click="submitUpload">전송</el-button>
+        <!-- <el-button v-on:click="submitFile()">전송</el-button> -->
       </div>
-      <input type="file" ref="file" multiple="multiple" v-on:change="handleFileUpload()" class="file-input"/>
+      <!-- <input type="file" ref="file" multiple="multiple" v-on:change="handleFileUpload()" class="file-input"/> -->
       <div class="d-flex flex-row justify-content-center">
         <el-upload
           ref="upload"
           :action="actionUrl"
           :limit="1"
           :on-exceed="handleExceed"
-          :auto-upload="false"
           :headers="headers"
           :on-success="onSuccess"
           drag
-          class="d-flex flex-column justify-content-center"
+          class="d-flex flex-column justify-content-center mt-2 align-items-center w-100"
         >
+          <!-- :auto-upload="false" -->
           <!-- <template #trigger>
             <el-button type="primary">select file</el-button>
           </template> -->
@@ -26,23 +27,23 @@
           <div class="el-upload__text">
             파일을 드래그 하거나 <em>클릭하세요</em>
           </div>
-          <template #tip>
+          <!-- <template #tip>
             <el-button class="mt-3" type="primary" plain round @click="submitUpload"
               >업로드</el-button
             >
+          </template> -->
             <!-- <div class="el-upload__tip" style="color: red">
               limit 1 file, new file will cover the old file
             </div> -->
-          </template>
         </el-upload>
       </div>
     </div>
     
     <!-- 다운로드 -->
     <div>
-      <div v-for="(file, index) in files" :key="index" @click="downloadFile(file.id)" class="d-flex flex-row py-1 px-2">
-        <el-button class="w-100">
-          <span class="text-truncate">{{ index + 1 }}. {{ file.archiveName.slice(10) }}</span>
+      <div v-for="(file, index) in files" :key="index" @click="downloadFile(file.id)" class="d-flex flex-row justify-content-center py-1 px-2">
+        <el-button class="w-75">
+          <span class="text-truncate">{{ index + 1 }}. {{ file.archiveName.slice(10, 30) }}</span>
         </el-button>
       </div>
     </div>
@@ -158,9 +159,9 @@ export default defineComponent({
     }
 
     const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    const actionUrl = `${process.env.VUE_APP_API_URL}meeting/${store.state.meeting.id}/upload/`
+    const actionUrl = `${process.env.VUE_APP_API_URL}/meeting/${store.state.meeting.id}/upload?archive-type=file`
     const onSuccess = function () {
-      alert("!!")
+      getFiles()
     }
     return { upload, downloadFile, handleExceed, submitUpload, files, headers, file, handleFileUpload, submitFile, actionUrl, onSuccess }
   }
