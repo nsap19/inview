@@ -1,18 +1,20 @@
 <template>
   <div>
     <Banner/> 
-    <div class="mt-5 mb-1 m-2">
+    <div class="mt-5 mb-1 m-3">
       <SearchFilterBar/>
     </div>
     <div class="result">
       <div v-if="meetings.length > 0" class="result-cards">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-          <div 
-            v-for="meeting in meetings" 
-            :key="meeting.id" 
-            class="col"
-          > 
-            <MeetingCard :meeting="meeting" />
+        <div class="mx-3">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div 
+              v-for="meeting in meetings" 
+              :key="meeting.id" 
+              class="col"
+            > 
+              <MeetingCard :meeting="meeting" />
+            </div>
           </div>
         </div>
       </div>
@@ -24,11 +26,11 @@
       </div>
       <div v-loading="loading" class="loading" element-loading-background="#F9F9F9">
       </div>
-      <div ref="createButton" class="create-button">
+      <div ref="createButton" class="create-button" v-if="this.$store.state.user.id">
         <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" size="large"
         >방 만들기</el-button>   
-        <CreateMeeting v-model="openCreateMeetingDialog" />
       </div>
+      <CreateMeeting v-model="openCreateMeetingDialog" />
     </div>
   </div>
 </template>

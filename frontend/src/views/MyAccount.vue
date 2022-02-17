@@ -1,5 +1,5 @@
 <template>
-  <AccountBanner :meetingExist="futureMeetings.length !== 0 ? futureMeetings[0] : false" />
+  <AccountBanner :meeting="futureMeetings.length !== 0 ? futureMeetings[0] : false" />
   <div class="meetings-wrapper">
     <div class="meetings mt-5">
       <div class="row justify-content-between">
@@ -38,14 +38,16 @@
     </div>
   </div>
   <div class="meetings-wrapper">
-    <div class="meetings mt-5">
-      <p class="fs-4 m-0">참가 예정 면접 연습</p>
-      <div v-if="futureMeetings.length !== 0" class="d-flex flex-column align-items-center">
+    <div class="meetings mt-5 pb-5" style="min-height: 400px">
+      <p class="fs-4">참가 예정 면접 연습</p>
+      <div v-if="futureMeetings.length === 0" class="d-flex flex-column align-items-center mt-5">
         <Vue3Lottie :animationData="NoResultsJSON" :width="300"  style="margin: 20px 0px 0px 0px"/>
-        <p>참가 예정인 면접 연습 기록이 존재하지 않습니다.</p>
+        <p class="mt-3">참가 예정 면접 연습방이 존재하지 않습니다.</p>
       </div>
-      <div v-for="(meeting, index) in futureMeetings" :key="index" v-else>
-        <MeetingCard :meeting="meeting" />
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" v-else>
+        <div v-for="(meeting, index) in futureMeetings" :key="index" class="col">
+          <MeetingCard :meeting="meeting" />
+        </div>
       </div>
     </div>
   </div>
@@ -100,7 +102,7 @@ export default defineComponent({
           }).then(res=>{
             console.log("미래", res)
             if (res.data.data) {
-              futureMeetings.value = res.data.data;
+              futureMeetings.value = res.data.data.content;
             }
           }).catch(err => {
             console.log(err)
