@@ -1,9 +1,5 @@
 <template>
   <div class="home text-center">
-      <el-button :plain="true" :duration="300000000000000" @click="open2">success</el-button>
-      <el-button :plain="true" :duration="300000000000000" @click="open3">warning</el-button>
-      <el-button :plain="true" :duration="300000000000000" @click="open1">message</el-button>
-      <el-button :plain="true" :duration="300000000000000" @click="open4">error</el-button>
     <div class="logo-wrapper">
       <img alt="INVIEW logo" src="../assets/logo.png" class="logo">
     </div>
@@ -30,7 +26,6 @@ import { defineComponent, computed, onMounted } from 'vue';
 import SearchBar from '@/components/SearchBar.vue';
 import MeetingCard from '@/components/MeetingCard.vue'
 import { useStore } from 'vuex'
-import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: 'Home',
@@ -44,34 +39,7 @@ export default defineComponent({
     onMounted(() => {
       window.scrollTo(0, 0)
     })
-    const open1 = () => {
-      ElMessage({
-        showClose: true,
-        message: 'This is a message.',
-      })
-    }
-    const open2 = () => {
-      ElMessage({
-        showClose: true,
-        message: 'Congrats, this is a success message.',
-        type: 'success',
-      })
-    }
-    const open3 = () => {
-      ElMessage({
-        showClose: true,
-        message: 'Warning, this is a warning message.',
-        type: 'warning',
-      })
-    }
-    const open4 = () => {
-      ElMessage({
-        showClose: true,
-        message: 'Oops, this is a error message.',
-        type: 'error',
-      })
-    }
-    return { meetings, open1, open2, open3, open4 }
+    return { meetings }
   }
 });
 </script>
