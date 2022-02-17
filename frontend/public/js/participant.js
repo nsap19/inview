@@ -35,7 +35,7 @@ function Participant(userId, userNickname) {
     : PARTICIPANT_MAIN_CLASS;
   container.id = userId;
   var span = document.createElement("span");
-  const video = document.createElement("video");
+  var video = document.createElement("video");
   var rtcPeer;
 
 	video.setAttribute('style', 'width: 100%; height: 100%;')
@@ -112,8 +112,9 @@ function Participant(userId, userNickname) {
   video.controls = false;
   resize();
 
-  getMedia(video);
-
+  // let myStream;
+  // getMedia(video);
+  // video.srcObject = myStream;
   
   this.getElement = function () {
     return container;

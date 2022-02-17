@@ -22,7 +22,7 @@ var userId;
 // 음소거, 카메라 on/off 기능
 let muted = false;
 let cameraOff = false;
-
+let myStream;
 function handleMuteClick(){
 	var participant = participants[userId];
 	const myStream = participant.getVideoElement().captureStream();
@@ -42,8 +42,7 @@ function handleMuteClick(){
 function handleCameraClick(){
 	var participant = participants[userId];
 	console.log(participant.rtcPeer)
-	const myStream = participant.getVideoElement().srcObject;
-	console.log(myStream)
+	const myStream = participant.getVideoElement().captureStream();
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
 		document.getElementById("cameraOn").style.display = 'block'
@@ -59,18 +58,18 @@ function handleCameraClick(){
 }
 
 async function getMedia(video) {
-	console.log(video)
     try {
       myStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
+      	audio: true,
+      	video: true,
       });
     } catch (e) {
       console.log(e);
     }
 	console.log(myStream)
-	video.srcObject = myStream
-    }
+	console.log(video)
+	video.srcObject = myStream;
+}
 
 
 const serverURL = "https://i6a201.p.ssafy.io/api/groupcall";
@@ -155,7 +154,6 @@ function register() {
 		meetingId : meetingId,
 		userNickname: userNickname
 	}
-
 	sendMessage(message);
 }
 
@@ -201,6 +199,8 @@ function onExistingParticipants(msg) {
 	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
+	console.log(video)
+	getMedia(video)
 
 	var options = {
 	      localVideo: video,
@@ -250,7 +250,7 @@ function receiveVideo(userId, nickname) {
 	var participant = new Participant(userId, nickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
-		
+
 	var options = {
       remoteVideo: video,
       onicecandidate: participant.onIceCandidate.bind(participant),
@@ -281,6 +281,6 @@ function onParticipantLeft(request) {
 
 function sendMessage(message) {
 	var jsonMessage = JSON.stringify(message);
-	console.log('Sending message: ' + jsonMessage);
+	// console.log('Sending message: ' + jsonMessage);
 	ws.send(jsonMessage);
 }
