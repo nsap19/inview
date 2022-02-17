@@ -19,7 +19,8 @@ import com.ssafy.db.repository.UserRepositorySupport;
 
 @Component
 public class ArchiveUtil {
-	private final String fileSeparator = File.separator;
+	private final String fileSeparator = File.pathSeparator;
+	private final String videoFileSeperator = "/";
 	private final String dir = System.getProperty("user.dir");
 	private final String src = dir + "files" + fileSeparator;
 
@@ -36,7 +37,7 @@ public class ArchiveUtil {
 
 		if (archiveType.equals(ArchiveType.VIDEO)) {
 			// docker path
-			return "file:///tmp" + fileSeparator + "files" + fileSeparator + meetingId + fileSeparator
+			return "file:///tmp" + videoFileSeperator + "files" + videoFileSeperator + meetingId + videoFileSeperator
 					+ String.valueOf(archiveType).toLowerCase();
 		}
 
@@ -80,7 +81,7 @@ public class ArchiveUtil {
 	public String getFilepath(ArchiveType archiveType, String savepath, String filename) {
 		if (archiveType.equals(ArchiveType.VIDEO)) {
 			// docker 내 저장으로 경로명 상이
-			return savepath + fileSeparator + filename;
+			return savepath + videoFileSeperator + filename;
 		}
 		return savepath + fileSeparator + filename;
 	}
@@ -89,7 +90,6 @@ public class ArchiveUtil {
 		if (archiveType.equals(ArchiveType.VIDEO)) {
 			// docker 내 저장으로 경로명 상이
 			System.out.println(path.substring(12));
-			String fileSeparator = File.separator;
 			String OsFilePath = path.substring(11).replaceAll("/", Matcher.quoteReplacement(File.separator));
 			System.out.println(dir + OsFilePath);
 			return dir + OsFilePath;

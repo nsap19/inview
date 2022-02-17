@@ -112,7 +112,10 @@ function Participant(userId, userNickname) {
   video.controls = false;
   resize();
 
-  getMedia(userId);
+  let myStream;
+  getMedia();
+  video.srcObject = myStream;
+
   
   this.getElement = function () {
     return container;
