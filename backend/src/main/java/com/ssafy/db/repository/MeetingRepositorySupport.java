@@ -42,7 +42,7 @@ public class MeetingRepositorySupport {
 				.select(qMeeting.meetingId, qMeeting.title, qMeeting.startTime, qMeeting.closeTime, qUser.nickname,
 						qMeeting.user.userId)
 				.from(qMeeting).leftJoin(qParticipant).on(qMeeting.eq(qParticipant.meeting)).leftJoin(qUser)
-				.on(qParticipant.user.eq(qUser)).where(qMeeting.meetingId.eq(meetingId)).fetch();
+				.on(qParticipant.user.eq(qUser)).where(qMeeting.meetingId.eq(meetingId), qParticipant.forcedExit.eq(0)).fetch();
 
 		if (tuple.size() == 0) {
 			throw new NotExistsMeetingException();
@@ -75,13 +75,13 @@ public class MeetingRepositorySupport {
 			builder.and(qCompany.companyName.in(companies));
 		}
 		
-		builder.and(Expressions.dateTemplate(Date.class,"{0}",qMeeting.startTime)
+		builder.and(Expressions.dateTemplate(Date.class,"{0}", qMeeting.startTime)
 				.after(
-					Expressions.dateTemplate(Date.class,"{0}",Expressions.currentTimestamp())));
+					Expressions.dateTemplate(Date.class,"{0}", Expressions.currentTimestamp())));
 		
 		builder.or(qMeeting.startTime.isNull());
 		
-		builder.andNot(qMeeting.status.eq(Status.CLOSING));
+		builder.and(qMeeting.status.eq(Status.WAITING));
 		
 		// builder.and(Expressions.dateTemplate(Date.class, "{0}", qMeeting.startTime)
 		// 		.after(Expressions.dateTemplate(Date.class, "{0}", Expressions.currentTimestamp())));
