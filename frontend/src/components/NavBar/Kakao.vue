@@ -33,10 +33,8 @@ export default {
         window.Kakao.API.request({
           url: "/v1/user/unlink",
           success: function (response) {
-            console.log(response);
           },
           fail: function (error) {
-            console.log(error);
           },
         });
         window.Kakao.Auth.setAccessToken(undefined);
@@ -49,11 +47,10 @@ export default {
             url: "/v2/user/me",
             // data: { property_keys: ["kakao_account.email"] },
             success: async function (response) {
-              console.log(response);
               await axios
                 .post("oauth/login/kakao", response)
                 .then((res) => {
-                  console.log(res.data);
+                  // console.log(res.data);
                   localStorage.setItem("token", res.data.token);
                   store.dispatch("setUser", {
                     nickname: res.data.nickname,
@@ -67,7 +64,7 @@ export default {
                   emit('closeDialog')
                 })
                 .catch((e) => {
-                  console.log(e);
+                  // console.log(e);
                   ElMessage({
                     message: '오류가 발생했습니다. 다시 시도해주세요.',
                   type: 'warning',
@@ -76,12 +73,12 @@ export default {
                 });
             },
             fail: function (error) {
-              console.log(error);
+              // console.log(error);
             },
           });
         },
         fail: function (error) {
-          console.log(error);
+          // console.log(error);
         },
       });
     };

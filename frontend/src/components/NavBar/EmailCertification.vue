@@ -57,12 +57,10 @@ export default defineComponent({
         email: props.signupInfo.email,
         password: props.signupInfo.password
       }).then(res => {
-        console.log(res)
         localStorage.setItem("token", res.data.token);
         store.dispatch('setUser', { nickname: res.data.nickname, id: res.data.userId });
         emit('closeDialog')
       }).catch(err => {
-        console.log(err.response)
       })
     }
 
@@ -76,17 +74,14 @@ export default defineComponent({
             nickname: props.signupInfo.nickname,
             password: props.signupInfo.password
           }).then(res => {
-            console.log(res)
             login()
             ElMessage({
               message: '회원가입이 완료되었습니다.',
               type: 'success',
             })
           }).catch(err => {
-            console.log(err)
           })
         } else {
-          console.log('error submit!')
           return false
         }
       })

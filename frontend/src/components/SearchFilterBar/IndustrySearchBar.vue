@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="industry" placeholder="직군을 선택해주세요" class="w-100">
+  <el-select v-model="industry" clearable placeholder="직군을 선택해주세요" class="w-100">
     <el-option 
       v-for="industry in industries" 
       :key="industry.id" 

@@ -59,7 +59,6 @@ export default defineComponent({
       axios.delete(`/meeting/${meetingId.value}`, 
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
-        console.log(res)
         router.push({ name: 'Home'})
         ElMessage({
           type: 'success',
@@ -67,7 +66,6 @@ export default defineComponent({
         })
         store.dispatch('deleteMeeting')
       }).catch(err => {
-        console.log(err.response)
       })
     }
 
@@ -96,7 +94,6 @@ export default defineComponent({
       axios.delete(`/meeting/${store.state.meeting.id}/users/${store.state.user.id}`, 
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
-        console.log(res)
         router.push({ name: 'Home'})
         // store.dispatch('deleteMeeting')
         ElMessage({
@@ -104,7 +101,6 @@ export default defineComponent({
           message: '참가를 취소하셨습니다.',
         })
       }).catch(err => {
-        console.log(err.response)
       }) 
     }
 

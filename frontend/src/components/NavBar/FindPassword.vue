@@ -65,7 +65,6 @@ export default defineComponent({
     });
 
     watch(() => props.modelValue, (newValue, oldValue) => {
-      console.log('props.visible 의 변이가 감지되었을 때 ', {newValue, oldValue})
       showEmailCertification.value = false
     })
 
@@ -126,12 +125,10 @@ export default defineComponent({
       axios.post( `/users/findpw`, ruleForm
         ).then((res: any) => {
             loading.value = false
-            console.log(res.data)
             codeServer.value = res.data.code
             showCodeInput.value = true
         }).catch((err: any) => {
             loading.value = false
-            console.log(err.response)
         });  
     }
 
@@ -145,11 +142,9 @@ export default defineComponent({
                 type: 'success',
                 message: '이메일로 임시 비밀번호가 전송되었습니다.',
               })
-              console.log('SUCCESS!!');
               emit('password')
           }).catch((err: any) => {
               loading.value = false
-              console.log(err.response)
           });  
       } else {
         ElMessage.error('인증번호가 일치하지 않습니다.')

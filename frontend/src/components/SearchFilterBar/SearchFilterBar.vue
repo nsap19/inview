@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CompanySearchBar from '@/components/SearchFilterBar/CompanySearchBar.vue';
@@ -63,26 +63,23 @@ export default defineComponent({
       getSearchResult()
     })
 
-    const getSearchResult = () => {
-      // 검색어에 글자가 있는 경우 검색 결과 갱신
-      if (title.value?.toString().trim() 
-          || industry.value?.toString().trim() 
-          || company.value?.toString().trim()) {
+    const makeQuery = function (page) {
+      let query = {page: page}
+      if (title.value && title.value?.toString().trim()) {
+        query['title'] = title.value?.toString().trim() 
+      }
+      if (industry.value && industry.value?.toString().trim()) {
+        query['industryList'] = industry.value?.toString().trim()
+      }
+      if (company.value && company.value?.toString().trim()) {
+        query['companyList'] = company.value?.toString().trim()
+      }
+      return query
+    }
 
-        const wholeQuery = {
-          title: title.value,
-          industry: industry.value,
-          company: company.value
-        }
-        // console.log(wholeQuery)
-        router.push({ name: 'Search', query: wholeQuery})
-        store.dispatch('search', {
-          title: title.value,
-          industry: industry.value,
-          company: company.value,
-          page: 1
-        })
-      } 
+    const getSearchResult = () => {
+      router.push({ name: 'Search', query: makeQuery(1)})
+      store.dispatch('search', makeQuery(1))
     }
 
     return { title, industry, company, getSearchResult }

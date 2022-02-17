@@ -36,7 +36,6 @@ export default createStore({
     },
     SET_PARTICIPANTS(state, data) {
       state.participants = data
-      console.log(data)
     },
     SET_NEW_HOST(state, data) {
       state.meeting.hostId = data
@@ -50,24 +49,22 @@ export default createStore({
       commit('SET_LOGOUT')
     },
     search( { commit }, query ) {
+      const industryList: string[] = []
+      const companyList: string[] = []
+      industryList.push(query.industry)
+      companyList.push(query.company)
       axios({
-        url: "/meeting/",
+        url: "/meeting",
         method: 'GET',
-        params: {
-          title: query.title,
-          industry: query.industry,
-          company: query.company,
-          page: query.page
-        }
+        params: query
       }).then(res => {
+          // console.log(res)
           if (1 < query.page) {
             commit('ADD_SEARCH_RESULT', res.data.data.content)
           } else {
             commit('SAVE_SEARCH_RESULT', res.data.data.content)
           }
         }).catch(err => {
-          console.log(err)
-          console.log(err.response)
         })
     },
     setMeeting ( { commit }, meetingId ) {

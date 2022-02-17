@@ -697,7 +697,7 @@ export default {
       for (const style of Object.keys(styles)) {
         const { topValue, bottomValue } = styles[style];
         const calc = (bottomValue - topValue) * r + topValue;
-        console.log("calc : " + calc);
+        // console.log("calc : " + calc);
         applyStyle(this.$refs[refname], style, calc, unit);
       }
     },
@@ -733,12 +733,12 @@ export default {
       const scrollTop = window.scrollY || window.pageYOffset;
       // const currentPos = scrollTop + window.innerHeight / 2;
       const currentPos = scrollTop + 361
-      console.log("currentPos : " + currentPos);
+      // console.log("currentPos : " + currentPos);
       // disabled 순회하며 활성화할 요소 찾기.
       disabled.forEach((obj, refname) => {
         // 만약 칸에 있다면 해당 요소 활성화
         if (isAmong(currentPos, obj.top, obj.bottom)) {
-          console.log(refname + " " + obj.top + " " + obj.bottom);
+          // console.log(refname + " " + obj.top + " " + obj.bottom);
           enabled.set(refname, obj);
           // console.log("classList가뭔데", this.$refs[refname])
           this.$refs[refname].classList.remove("disabled");
@@ -753,7 +753,7 @@ export default {
         // console.log(`${top}, ${bottom}, ${topStyle}, ${bottomStyle}`);
         // 범위 밖에 있다면
         if (!isAmong(currentPos, top, bottom)) {
-          console.log(currentPos + " " + top + " " + bottom);
+          // console.log(currentPos + " " + top + " " + bottom);
           // 위로 나갔다면 시작하는 스타일 적용
           if (currentPos <= top) {
             Object.keys(topStyle).forEach((styleName) => {
@@ -781,7 +781,7 @@ export default {
         // enable 순회중, 범위 내부에 제대로 있다면 각 애니메이션 적용시키기.
         else {
           this.applyAllAnimation(currentPos, refname);
-          console.log(currentPos + " " + refname + " 애니메이션 적용중");
+          // console.log(currentPos + " " + refname + " 애니메이션 적용중");
         }
       });
     },

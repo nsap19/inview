@@ -53,7 +53,7 @@
             @click="
               this.$router.push({
                 name: 'Search',
-                query: { title: '', industry: '', company: '' },
+                query: { page: 1 },
               })
             "
           ></el-button>

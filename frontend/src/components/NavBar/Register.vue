@@ -62,7 +62,6 @@ export default defineComponent({
     });
 
     watch(() => props.modelValue, (newValue, oldValue) => {
-      console.log('props.visible 의 변이가 감지되었을 때 ', {newValue, oldValue})
       showEmailCertification.value = false
     })
 
@@ -146,12 +145,11 @@ export default defineComponent({
     const signup = function (body: {nickname: string, email: string, password: string}) {
       axios.post("/users/signup/", body).then(res => {
         loading.value = false
-        console.log(res)
+        // console.log(res)
         emailCertificationCode.value = res.data.code
         showEmailCertification.value = true
       }).catch(err => {
         loading.value = false
-        console.log(err.response)
         if (err.response.data.message === "이미 등록된 닉네임입니다.") {
           nicnknameError.value = "중복된 닉네임입니다"
         } else if (err.response.data.message === "이미 등록된 이메일입니다.") {
@@ -164,12 +162,10 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          console.log('valid')
           loading.value = true
           const { nickname, email, password } = ruleForm
           signup({nickname, email, password})
         } else {
-          console.log('error submit!')
           return false
         }
       })

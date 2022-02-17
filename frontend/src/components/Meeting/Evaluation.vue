@@ -56,7 +56,6 @@ export default defineComponent({
     const currentPage = ref(1)
     const paginate = function (page: number) {
       currentPage.value = page
-      console.log(currentPage.value)
     }
     const questions = [
       {
@@ -135,9 +134,7 @@ export default defineComponent({
     watch(() => store.state.meeting, (newValue, oldValue) => {
       userNickname = userNickname || store.state.user.nickname
       meetingId = newValue.id || oldValue.id
-      console.log("평가지 왜그러는거야", newValue.id, props.startSignal)
       if( !newValue.id && props.startSignal ) {
-        console.log('평가지좀올려', newValue, oldValue, props.startSignal)
         createHtmlFile(meetingId)
       }
     })
@@ -174,12 +171,8 @@ export default defineComponent({
           }
         }
       ).then(res => {
-        console.log('평가지 업로드 SUCCESS!!');
-        console.log(res)
       })
       .catch(err => {
-        console.log('평가지 업로드 FAILURE!!');
-        console.log(err.response)
       });
       
       // 디버그용 파일 다운로드

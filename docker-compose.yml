@@ -84,9 +84,18 @@ services:
     depends_on:
       - db
       - kurento
+      - coturn_server
     networks:
       - backend
       # - frontend
+
+  coturn_server:
+    image: instrumentisto/coturn:4.5.1
+    restart: always
+    network_mode: "host"
+    volumes:
+      - /etc/turnserver.conf:/etc/coturn/turnserver.conf
+      - /etc/default/coturn:/etc/default/coturn
 networks:
   backend: 
   # frontend:

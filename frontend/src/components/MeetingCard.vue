@@ -77,20 +77,20 @@ export default defineComponent({
   setup (props) {
     const makePrettyTime = function (time: string) {
       let prettyTime = ''
-      const today = new Date(+new Date() + 3240 * 10000).toISOString().split("T")[0]
-      const tomorrow = new Date(+new Date() + 11880 * 10000).toISOString().replace("T", " ").replace(/\..*/, '')
-      const twoDaysAfter = new Date(+new Date() + 20520 * 10000).toISOString().replace("T", " ").replace(/\..*/, '')
-      if (time.slice(0, 10) === today) {
-        prettyTime += '오늘'
-      } else if (time.slice(0, 10) === tomorrow) {
-        prettyTime += '내일'
-      } else if (time.slice(0, 10) === twoDaysAfter) {
-        prettyTime += '모레'
-      } else {
-        if (time.slice(0, 4) !== new Date().getFullYear().toString()) {
-          prettyTime += time.slice(2, 4) + "년 "
-        }
-      }
+      // const today = new Date(+new Date() + 3240 * 10000).toISOString().split("T")[0]
+      // const tomorrow = new Date(+new Date() + 11880 * 10000).toISOString().replace("T", " ").replace(/\..*/, '').slice(0, 10)
+      // const twoDaysAfter = new Date(+new Date() + 20520 * 10000).toISOString().replace("T", " ").replace(/\..*/, '').slice(0, 10)
+      // if (time.slice(0, 10) === today) {
+      //   prettyTime += '오늘'
+      // } else if (time.slice(0, 10) === tomorrow) {
+      //   prettyTime += '내일'
+      // } else if (time.slice(0, 10) === twoDaysAfter) {
+      //   prettyTime += '모레'
+      // } else {
+      //   if (time.slice(0, 4) !== new Date().getFullYear().toString()) {
+      //     prettyTime += time.slice(2, 4) + "년 "
+      //   }
+      // }
       prettyTime += time.slice(5, 6) === "0" ? time.slice(6, 7) + "월 " : time.slice(5, 7) + "월 "
       prettyTime += time.slice(8, 9) === "0" ? time.slice(9, 10) + "일 " : time.slice(8, 10) + "일 "
       prettyTime += time.slice(11, 12) === "0" ? time.slice(12, 13) + "시 " : time.slice(11, 13) + "시 "
@@ -170,12 +170,9 @@ export default defineComponent({
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         params: { password: passwordForm.password },
       }).then(res => {
-        console.log(res, 'joinMeeting')
         store.dispatch('setMeeting', meetingId)
         router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
       }).catch(err => {
-        console.log(err)
-        console.log(err.response)
         if (err.data.message == "비밀번호가 일치하지 않습니다.") {
           passwordError.value = "비밀번호가 일치하지 않습니다"
         }
@@ -186,10 +183,8 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          console.log('submit!')
           joinMeeting(props.meeting.id)
         } else {
-          console.log('error submit!')
           return false
         }
       })

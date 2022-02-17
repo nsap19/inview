@@ -95,10 +95,10 @@ const joinMeeting = function (meetingUrl: unknown) {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   })
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     })
     .catch((err) => {
-      console.log(err.response);
+      // console.log(err.response);
       router.push({ name: 'Home' })
       return false;
     });

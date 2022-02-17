@@ -76,7 +76,6 @@ export default defineComponent({
 
     const loading = ref(false)
     watch(meetings, (newValue, oldValue) => {
-      console.log('old', oldValue, 'new', newValue)
       if (!oldValue.length || oldValue.length === newValue.length) {
         loading.value = false
       } else {
@@ -84,24 +83,28 @@ export default defineComponent({
       }
     })
 
+    const makeQuery = function (page) {
+      let query = {page: page}
+      // console.log(route.query.title.trim())
+      if (route.query.title && route.query.title.trim()) {
+        query['title'] = route.query.title.trim()
+      }
+      if (route.query.industry && route.query.industry.trim()) {
+        query['industryList'] = route.query.industry.trim()
+      }
+      if (route.query.company && route.query.company.trim()) {
+        query['companyList'] = route.query.company.trim()
+      }
+      return query
+    }
+
     let page = 2
     onMounted(() => {
-      store.dispatch('search', {
-        title: route.query.title,
-        industry: route.query.industry,
-        company: route.query.company,
-        page: 1
-      })
+      store.dispatch('search', makeQuery(1))
       document.addEventListener('scroll', (event) => {
         const {scrollHeight, scrollTop, clientHeight} = document.documentElement
         if (scrollHeight - Math.round(scrollTop) === clientHeight) {
-          store.dispatch('search', {
-            title: route.query.title,
-            industry: route.query.industry,
-            company: route.query.company,
-            page: page
-          })
-          console.log(meetings)
+          store.dispatch('search', makeQuery(page))
           page += 1
         }
       })

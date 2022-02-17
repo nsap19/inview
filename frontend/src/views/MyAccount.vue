@@ -91,14 +91,12 @@ export default defineComponent({
             page: pageNum
           },
         }).then(res => {
-            console.log(res)
             loadComplete.value++
             if (res.data.data) {
               tableDatas.value = res.data.data.content;
               table.value = res.data.data
             }
           }).catch(err => {
-            console.log(err)
           })
       }
 
@@ -110,13 +108,11 @@ export default defineComponent({
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             }
           }).then(res=>{
-            console.log("미래", res)
             loadComplete.value++
             if (res.data.data) {
               futureMeetings.value = res.data.data.content;
             }
           }).catch(err => {
-            console.log(err)
           })
       }
 

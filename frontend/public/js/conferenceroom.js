@@ -22,7 +22,7 @@ var userId;
 // 음소거, 카메라 on/off 기능
 let muted = false;
 let cameraOff = false;
-let myStream;
+
 function handleMuteClick(){
 	var participant = participants[userId];
 	const myStream = participant.getVideoElement().captureStream();
@@ -59,20 +59,7 @@ function handleCameraClick(){
 	}
 }
 
-async function getMedia(video) {
-    try {
-      myStream = await navigator.mediaDevices.getUserMedia({
-      	audio: true,
-      	video: true,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-	console.log(myStream)
-	console.log(video)
-	video.srcObject = myStream;
-	console.log(video.srcObject)
-}
+let myStream;
 
 
 const serverURL = "https://i6a201.p.ssafy.io/api/groupcall";
@@ -157,6 +144,7 @@ function register() {
 		meetingId : meetingId,
 		userNickname: userNickname
 	}
+
 	sendMessage(message);
 }
 
@@ -166,6 +154,7 @@ function onNewParticipant(request) {
 }
 
 function receiveVideoResponse(result) {
+	console.log("receive:"+result.userId)
 	participants[result.userId].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
 		if (error) return console.error (error);
 	});
@@ -202,10 +191,10 @@ function onExistingParticipants(msg) {
 	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
-
-	console.log("VIDEO: "+video.srcObject)
+	video.srcObject = myStream;
+	console.log("VIDEO: "+video.srcObject.id)
 	var options = {
-	      localVideo: video,
+	      localVideo: myStream,
 	      mediaConstraints: constraints,
 	      onicecandidate: participant.onIceCandidate.bind(participant),
 		  configuration: {
@@ -216,6 +205,7 @@ function onExistingParticipants(msg) {
 			}]
 		}
 	    }
+
 	participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
 		function (error) {
 		  if(error) {
@@ -231,6 +221,25 @@ function onExistingParticipants(msg) {
 		receiveVideo(userId, userNickname)
 	}
 }
+
+async function getMedia() {
+	// console.log()
+    try {
+      myStream = await navigator.mediaDevices.getUserMedia({
+      	audio: true,
+      	video: true,
+      })
+    } catch (e) {
+      console.log(e);
+    }
+	// console.log(myStream)
+	// console.log(myFace)
+	// myFace.srcObject = myStream;
+	console.log(myStream)
+	// console.log(myvideo.srcObject)
+}
+
+getMedia();
 
 function leaveRoom() {
 	sendMessage({
@@ -283,6 +292,6 @@ function onParticipantLeft(request) {
 
 function sendMessage(message) {
 	var jsonMessage = JSON.stringify(message);
-	// console.log('Sending message: ' + jsonMessage);
+	console.log('Sending message: ' + jsonMessage);
 	ws.send(jsonMessage);
 }

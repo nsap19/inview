@@ -1,5 +1,5 @@
 <template>
-  <div class="container text-center d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <div class="container text-center d-flex w-100 p-3 mx-auto flex-column justify-content-center" style="height: 700px">
     <div class="row mt-3 mb-3">
       <div class="col"></div>
       <div class="col">
@@ -42,7 +42,6 @@ export default {
     const handleResize = function (event) {
       width.value = window.innerWidth / 4;
       height.value = window.innerHeight / 4;
-      console.log(width.value);
     };
     return { NoResultsJSON, handleResize, width, height };
   },

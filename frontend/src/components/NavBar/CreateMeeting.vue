@@ -170,10 +170,8 @@ export default defineComponent({
         {},
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
-        console.log(res, 'joinMeeting')
         router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
       }).catch(err => {
-        console.log(err.response)
       })
     }
 
@@ -193,21 +191,18 @@ export default defineComponent({
         body,
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         }).then(res => {
-          console.log(res.data)
           openDialog.value = false
           store.dispatch('setMeeting', res.data.data.id)
           store.dispatch('setParticipants', [{id: store.state.user.id, nickname: store.state.user.nickname, ready: true}])
           // joinMeeting(res.data.data.id)
           router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
         }).catch(err => {
-          console.log(err.response)
         })
     }
     const submitForm = (formEl: InstanceType<typeof ElForm> | undefined) => {
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          // console.log('submit!')
           const { title, industryName, userLimit, startTime, endTime, password } = ruleForm
           const companyNameList = companyName.value ? [companyName.value] : []
           createMeeting({
@@ -220,7 +215,6 @@ export default defineComponent({
             password
           })
         } else {
-          // console.log('error submit!')
           return false
         }
       })
