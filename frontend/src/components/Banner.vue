@@ -23,7 +23,7 @@ import CreateMeeting from "@/components/NavBar/CreateMeeting.vue"
 import { ref } from 'vue'
 
 export default {
-  name: 'Lottie',
+  name: 'Banner',
   components: {
     Vue3Lottie, CreateMeeting
   },

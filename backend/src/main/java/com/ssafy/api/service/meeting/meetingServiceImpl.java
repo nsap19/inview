@@ -12,6 +12,7 @@ import com.ssafy.api.request.meeting.MeetingRegisterPostReq;
 import com.ssafy.api.response.MeetingJoinRes;
 import com.ssafy.api.response.MeetingRegisterRes;
 import com.ssafy.common.exception.handler.AlreadyFullParticipantException;
+import com.ssafy.common.exception.handler.AlreadyJoinMeetingException;
 import com.ssafy.common.exception.handler.AlreadyRunningMeetingException;
 import com.ssafy.common.exception.handler.NotEqualPasswordException;
 import com.ssafy.common.exception.handler.NotExistsCompanyException;
@@ -72,6 +73,10 @@ public class meetingServiceImpl implements MeetingService {
 		List<Company> companyList = registerInfo.getCompanyNameList().stream()
 				.map(c -> companyRepository.findByCompanyName(c).orElseThrow(() -> new NotExistsCompanyException()))
 				.collect(Collectors.toList());
+
+//		List<Company> companyList = registerInfo.getCompanyNameList().stream()
+//				.map(c -> companyRepository.findByCompanyName(c).orElse(new Company()))
+//				.collect(Collectors.toList());
 
 		// 비밀번호가 빈문자열이면 제거
 		if (registerInfo.getPassword().trim().length() == 0)
@@ -134,13 +139,15 @@ public class meetingServiceImpl implements MeetingService {
 
 		if (meeting.getUser().getUserId() == user.getUserId() || isParticipant)
 			return MeetingJoinRes.builder().url(meeting.getUrl()).build();
-		else if (meeting.getPassword() != null && !meeting.getPassword().equals(password))
+		if (meeting.getPassword() != null && !meeting.getPassword().equals(password))
 			throw new NotEqualPasswordException();
-		else {
-			participantRepository.save(Participant.builder().meeting(meeting).user(user).build());
-			return MeetingJoinRes.builder().url(meeting.getUrl()).build();
-		}
+		Participant participant = participantRepository.findByMeetingIdAndUserId(meetingId, userId)
+				.orElse(Participant.builder().meeting(meeting).user(user).build());
+		if (participant.getForcedExit() == 1)
+			throw new AlreadyJoinMeetingException();
 
+		participantRepository.save(participant);
+		return MeetingJoinRes.builder().url(meeting.getUrl()).build();
 	}
 
 	@Override

@@ -8,10 +8,10 @@
     </div>
   </div>
   <div class="container recent-result">
-    <h4>최근 만들어진 방</h4>
+    <p class="fs-4">최근 만들어진 방</p>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div 
-        v-for="meeting in meetings.slice(0, 10)" 
+        v-for="meeting in meetings.slice(0, 6)" 
         :key="meeting.id" 
         class="col"
       > 
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, onUnmounted } from 'vue';
+import { defineComponent, computed } from 'vue';
 import SearchBar from '@/components/SearchBar.vue';
 import MeetingCard from '@/components/MeetingCard.vue'
 import { useStore } from 'vuex'
@@ -36,14 +36,7 @@ export default defineComponent({
     const store = useStore()
     store.dispatch('search', {title: '', industry: '', company: ''})
     const meetings = computed(() => store.state.searchResult)
-    onMounted(() => {
-      // document.getElementById('body')!.setAttribute('style', 'background: linear-gradient(to bottom, rgba(206, 229, 208, 0.3) 0%, rgba(243, 240, 215, 0.4) 20%, rgba(224, 192, 151, 0.3), 80%, rgba(255, 120, 120, 0.3) 100%);')
-      // document.documentElement.setAttribute('style', 'width: 100%; height: 100%; padding: 0; margin: 0;')
-    })
-    onUnmounted(() => {
-      document.getElementById('body')!.setAttribute('style', 'background: #fff;')
-      document.documentElement.setAttribute('style', '')
-    })
+
     return { meetings }
   }
 });

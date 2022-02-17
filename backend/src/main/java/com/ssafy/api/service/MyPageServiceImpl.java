@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.request.UserUpdatePutReq;
 import com.ssafy.api.response.LastMeetingDetailRes;
 import com.ssafy.api.response.LastMeetingRes;
+import com.ssafy.api.response.MeetingRes;
 import com.ssafy.common.exception.handler.NotExistsUserException;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.repository.LastMeetingRepositorySupport;
 import com.ssafy.db.repository.UserRepository;
 
@@ -38,9 +42,20 @@ public class MyPageServiceImpl implements MyPageService {
 
 		userRepository.save(user);
 	}
+	
+	@Override
+	public List<Meeting> searchFutureMeeting(int userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public Page<MeetingRes> searchFutureMeeting(int userId, int page){
+		PageRequest pageable = PageRequest.of(page - 1, 6);
+		return lastMeetingRepositorySupport.findFutureMeetingById(userId, pageable);
+	}
 
 	@Override
-	public Page<LastMeetingRes> searchMeeting(int userId, int page) {
+	public Page<MeetingRes> searchMeeting(int userId, int page) {
 		PageRequest pageable = PageRequest.of(page - 1, 6);
 
 		userRepository.findById(userId).orElseThrow(() -> new NotExistsUserException());
@@ -52,4 +67,6 @@ public class MyPageServiceImpl implements MyPageService {
 	public LastMeetingDetailRes searchMeetingDetail(int userId, int meetingId) {
 		return lastMeetingRepositorySupport.findMeetingDetailById(userId, meetingId);
 	}
+
+
 }

@@ -16,12 +16,16 @@ services:
     container_name: nginx    
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /home/jenkins/workspace/INVIEW/frontend/default.conf:/etc/nginx/conf.d/default.conf
       - /home/jenkins/workspace/INVIEW/frontend/dist:/usr/share/nginx/html
+      - /etc/letsencrypt:/etc/letsencrypt # 추가
+      - /etc/ssl/certs:/etc/ssl/certs
     restart: "always"
     depends_on:
       - spring-boot
+
   db:
     image: mysql:5.7
     container_name: backend_db

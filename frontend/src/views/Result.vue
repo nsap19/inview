@@ -1,35 +1,39 @@
 <template>
-  <div class="container result-container">
-    <div>
-      <span class="fs-3 mb-0">{{ props.tableDatas.title }}</span>
+  <div class="result-container">
+    <div class="d-flex flex-column justify-content-between">
+      <p class="fs-5 fw-bold mb-0 mt-2">{{ props.tableDatas.title }}</p>
     </div>
-    <div>
-      <el-button @click="download('EVALUATION')">받은 면접 평가 다운로드</el-button>
-      <el-button @click="download('VIDEO')">면접 영상 다운로드</el-button>
-      <el-button @click="download('CHAT')">채팅 내역 다운로드</el-button>
-      <el-button @click="download('MEMO')">메모 다운로드</el-button>
-      <el-button @click="download('FILE')">공유 파일 다운로드</el-button>
-    </div>
-    <hr>
 
-    
+    <el-divider content-position="left" class="result mb-1">상세 내역</el-divider>
+    <div class="d-flex flex-column justify-content-end align-items-end">
+      <p class="m-0" style="font-size: 14px;">시작 | {{ props.tableDatas.startTime.slice(0, 16) }}</p>
+      <p class="m-0" style="font-size: 14px;">종료 | {{ props.tableDatas.endTime.slice(0, 16) }}</p>
+    </div>
     <div class="row p-1" v-for="(data, index) in tableData" :key="index">
-      <div class="col-2">
+      <div class="col-4 col-sm-3">
         <span>{{ data.category }}</span>
       </div>
       <div class="col" v-if="typeof(data.content) === 'object'">
-        <div class="row" v-for="(participant, index) in data.content" :key="index">
-          <span>{{ participant }}</span>
-        </div>
+          <span class="pe-2" v-for="(participant, index) in data.content" :key="index">
+            {{ participant }}
+          </span>
       </div>
       <div class="col" v-else>
         <span>{{ data.content }}</span>
       </div>
-      <div class="col">
+    </div>
 
+    <el-divider content-position="left" class="result mb-1">결과 다운로드</el-divider>
+    <p class="text-end mb-1 mt-2" style="font-size: 14px;">유효 기간 | {{ expirationDate }}</p>
+    <div>
+      <div>
+        <el-button plain round type="primary" class="m-1" @click="download('VIDEO')">면접 영상</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('CHAT')">채팅</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('MEMO')">메모</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('FILE')">공유 파일</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('EVALUATION')">받은 면접 평가</el-button>
       </div>
     </div>
- 
   </div>
 </template>
 
@@ -55,19 +59,19 @@ export default defineComponent({
 
     const meetingId = route.params.meetingId
     const userName = route.params.userName
-  
     const getExpirationDate = function () {
-      if(props.tableDatas.endTime == null){
+      if (props.tableDatas.endTime == null) {
         return ''
-      }else{
-      const date = new Date(props.tableDatas.endTime)
-      date.setDate(new Date(props.tableDatas.endTime).getDate() + 7)
-      return date.getFullYear() + "-"
-             + ("0" + (1 + date.getMonth())).slice(-2) + "-" 
-             + ("0" + date.getDate()).slice(-2) + " " 
-             + date.getHours() + ":" + date.getMinutes()
+      } else {
+        const date = new Date(props.tableDatas.endTime)
+        date.setDate(new Date(props.tableDatas.endTime).getDate() + 7)
+        return date.getFullYear() + "-"
+              + ("0" + (1 + date.getMonth())).slice(-2) + "-" 
+              + ("0" + date.getDate()).slice(-2) + " " 
+              + date.getHours() + ":" + date.getMinutes()
       }
     }
+    const expirationDate = getExpirationDate()
 
     const download = function (type){
       axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.id}`).then(res=>{
@@ -106,7 +110,6 @@ export default defineComponent({
       })
     }
 
-
     const tableData = ref([
       {
         category: '직군',
@@ -114,28 +117,28 @@ export default defineComponent({
       },
       {
         category: '회사',
-        content: props.tableDatas.companyNameList,
+        content: props.tableDatas.companyNameList.length ? props.tableDatas.companyNameList : "상관 없음!",
       },
-      {
-        category: '시작 시간',
-        content: props.tableDatas.startTime,
-      },
-      {
-        category: '종료 시간',
-        content: props.tableDatas.endTime,
-      },
+      // {
+      //   category: '시작 시간',
+      //   content: props.tableDatas.startTime,
+      // },
+      // {
+      //   category: '종료 시간',
+      //   content: props.tableDatas.endTime,
+      // },
       {
         category: '참가자',
         content: props.tableDatas.participantNicknameList,
       },
-      {
-        category: '다운로드 유효 기간',
-        content: getExpirationDate(),
-      },
+      // {
+      //   category: '다운로드 유효 기간',
+      //   content: getExpirationDate(),
+      // },
     ]);
 
     console.log("test",props.tableDatas, tableData.value)
-    return {download,  meetingId, userName, props, tableData }
+    return {download,  meetingId, userName, props, tableData, expirationDate, getExpirationDate }
   }
 })
 </script>

@@ -16,11 +16,12 @@
       </el-form-item>
 
       <el-form-item prop="password" :error="errorMessage">
-        <el-input type="password" v-model="ruleForm.password" autocomplete="off" @input="clearErrorMessage" placeholder="비밀번호"></el-input>
+        <el-input type="password" v-model="ruleForm.password" autocomplete="off" @input="clearErrorMessage" placeholder="비밀번호" @keydown.enter="login(ruleFormRef)"></el-input>
       </el-form-item>
 
       <div class="d-flex flex-column align-self-center" style="margin: 10px auto">
         <el-button type="primary" round @click="login(ruleFormRef)">로그인</el-button>
+        <el-divider></el-divider>
         <div class="mt-2">
           <Kakao />
         </div>

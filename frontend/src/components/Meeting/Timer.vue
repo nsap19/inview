@@ -1,39 +1,90 @@
 <template>
-  <div class="container">
-    <div class="row">
+  <div style="margin: auto 0">
+    <div class="row custom-row-cols g-2">
+      <div class="col">
+        <div class="row timer-wrapper" v-show="counting[0]">
+          <div
+            class="col d-flex flex-column justify-content-center align-items-center"
+          >
+            <Vue3Lottie
+              ref="timer1"
+              :animationData="TimerImg"
+              :width="100"
+              :autoPlay="false"
+            />
+            <div class="timer">
+              <span>{{ time[0] }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row timer-wrapper" v-show="!counting[0]">
+          <div
+            class="d-flex flex-row justify-content-center align-items-center fw-bold fs-5"
+          >
+            30초
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row timer-wrapper" v-show="counting[1]">
+          <div
+            class="col d-flex flex-column justify-content-center align-items-center"
+          >
+            <Vue3Lottie
+              ref="timer2"
+              :animationData="TimerImg"
+              :width="100"
+              :autoPlay="false"
+            />
+            <div class="timer">
+              <span>{{ time[1] }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row timer-wrapper" v-show="!counting[1]">
+          <div
+            class="d-flex flex-row justify-content-center align-items-center fw-bold fs-5"
+          >
+            60초
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row timer-wrapper" v-show="counting[2]">
+          <div
+            class="col d-flex flex-column justify-content-center align-items-center"
+          >
+            <Vue3Lottie
+              ref="timer3"
+              :animationData="TimerImg"
+              :width="100"
+              :autoPlay="false"
+            />
+            <div class="timer">
+              <span>{{ time[2] }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row timer-wrapper" v-show="!counting[2]">
+          <div
+            class="d-flex flex-row justify-content-center align-items-center fw-bold fs-5"
+          >
+            90초
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-flex flex-row justify-content-center"
+      style="transform: translateY(-30%)"
+    >
       <Vue3Lottie
         @click="startCountdown"
         :disabled="counting[0]"
         :animationData="StartImg"
-        :width="300"
+        :height="200"
       />
-    </div>
-    <div class="row">
-      <div v-show="counting[0]">
-          <div class="col">
-              <Vue3Lottie ref="timer1" :animationData="TimerImg" :width="100" :autoPlay="false" />
-          </div>
-          <div class="col">
-              {{ time[0] }}
-          </div>
-      </div>
-      <span v-if="!counting[0]"> finish!!</span>
-    </div>
-    <div class="row">
-      <div v-show="counting[1]">
-        <Vue3Lottie ref="timer2" :animationData="TimerImg" :width="100" :autoPlay="false" /> Time
-        Remaining:
-        {{ time[1] }}
-      </div>
-      <span v-if="!counting[1]"> finish!!</span>
-    </div>
-    <div class="row">
-      <div v-show="counting[2]">
-        <Vue3Lottie ref="timer3" :animationData="TimerImg" :width="100" :autoPlay="false" />Time
-        Remaining:
-        {{ time[2] }}
-      </div>
-      <span v-if="!counting[2]"> finish!!</span>
+      <!-- :width="200" -->
     </div>
   </div>
 </template>
@@ -51,12 +102,6 @@ export default {
     Vue3Lottie,
   },
   filters: {
-    second60(value) {
-      return value + second30;
-    },
-    second90(value) {
-      return value + second30 * 2;
-    },
     minutesAndSeconds(value) {
       var minutes = Math.floor(parseInt(value, 10) / 60);
       var seconds = parseInt(value, 10) - minutes * 60;
@@ -64,11 +109,18 @@ export default {
     },
   },
   mounted() {
+    for (var i = 0; i < this.time.length; i++) {
+      this.time[i] = 0;
+      this.counting[i] = false;
+    }
     setInterval(() => {
-      for (var i = 0; i < this.time.length; i++) {
-        this.time[i]--;
-        if (this.time[i] == 0) {
-          this.counting[i] = false;
+      if (this.counting[0] || this.counting[1] || this.counting[2]) {
+        for (var i = 0; i < this.time.length; i++) {
+          this.time[i]--;
+          if (this.time[i] < 0) {
+            this.counting[i] = false;
+            this.time[i] = 0;
+          }
         }
       }
     }, 1000);
@@ -80,32 +132,103 @@ export default {
       timer: TEN_MINUTES,
       counting: [false, false, false],
       time: [second30, second30 * 2, second30 * 3],
-      timerName :['timer1', 'timer2', 'timer3'],
+      timerName: ["timer1", "timer2", "timer3"],
     };
   },
   methods: {
     startCountdown: function () {
-        
+    //   this.stop_auto_reload();
       for (var i = 0; i < this.time.length; i++) {
-            this.counting[i] = false;
-     }
-     if(this.$refs['timer1'] != undefined && this.$refs['timer2'] != undefined && this.$refs['timer3'] != undefined){
-              this.$refs['timer3'].stop();
-              this.$refs['timer2'].stop();
-              this.$refs['timer1'].stop();          
-     }
+        console.log(this.time.length);
+        this.counting[i] = false;
+      }
+      if (
+        this.$refs["timer1"] != undefined &&
+        this.$refs["timer2"] != undefined &&
+        this.$refs["timer3"] != undefined
+      ) {
+        this.$refs["timer3"].stop();
+        this.$refs["timer2"].stop();
+        this.$refs["timer1"].stop();
+      }
       for (var i = 0; i < this.time.length; i++) {
         this.time[i] = second30 * (i + 1);
         this.counting[i] = true;
       }
-      if(this.$refs['timer1'] != undefined && this.$refs['timer2'] != undefined && this.$refs['timer3'] != undefined){
-         this.$refs['timer3'].play();
-         this.$refs['timer2'].play();
-         this.$refs['timer1'].play();          
+      if (
+        this.$refs["timer1"] != undefined &&
+        this.$refs["timer2"] != undefined &&
+        this.$refs["timer3"] != undefined
+      ) {
+        this.$refs["timer3"].play();
+        this.$refs["timer2"].play();
+        this.$refs["timer1"].play();
       }
+    //   this.start_auto_reload();
     },
+    // start_auto_reload() {
+    //   console.log("start!!");
+    //   this.auto_reload = true;
+    //   this.auto_reload_func = setInterval(() => {
+    //     if (this.counting[0] || this.counting[1] || this.counting[2]) {
+    //       for (var i = 0; i < this.time.length; i++) {
+    //         this.time[i]--;
+    //         if (this.time[i] < 0) {
+    //           this.counting[i] = false;
+    //           this.time[i] = 0;
+    //         }
+    //       }
+    //     }
+    //   }, 1000);
+    // },
+    // stop_auto_reload() {
+    //   console.log("stop!!");
+    //   this.auto_reload = false;
+    //   clearInterval(this.auto_reload_func);
+    // },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.timer {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: calc(1.275rem + 0.3vw);
+  font-weight: 700;
+  transform: translateY(-50%);
+}
+
+.timer-wrapper {
+  background: linear-gradient(
+      140deg,
+      rgba(243, 240, 215, 1) -10%,
+      rgba(78, 115, 81, 0.522) 50%
+    ),
+    url(https://grainy-gradients.vercel.app/noise.svg);
+  margin: 10px;
+  border-radius: 20px;
+  width: 50%;
+  margin: 0 auto;
+  height: 135px;
+}
+
+.custom-row-cols > * {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+  .timer-wrapper {
+    width: 80%;
+    margin-top: 50px;
+  }
+  .custom-row-cols > * {
+    flex: 0 0 auto;
+    width: 33.3333333333%;
+  }
+}
+</style>

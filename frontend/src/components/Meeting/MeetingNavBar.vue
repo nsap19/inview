@@ -34,7 +34,8 @@ export default defineComponent({
     const meetingId = computed(() => store.state.meeting.id)
 
     const closeMeeting = function () {
-      axios.post(`/meeting/${meetingId.value}/close`, 
+      console.log("여기 들어오나요??")
+      axios.post(`meeting/${meetingId.value}/close`,  {} ,
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)
@@ -57,6 +58,7 @@ export default defineComponent({
         .then(() => {
           emit('closeMeeting')
           closeMeeting()
+          console.log("여기 들어오나요??")
           store.dispatch('deleteMeeting')
           router.push({ name: 'Home'})
           ElMessage({
@@ -83,8 +85,10 @@ export default defineComponent({
         }
       )
         .then(() => {
-          if (closeSignal) {
+          console.log(closeSignal.value)
+          if (closeSignal.value) {
             console.log("마지막 남은 사람도 나왔습니다")
+            closeMeeting()
           }
           emit('leaveMeeting')
           store.dispatch('deleteMeeting')
