@@ -32,7 +32,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item 
-              v-for="(participant, index) in participants"
+              v-for="(participant, index) in participantsExceptMe"
               :key="index"
               @click="[
                 openAside=!(openAside && asideCategory==='evaluation' + participant.nickname), 
@@ -87,9 +87,12 @@ export default defineComponent({
     const participants = computed(() => store.state.participants)
     const startSignal = computed(() => props.startSignal)
 
+    const participantsExceptMe = computed(() => store.state.participants.filter((participant: { id: any }) => {
+      return parseInt(participant.id) !== store.state.user.id
+    }))
     const record = ref(false)
     return { 
-      openAside, asideCategory, participants, startSignal, record,
+      openAside, asideCategory, participants, startSignal, record, participantsExceptMe,
       ChatDotSquare, MoreFilled, List, VideoCamera, Microphone, Mute,
     }
   }
