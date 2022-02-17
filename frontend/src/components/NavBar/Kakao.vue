@@ -1,68 +1,35 @@
 <template>
   <div class="container">
     <div class="large-12 medium-12 small-12 cell">
-      <img src="@/assets/kakao_login_medium_wide.png" class="w-100" @click="kakoLoginBtn">
+      <img
+        src="@/assets/kakao_login_medium_wide.png"
+        class="w-100"
+        @click="kakoLoginBtn"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { mapActions } from 'vuex';
+import { useStore } from "vuex";
+import { ElMessage } from 'element-plus'
+import { onMounted } from '@vue/runtime-core';
 
 export default {
-  name: "App",
-  // mounted: function () {
-  //   this.$nextTick(function () {
-  //     // Code that will run only after the
-  //     // entire view has been rendered
-  //     if (this.kakaoInfo != "") {
-  //       var data = JSON.parse(this.kakaoInfo);
-
-  //       alert("카카오로그인 성공 \n accessToken : " + data["accessToken"]);
-  //       alert(
-  //         "user : \n" +
-  //           "email : " +
-  //           data["email"] +
-  //           "\n nickname : " +
-  //           data["nickname"]
-  //       );
-  //     }
-  //   });
-  // },
-  data() {
-    return {
-      kakaoInfo: "",
-      KAKAO_API_KEY: process.env.VUE_APP_KAKAO_API_KEY,
-      KAKAO_REDIRECT_URI: process.env.VUE_APP_KAKAO_REDIERCT_URI,
-    };
+  name: "Kakao",
+  props: {
+    modelValue: Boolean,
   },
-  methods: {
-    ...mapActions([
-      'setUser', 
-    ]),
-    kakaoLogin() {
-      axios
-        .get("/oauth/login/kakao")
-        .then((res) => {
-          console.log(res);
-          // location.href = res;
-        })
-        .catch();
-    },
-
-    kakaoLogin2() {
-      axios
-        .get("/oauth/kakao")
-        .then((res) => {
-          console.log(res);
-        })
-        .catch();
-    },
-
-    kakoLoginBtn() {
-      var self = this; //다른 method 사용하기 위해 사용
-      window.Kakao.init("08176443547157e6d25360abeded1e0b"); //처음에 카카오 로그인 세션을 없애준다.
+  emits: ['update:modelValue'],
+  setup() {
+    onMounted(()=>{
+       window.Kakao.init(kakakoKey); //처음에 카카오 로그인 세션을 없애준다.
+    })
+    const kakakoKey = process.env.VUE_APP_KAKAO_JS_KEY;
+    const kakaoInfo = "";
+    const store = useStore();
+    const kakoLoginBtn = function () {
       if (window.Kakao.Auth.getAccessToken()) {
         window.Kakao.API.request({
           url: "/v1/user/unlink",
@@ -81,20 +48,30 @@ export default {
         success: function (response) {
           window.Kakao.API.request({
             url: "/v2/user/me",
-            data: { property_keys: ["kakao_account.email"] },
+            // data: { property_keys: ["kakao_account.email"] },
             success: async function (response) {
-              await axios.post('oauth/login/kakao', response)
-              .then(res=>{
-                console.log(res)
-                console.log(res.data)
-                localStorage.setItem("token", res.data.token);
-                this.setUser({ nickname: res.data.nickname, id: res.data.userId })
-              }).catch(e=>{
-                console.log(e);
-              })
-              // console.log(response);
-              // const kakaoemail = response.kakao_account.email;
-              // console.log(response.kakao_account.email);
+              console.log(response);
+              await axios
+                .post("oauth/login/kakao", response)
+                .then((res) => {
+                  console.log(res.data);
+                  localStorage.setItem("token", res.data.token);
+                  store.dispatch("setUser", {
+                    nickname: res.data.nickname,
+                    id: res.data.userId,
+                  });
+                  ElMessage({
+                    message: "로그인 되었습니다.",
+                    type: "success",
+                  });
+                })
+                .catch((e) => {
+                  console.log(e);
+                  ElMessage({
+                    message: '오류가 발생했습니다. 다시 시도해주세요.',
+                  type: 'warning',
+                  });
+                });
             },
             fail: function (error) {
               console.log(error);
@@ -105,7 +82,9 @@ export default {
           console.log(error);
         },
       });
-    },
+    };
+
+    return { kakoLoginBtn };
   },
 };
 </script>
