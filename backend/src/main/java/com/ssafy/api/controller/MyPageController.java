@@ -58,7 +58,7 @@ public class MyPageController {
 	
 	@GetMapping("/{userId}/futureMeeting")
 	@ApiImplicitParam(name = "userId", value = "userId")
-	@ApiOperation(value = "참가할 미팅 내역 전체 조회", response = LastMeetingResClass.class)
+	@ApiOperation(value = "참가할 미팅 내역 전체 조회", response = FutureMeetingResClass.class)
 	@ApiResponses({ @ApiResponse(code = 200, message = "참가할 미팅 내역 전체 조회 성공"),
 			@ApiResponse(code = 400, message = "존재하지 않는 유저입니다."), @ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> searchFutureAll(@PathVariable("userId") int userId) {
@@ -88,6 +88,10 @@ public class MyPageController {
 			@PathVariable("meetingId") int meetingId) {
 		return ResponseEntity.status(200).body(AdvancedResponseBody.of(200, "지난 미팅 내역 상세 조회 성공",
 				myPageService.searchMeetingDetail(userId, meetingId)));
+	}
+	
+	@ApiModel
+	private class FutureMeetingResClass extends AdvancedResponseBody<List<LastMeetingRes>> {
 	}
 
 	@ApiModel
