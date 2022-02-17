@@ -130,7 +130,7 @@ export default defineComponent({
 
 		onMounted(() => {
 			document.getElementById('joinButton').onclick=function(){register(); return false;};
-			document.getElementById('debug').onclick=function(){register(); return false;};
+			// document.getElementById('debug').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
 			document.getElementById('record').onclick=function(){start(); return false;};
