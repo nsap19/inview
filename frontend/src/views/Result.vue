@@ -1,27 +1,14 @@
 <template>
   <div class="result-container">
-    <div class="d-flex flex-row justify-content-between">
-      <p class="fs-4 fw-bold">{{ props.tableDatas.title }}</p>
-      <div class="d-flex flex-column justify-content-end">
-        <p class="m-0">{{ props.tableDatas.startTime }} 시작 - {{ props.tableDatas.endTime }} 종료</p>
-      </div>
+    <div class="d-flex flex-column justify-content-between">
+      <p class="fs-5 fw-bold mb-0 mt-2">{{ props.tableDatas.title }}</p>
     </div>
-    <el-divider class="mt-1 mb-2"></el-divider>
-    <div>
-      <p class="mb-1">면접 연습 결과 다운로드</p>
-      <div>
-        <el-button plain round type="primary" class="m-1" @click="download('VIDEO')">면접 영상</el-button>
-        <el-button plain round type="primary" class="m-1" @click="download('CHAT')">채팅</el-button>
-        <el-button plain round type="primary" class="m-1" @click="download('MEMO')">메모</el-button>
-      </div>
-      <div>
-        <el-button plain round type="primary" class="m-1" @click="download('FILE')">공유 파일</el-button>
-        <el-button plain round type="primary" class="m-1" @click="download('EVALUATION')">받은 면접 평가</el-button>
-      </div>
-      <p class="text-end mb-0 mt-2">{{ expirationDate }}까지 다운로드 가능</p>
-    </div>
-    <el-divider class="mt-1 mb-2"></el-divider>
 
+    <el-divider content-position="left" class="result mb-1">상세 내역</el-divider>
+    <div class="d-flex flex-column justify-content-end align-items-end">
+      <p class="m-0" style="font-size: 14px;">시작 | {{ props.tableDatas.startTime.slice(0, 16) }}</p>
+      <p class="m-0" style="font-size: 14px;">종료 | {{ props.tableDatas.endTime.slice(0, 16) }}</p>
+    </div>
     <div class="row p-1" v-for="(data, index) in tableData" :key="index">
       <div class="col-4 col-sm-3">
         <span>{{ data.category }}</span>
@@ -35,7 +22,18 @@
         <span>{{ data.content }}</span>
       </div>
     </div>
- 
+
+    <el-divider content-position="left" class="result mb-1">결과 다운로드</el-divider>
+    <p class="text-end mb-1 mt-2" style="font-size: 14px;">유효 기간 | {{ expirationDate }}</p>
+    <div>
+      <div>
+        <el-button plain round type="primary" class="m-1" @click="download('VIDEO')">면접 영상</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('CHAT')">채팅</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('MEMO')">메모</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('FILE')">공유 파일</el-button>
+        <el-button plain round type="primary" class="m-1" @click="download('EVALUATION')">받은 면접 평가</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -119,7 +117,7 @@ export default defineComponent({
       },
       {
         category: '회사',
-        content: props.tableDatas.companyNameList,
+        content: props.tableDatas.companyNameList.length ? props.tableDatas.companyNameList : "상관 없음!",
       },
       // {
       //   category: '시작 시간',

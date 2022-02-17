@@ -133,10 +133,11 @@ export default defineComponent({
     let meetingId = store.state.meeting.id
     const startSignal = computed(() => props.startSignal)
     watch(() => store.state.meeting, (newValue, oldValue) => {
-      console.log('평가지좀올려', newValue, oldValue, props.startSignal)
       userNickname = userNickname || store.state.user.nickname
       meetingId = newValue.id || oldValue.id
-      if( !newValue.id && startSignal ) {
+      console.log("평가지 왜그러는거야", newValue.id, props.startSignal)
+      if( !newValue.id && props.startSignal ) {
+        console.log('평가지좀올려', newValue, oldValue, props.startSignal)
         createHtmlFile(meetingId)
       }
     })
@@ -172,8 +173,7 @@ export default defineComponent({
             'Content-Type': 'multipart/form-data'
           }
         }
-      )
-      .then(res => {
+      ).then(res => {
         console.log('평가지 업로드 SUCCESS!!');
         console.log(res)
       })

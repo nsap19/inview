@@ -26,19 +26,19 @@ const routes: Array<RouteRecordRaw> = [
     path: '/meeting/:meetingUrl',
     name: 'Meeting',
     component: () => import(/* webpackChunkName: "create" */ '@/views/Meeting.vue'),
-    // beforeEnter: function (to, from, next) {
-    //   try {
-    //     joinMeeting(to.params.meetingUrl);
-    //   } finally{
-    //     next();
-    //   }
-    // }
+    beforeEnter: function (to, from, next) {
+      try {
+        joinMeeting(to.params.meetingUrl);
+      } finally{
+        next();
+      }
+    }
   },
-  {
-    path: '/result/:userName/:meetingId',
-    name: 'Result',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/Result.vue')
-  },
+  // {
+  //   path: '/result/:userName/:meetingId',
+  //   name: 'Result',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/views/Result.vue')
+  // },
   // {
   //   path: "/:pathMatch(.*)*",
   //   name: '404',
@@ -49,25 +49,25 @@ const routes: Array<RouteRecordRaw> = [
     name: '404',
     component: () => import(/* webpackChunkName: "create" */ '@/views/Page404.vue')
   },
-  {
-    path: '/account',
-    name: 'Account',
-    component: () => import(/* webpackChunkName: "create" */ '@/components/NavBar/UpdateUser.vue')
-  },
-  {
-    path: '/video',
-    name: 'Video',
-    component: () => import(/* webpackChunkName: "create" */ '@/components/Meeting/Video.vue')
-  },
+  // {
+  //   path: '/account',
+  //   name: 'Account',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/components/NavBar/UpdateUser.vue')
+  // },
+  // {
+  //   path: '/video',
+  //   name: 'Video',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/components/Meeting/Video.vue')
+  // },
   // {
   //   path: "/mypage",
   //   name: 'mypage',
   //   component: () => import(/* webpackChunkName: "create" */ '@/views/Mypage.vue')
   // },
   {
-    path: "/myproject",
-    name: 'MyProjectList',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/MyProjectList.vue')
+    path: "/myaccount",
+    name: 'MyAccount',
+    component: () => import(/* webpackChunkName: "create" */ '@/views/MyAccount.vue')
   },
 ]
 
