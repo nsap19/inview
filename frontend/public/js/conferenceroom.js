@@ -57,7 +57,7 @@ function handleCameraClick(){
 }
 
 
-const serverURL = "http://i6a201.p.ssafy.io:8080/api/groupcall";
+const serverURL = "https://i6a201.p.ssafy.io/api/groupcall";
 // const serverURL = "http://localhost:8080/api/groupcall";
 let ws = new SockJS(serverURL);
 
