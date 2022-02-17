@@ -23,7 +23,12 @@
                 <li>
                   <a href="#" class="nav-link px-2 link-secondary">Overview</a>
                 </li>
-                <li><a href="#" class="nav-link px-2 link-dark">Home</a></li>
+                <li>
+                  <router-link to="/home" class="nav-link px-2 link-dark">
+                    Home
+                  </router-link>
+                  <!-- <a href="#" class="nav-link px-2 link-dark">Home</a> -->
+                </li>
               </ul>
             </div>
             <div class="col">

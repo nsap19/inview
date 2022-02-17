@@ -23,7 +23,7 @@
         <el-button type="primary" round @click="login(ruleFormRef)">로그인</el-button>
         <el-divider></el-divider>
         <div class="mt-2">
-          <Kakao />
+          <Kakao @closeDialog="openDialog=false" />
         </div>
         <!-- <el-button @click="openDialog=false">취소</el-button> -->
       </div>

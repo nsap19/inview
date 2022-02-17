@@ -2,7 +2,7 @@
   <div class="banner">
     <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center h-100" v-if="meeting">
       <div class="d-flex flex-column justify-content-center">
-        <p class="fs-3 m-0">{{ meeting.startTiem }}에 예정된</p>
+        <p class="fs-3 m-0">{{ meetingTime }}에 예정된</p>
         <p class="fs-3">면접 연습이 있습니다.</p>
         <el-button round plain size="large" style="width: 90%" @click="clickEnter">
           입장하기 <span class="px-2"></span> <i class="bi bi-chevron-right"></i>
@@ -10,7 +10,7 @@
         <CreateMeeting v-model="openCreateMeetingDialog" />
       </div>
       <div style="display: inline-block;">
-        <Vue3Lottie :animationData="LaptopJSON" :width="300" />
+        <Vue3Lottie :animationData="JoinJSON" :width="300" />
       </div>
     </div>
     <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center h-100" v-else>
@@ -33,9 +33,11 @@
 import Vue3Lottie from 'vue3-lottie'
 import LaptopJSON from '@/assets/lottie_json/togather.json'
 import SearchJSON from '@/assets/lottie_json/laptop.json'
+import JoinJSON from '@/assets/lottie_json/join-meeting.json'
 import CreateMeeting from "@/components/NavBar/CreateMeeting.vue"
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'AccountBanner',
@@ -47,6 +49,7 @@ export default {
     const openCreateMeetingDialog = ref(false)
     const meeting = computed(() => props.meeting)
     const router = useRouter()
+    const store = useStore()
     const clickEnter = function () {
       store.dispatch('setMeeting', props.meeting.id)
       router.push({ name: 'Meeting', params: { meetingUrl: props.meeting.url } })
@@ -56,8 +59,33 @@ export default {
       router.push({ name: 'Search', query: { title: '', industry: '', company: '' }})
       store.dispatch('search', { title: '', industry: '', company: '' })
     }
+
+    const makePrettyTime = function (time) {
+      let prettyTime = ''
+      const today = new Date(+new Date() + 3240 * 10000).toISOString().split("T")[0]
+      const tomorrow = new Date(+new Date() + 11880 * 10000).toISOString().replace("T", " ").replace(/\..*/, '')
+      const twoDaysAfter = new Date(+new Date() + 20520 * 10000).toISOString().replace("T", " ").replace(/\..*/, '')
+      if (time.slice(0, 10) === today) {
+        prettyTime += '오늘'
+      } else if (time.slice(0, 10) === tomorrow) {
+        prettyTime += '내일'
+      } else if (time.slice(0, 10) === twoDaysAfter) {
+        prettyTime += '모레'
+      } else {
+        if (time.slice(0, 4) !== new Date().getFullYear().toString()) {
+          prettyTime += time.slice(2, 4) + "년 "
+        }
+      }
+      prettyTime += time.slice(5, 6) === "0" ? time.slice(6, 7) + "월 " : time.slice(5, 7) + "월 "
+      prettyTime += time.slice(8, 9) === "0" ? time.slice(9, 10) + "일 " : time.slice(8, 10) + "일 "
+      prettyTime += time.slice(11, 12) === "0" ? time.slice(12, 13) + "시 " : time.slice(11, 13) + "시 "
+      prettyTime += time.slice(14, 15) === "0" ? time.slice(15, 16) + "분" : time.slice(14, 16) + "분"
+      return prettyTime
+    }
+
+    const meetingTime = props.meeting.startTime ? makePrettyTime(props.meeting.startTime) : ""
     return {
-      LaptopJSON, openCreateMeetingDialog, meeting, SearchJSON,
+      LaptopJSON, openCreateMeetingDialog, meeting, SearchJSON, meetingTime, JoinJSON, 
       clickEnter, goToSearchResult,
     }
   }

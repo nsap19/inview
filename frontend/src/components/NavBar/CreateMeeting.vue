@@ -2,7 +2,7 @@
   <el-dialog
     v-model="openDialog"
     title="방 만들기"
-    width="450px"
+    :width="windowWidth > 416 ? 416 : windowWidth"
   >
     <el-form 
       ref="ruleFormRef"
@@ -32,26 +32,26 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="시작 시간" prop="startTime">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="ruleForm.startTime"
-            type="datetime"
-            format="YYYY-MM-DD HH:mm"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            placeholder="날짜"
-          ></el-date-picker>
-        </el-col>
+        <el-date-picker
+          v-model="ruleForm.startTime"
+          type="datetime"
+          format="YYYY-MM-DD HH:mm"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          placeholder="날짜"
+        ></el-date-picker>
+        <!-- <el-col :span="11">
+        </el-col> -->
       </el-form-item>
       <el-form-item label="종료 시간" prop="endTime">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="ruleForm.endTime"
-            type="datetime"
-            format="YYYY-MM-DD HH:mm"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            placeholder="날짜"
-          ></el-date-picker>
-        </el-col>
+        <el-date-picker
+          v-model="ruleForm.endTime"
+          type="datetime"
+          format="YYYY-MM-DD HH:mm"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          placeholder="날짜"
+        ></el-date-picker>
+        <!-- <el-col :span="11">
+        </el-col> -->
       </el-form-item>
       <el-form-item label="비밀번호">
         <el-input 
@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed } from 'vue'
+import { defineComponent, reactive, ref, computed, onMounted, onUnmounted } from 'vue'
 import CompanySearchBar from '@/components/SearchFilterBar/CompanySearchBar.vue'
 import IndustrySearchBar from '@/components/SearchFilterBar/IndustrySearchBar.vue'
 import type { ElForm } from 'element-plus'
@@ -233,8 +233,18 @@ export default defineComponent({
         }
       })
     }
-
-    return {companyName, ruleFormRef, ruleForm, rules, submitForm, validateStartTime, openDialog }
+    const windowWidth = ref(450)
+		onMounted(() => {
+			window.addEventListener('resize', function () {
+				windowWidth.value = window.innerWidth
+			})
+		})
+    onUnmounted(() => {
+      window.removeEventListener('resize', function () {
+				windowWidth.value = window.innerWidth
+			})
+    })
+    return {companyName, ruleFormRef, ruleForm, rules, submitForm, validateStartTime, openDialog, windowWidth }
   }
 })
 </script>
