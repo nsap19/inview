@@ -27,7 +27,7 @@ public class KakaoProfile {
 	@Setter
 	@ToString
 //	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-	public class KakaoAccount {
+	public static class KakaoAccount {
 		@JsonProperty("profile_nickname_needs_agreement")
 		public Boolean profileNicknameNeedsAgreement;
 		@JsonProperty("profile")
@@ -49,7 +49,7 @@ public class KakaoProfile {
 	@Setter
 	@ToString
 //	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-	public class Profile {
+	public static class Profile {
 		@JsonProperty("nickname")
 		public String nickname;
 	}
@@ -58,7 +58,7 @@ public class KakaoProfile {
 	@Setter
 	@ToString
 //	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-	public class Properties {
+	public static class Properties {
 		@JsonProperty("nickname")
 		public String nickname;
 	}

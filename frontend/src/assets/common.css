@@ -202,3 +202,7 @@ video {
   background: linear-gradient(45deg, rgba(78, 115, 81, 0.5) 50%, rgba(78, 115, 81, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);
   right: 0;
 }
+
+.el-date-editor {
+  --el-date-editor-width: 100%;
+}
