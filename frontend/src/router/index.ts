@@ -2,6 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Landing from '../views/Landing.vue'
 import Home from '../views/Home.vue'
 import axios from "axios";
+import store from '@/store';
+import { ElMessage } from 'element-plus'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -67,7 +69,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/myaccount",
     name: 'MyAccount',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/MyAccount.vue')
+    component: () => import(/* webpackChunkName: "create" */ '@/views/MyAccount.vue'),
+    beforeEnter: function (to, from, next) {
+      if (Object.keys(store.state.user).length === 0) {
+        next({ name: 'Home' }) 
+        ElMessage({
+          message: '로그인이 필요합니다.',
+          type: 'warning',
+        })
+      }
+      else next()
+    }
   },
 ]
 

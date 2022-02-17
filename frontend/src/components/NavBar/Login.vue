@@ -30,7 +30,7 @@
       <div class="d-flex flex-row justify-content-center">
         <el-button type="text" @click="$emit('signup')">회원가입</el-button>
       </div>
-       <div class="d-flex flex-row justify-content-center" style="margin-top: 4px; cursor:pointer; font-size: 12px; color: blue;"  @click="$emit('password')">
+       <div class="d-flex flex-row justify-content-center" style="margin-top: 4px; cursor:pointer; font-size: 12px; color: #698767;"  @click="$emit('password')">
         <div>비밀번호를 잊어버리셨나요?</div>
       </div>
 
@@ -110,7 +110,7 @@ export default defineComponent({
 
             emit("update:modelValue", false)
             localStorage.setItem("token", res.data.token);
-            store.dispatch('setUser', { nickname: res.data.nickname, id: res.data.userId });
+            store.dispatch('setUser', { nickname: res.data.nickname, id: res.data.userId, oauth: false });
             ElMessage({
               message: '로그인 되었습니다.',
               type: 'success',

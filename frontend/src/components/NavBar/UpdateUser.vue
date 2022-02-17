@@ -53,7 +53,7 @@
           <div class="mb-1" v-if="updateWhat === 'password' || updateWhat==='delete'">
             <el-button plain round type="primary" @click="updateWhat='nickname'">닉네임 수정</el-button>
           </div>
-          <div class="" v-if="updateWhat === 'nickname' || updateWhat==='delete'">
+          <div class="" v-if="(updateWhat === 'nickname' || updateWhat==='delete') && !this.$store.state.user.oauth">
             <el-button plain round type="primary" @click="updateWhat='password'">비밀번호 수정</el-button>
           </div>
           <div class="row">

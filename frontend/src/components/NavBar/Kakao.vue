@@ -58,6 +58,7 @@ export default {
                   store.dispatch("setUser", {
                     nickname: res.data.nickname,
                     id: res.data.userId,
+                    oauth: true
                   });
                   ElMessage({
                     message: "로그인 되었습니다.",
