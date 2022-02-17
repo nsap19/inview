@@ -21,6 +21,7 @@ import com.ssafy.db.entity.QParticipant;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.entity.meeting.QMeeting;
+import com.ssafy.db.entity.meeting.Status;
 
 @Repository
 public class LastMeetingRepositorySupport {
@@ -34,6 +35,17 @@ public class LastMeetingRepositorySupport {
 	QIndustry qIndustry = QIndustry.industry;
 	QMeetingCompany qMeetingCompany = QMeetingCompany.meetingCompany;
 	QCompany qCompany = QCompany.company;
+	
+	public List<Meeting> findFutureMeetingById(int userId) {
+		List<Meeting> meetingList = jpaQueryFactory.select(qMeeting).from(qMeeting).leftJoin(qMeetingCompany)
+				.on(qMeeting.eq(qMeetingCompany.meeting)).fetchJoin().leftJoin(qParticipant)
+				.on(qParticipant.meeting.eq(qMeeting)).fetchJoin().leftJoin(qUser).on(qUser.eq(qParticipant.user))
+				.fetchJoin().leftJoin(qCompany).on(qCompany.eq(qMeetingCompany.company)).fetchJoin().leftJoin(qIndustry)
+				.on(qIndustry.eq(qMeeting.industry)).fetchJoin().groupBy(qMeeting).where(qUser.userId.eq(userId), qMeeting.status.eq(Status.WAITING))
+				.orderBy(qMeeting.startTime.asc()).fetch();
+		
+		return meetingList;
+	}
 
 	public Page<LastMeetingRes> findMeetingById(int userId, Pageable pageable) {
 
@@ -41,8 +53,8 @@ public class LastMeetingRepositorySupport {
 				.on(qMeeting.eq(qMeetingCompany.meeting)).fetchJoin().leftJoin(qParticipant)
 				.on(qParticipant.meeting.eq(qMeeting)).fetchJoin().leftJoin(qUser).on(qUser.eq(qParticipant.user))
 				.fetchJoin().leftJoin(qCompany).on(qCompany.eq(qMeetingCompany.company)).fetchJoin().leftJoin(qIndustry)
-				.on(qIndustry.eq(qMeeting.industry)).fetchJoin().groupBy(qMeeting).where(qUser.userId.eq(userId))
-				.offset(pageable.getOffset()).limit(pageable.getPageSize()).orderBy(qMeeting.meetingId.desc()).fetch();
+				.on(qIndustry.eq(qMeeting.industry)).fetchJoin().groupBy(qMeeting).where(qUser.userId.eq(userId), qMeeting.status.eq(Status.CLOSING))
+				.offset(pageable.getOffset()).limit(pageable.getPageSize()).orderBy(qMeeting.endTime.desc()).fetch();
 
 		List<LastMeetingRes> ret = meetingList.stream().map(m -> LastMeetingRes.builder().id(m.getMeetingId())
 				.title(m.getTitle()).startTime(m.getStartTime()).endTime(m.getEndTime())

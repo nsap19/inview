@@ -125,7 +125,7 @@ public class ArchiveUtil {
 			arhciveService.createArchive(archiveRegisterPostReq);
 			break;
 		case EVALUATION:
-			arhciveService.createAllArchive(archiveRegisterPostReq);
+			arhciveService.createAllEvaluation(archiveRegisterPostReq);
 			break;
 		case FILE:
 			arhciveService.createAllArchive(archiveRegisterPostReq);

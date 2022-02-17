@@ -10,9 +10,11 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.meeting.Meeting;
 
 public interface ArchiveService {
+	String createArchive(ArchiveRegisterPostReq archiveRegisterPostReq);
+	
 	String createAllArchive(ArchiveRegisterPostReq archiveRegisterPostReq);
 
-	String createArchive(ArchiveRegisterPostReq archiveRegisterPostReq);
+	String createAllEvaluation(ArchiveRegisterPostReq archiveRegisterPostReq);
 
 	List<Archive> getArchives();
 
