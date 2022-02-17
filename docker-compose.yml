@@ -18,11 +18,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /home/jenkins/workspace/INVIEW/frontend/default.conf:/etc/nginx/conf.d/default.conf
-      - /home/jenkins/workspace/INVIEW/frontend/dist:/usr/share/nginx/html
+      - ./frontend/default.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/dist:/usr/share/nginx/html
       - /etc/letsencrypt:/etc/letsencrypt # 추가
       - /etc/ssl/certs:/etc/ssl/certs
-    restart: "always"
+    restart: always
     depends_on:
       - spring-boot
 
@@ -51,14 +51,14 @@ services:
     image: kurento/kurento-media-server:latest
     restart: always
     ports:
-#        - "8888:8888"
-       - "8888:8888/tcp"
-       - "5000-5050:5000-5050/udp"
+       - "8888:8888"
+      #  - "8888:8888/tcp"
+      #  - "5000-5050:5000-5050/udp"
     environment: 
         TZ: "Asia/Seoul"
-        KMS_STUN_IP: "172-26-1-220"
+        KMS_STUN_IP: "172.26.1.220"
         KMS_STUN_PORT: "3478"
-        KMS_TURN_URL: "myuser:mypassword@172-26-1-220:3478?transport=udp"
+        KMS_TURN_URL: "myuser:mypassword@172.26.1.220:3478?transport=udp"
     networks: 
       - backend
     working_dir: /tmp # RUN, CMD, ADD, COPY등이 이루어질 기본 디렉토리를 설정합니다.

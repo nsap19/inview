@@ -41,8 +41,10 @@ function handleMuteClick(){
 }
 function handleCameraClick(){
 	var participant = participants[userId];
+	console.log(userId)
 	console.log(participant.rtcPeer)
 	const myStream = participant.getVideoElement().captureStream();
+	console.log(myStream)
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
 		document.getElementById("cameraOn").style.display = 'block'
@@ -69,6 +71,7 @@ async function getMedia(video) {
 	console.log(myStream)
 	console.log(video)
 	video.srcObject = myStream;
+	console.log(video.srcObject)
 }
 
 
@@ -199,9 +202,8 @@ function onExistingParticipants(msg) {
 	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
-	console.log(video)
-	getMedia(video)
 
+	console.log("VIDEO: "+video.srcObject)
 	var options = {
 	      localVideo: video,
 	      mediaConstraints: constraints,
