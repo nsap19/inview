@@ -17,9 +17,9 @@
           :headers="headers"
           :on-success="onSuccess"
           drag
+          :auto-upload="false"
           class="d-flex flex-column justify-content-center mt-2 align-items-center w-100"
         >
-          <!-- :auto-upload="false" -->
           <!-- <template #trigger>
             <el-button type="primary">select file</el-button>
           </template> -->
