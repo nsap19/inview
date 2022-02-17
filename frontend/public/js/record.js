@@ -62,15 +62,14 @@ function setState(nextState) {
 function start() {
     var participant = participants[this.userId];
 
-	videoInput = participant.getVideoElement();
-	videoOutput = participant.getVideoElement();
+	videoInput = participant.getVideoElement().captureStream();
 	console.log('Starting video call ...');
 
 	console.log('Creating WebRtcPeer and generating local sdp offer ...');
 
 	var options = {
 			localVideo : videoInput,
-			remoteVideo : videoOutput,
+			remoteVideo : videoInput,
 			mediaConstraints : getConstraints(),
 			onicecandidate : onIceCandidate
 	}
@@ -79,10 +78,10 @@ function start() {
 			function(error) {
 		if (error)
 			return console.error(error);
-		webRtcPeer.generateOffer(onOffer);
+		participant.rtcPeer.generateOffer(onOffer);
 	});
 
-	console.log(webRtcPeer)
+	console.log(participant.rtcPeer)
 
 }
 
@@ -108,6 +107,7 @@ function onIceCandidate(candidate) {
 	var message = {
 			id : 'onIceCandidate',
 			candidate : candidate,
+			userId: userId
 	};
 	sendMessage(message);
 }
@@ -173,17 +173,17 @@ function onPlayOffer(error, offerSdp) {
 }
 
 function getConstraints() {
-	var mode = $('input[name="mode"]:checked').val();
+	// var mode = $('input[name="mode"]:checked').val();
 	var constraints = {
 			audio : true,
 			video : true
 	}
 
-	if (mode == 'video-only') {
-		constraints.audio = false;
-	} else if (mode == 'audio-only') {
-		constraints.video = false;
-	}
+	// if (mode == 'video-only') {
+	// 	constraints.audio = false;
+	// } else if (mode == 'audio-only') {
+	// 	constraints.video = false;
+	// }
 	
 	return constraints;
 }
@@ -202,11 +202,11 @@ function playEnd() {
 	// hideSpinner(videoInput, videoOutput);
 }
 
-// function sendMessage(message) {
-// 	var jsonMessage = JSON.stringify(message);
-// 	console.log('Sending message: ' + jsonMessage);
-// 	ws.send(jsonMessage);
-// }
+function sendMessage(message) {
+	var jsonMessage = JSON.stringify(message);
+	console.log('Sending message: ' + jsonMessage);
+	ws.send(jsonMessage);
+}
 
 // /**
 //  * Lightbox utility (to display media pipeline image in a modal dialog)

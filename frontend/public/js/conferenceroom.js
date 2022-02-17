@@ -167,7 +167,7 @@ function callResponse(message) {
 
 function onExistingParticipants(msg) {
 	var constraints = {
-		audio : false,
+		audio : true,
 		video : {
 			mandatory : {
 				maxWidth : 320,
@@ -214,17 +214,16 @@ function onExistingParticipants(msg) {
 	}
 }
 
-async function getMedia(userId) {
-	try {
-	  myStream = await navigator.mediaDevices.getUserMedia({
-		audio: true,
-		video: true,
-	  });
-	  video.srcObject = myStream;
-	} catch (e) {
-	  console.log(e);
-	}
-  }
+async function getMedia() {
+    try {
+      myStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    }
 
 function leaveRoom() {
 	sendMessage({
