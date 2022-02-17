@@ -36,13 +36,21 @@ export default defineComponent({
     const goToSearchResult = () => {
       // 검색어에 글자가 있는 경우 검색 결과 페이지로 이동
       if (searchQuery.value.trim()) {
+        let query = {}
+        if (selectedCategory.value === 'title') {
+          query = { title: searchQuery.value, page: 1 }
+        } else if (selectedCategory.value === 'industry') {
+          query = { industryList: searchQuery.value, page: 1 }
+        } else if (selectedCategory.value === 'company') {
+          query = { companyList: searchQuery.value, page: 1 }
+        }
         const wholeQuery = {
           title: selectedCategory.value === 'title' ? searchQuery.value : '',
           industry: selectedCategory.value === 'industry' ? searchQuery.value : '',
           company: selectedCategory.value === 'company' ? searchQuery.value : ''
         }
         router.push({ name: 'Search', query: wholeQuery})
-        store.dispatch('search', wholeQuery)
+        store.dispatch('search', query)
       }
     }
 
