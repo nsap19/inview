@@ -119,7 +119,7 @@ export default defineComponent({
         }
       )
         .then(() => {
-          router.push({ name: 'Home'})
+          // router.push({ name: 'Home'})
           leaveMeeting()
           // store.dispatch('deleteMeeting')
           emit('leave')

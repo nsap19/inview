@@ -11,7 +11,7 @@
     <p class="fs-4">최근 만들어진 방</p>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div 
-        v-for="meeting in meetings.slice(0, 10)" 
+        v-for="meeting in meetings.slice(0, 6)" 
         :key="meeting.id" 
         class="col"
       > 

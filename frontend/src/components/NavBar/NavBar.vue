@@ -72,9 +72,9 @@
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <router-link to="/myproject" class="text-decoration-none"
+                  <router-link to="/myaccount" class="text-decoration-none"
                     ><el-dropdown-item
-                      >회의 목록 조회</el-dropdown-item
+                      >기록 조회</el-dropdown-item
                     ></router-link
                   >
                   <el-dropdown-item @click="UpdateUserModal"

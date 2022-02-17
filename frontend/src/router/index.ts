@@ -26,13 +26,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/meeting/:meetingUrl',
     name: 'Meeting',
     component: () => import(/* webpackChunkName: "create" */ '@/views/Meeting.vue'),
-    // beforeEnter: function (to, from, next) {
-    //   try {
-    //     joinMeeting(to.params.meetingUrl);
-    //   } finally{
-    //     next();
-    //   }
-    // }
+    beforeEnter: function (to, from, next) {
+      try {
+        joinMeeting(to.params.meetingUrl);
+      } finally{
+        next();
+      }
+    }
   },
   {
     path: '/result/:userName/:meetingId',
@@ -65,9 +65,9 @@ const routes: Array<RouteRecordRaw> = [
   //   component: () => import(/* webpackChunkName: "create" */ '@/views/Mypage.vue')
   // },
   {
-    path: "/myproject",
-    name: 'MyProjectList',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/MyProjectList.vue')
+    path: "/myaccount",
+    name: 'MyAccount',
+    component: () => import(/* webpackChunkName: "create" */ '@/views/MyAccount.vue')
   },
 ]
 

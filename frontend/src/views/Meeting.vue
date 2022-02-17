@@ -59,6 +59,7 @@
 					:leaveSignal="leaveSignal"
 					@start="startSignal=true" 
 					@close="closeSignal=true"
+					@leave="leaveSignal=true"
 					v-show="asideCategory === 'chat'" 
 				/>
 				<Memo :endSignal="endSignal" v-show="asideCategory === 'memo'" />
@@ -295,7 +296,7 @@ export default defineComponent({
 		const closeSignal = ref(false)  // 미팅 CLOSE
 		watch(startSignal, (oldVal) => {
 			register()
-			axios.post(`meeting/${meetingId.value}/start`, null ,
+			axios.post(`meeting/${store.state.meeting.id}/start`, {} ,
 				{ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
 			).then(res => {
 				console.log(res)
@@ -305,6 +306,7 @@ export default defineComponent({
 
 		})
 		watch(leaveSignal, (oldVal) => {
+			console.log('leave신호받고 비디오 나가야')
 			if (startSignal) {
 				leaveRoom()
 			}
