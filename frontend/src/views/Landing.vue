@@ -18,7 +18,10 @@
                   <div class="slide-small-text">
                     <p>Inview를 통해 서로를 만나보세요.</p>
                     <br />
-                    <a href="#" class="button1">Try it free</a>
+                    <router-link to="/home" class="button1">
+                      Try it free
+                    </router-link>
+                    <!-- <a href="#" class="button1">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -73,7 +76,10 @@
                     <p>같은 목표를 가진 사람들끼리</p>
                     <p>효율적으로 면접 스터디가 가능합니다.</p>
                     <br />
-                    <a href="#" class="button2">Try it free</a>
+                    <router-link to="/home" class="button2">
+                      Try it free
+                    </router-link>
+                    <!-- <a href="#" class="button2">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -129,7 +135,10 @@
                     <p>그룹 채팅, 파일 공유, 개인 메모장 기능을 제공합니다.</p>
                     <p>면접 종료 후 파일로 다운받을 수 있습니다.</p>
                     <br />
-                    <a href="#" class="button1">Try it free</a>
+                    <router-link to="/home" class="button1">
+                      Try it free
+                    </router-link>
+                    <!-- <a href="#" class="button1">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -185,7 +194,10 @@
                       * 평가시트는 면접 종료 후 html 파일로 제공됩니다.
                     </p>
                     <br />
-                    <a href="#" class="button4">Try it free</a>
+                    <router-link to="/home" class="button4">
+                      Try it free
+                    </router-link>
+                    <!-- <a href="#" class="button4">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -249,7 +261,10 @@
               <div class="slide-small-text">
                 <p>Inview가 당신을 응원합니다.</p>
                 <br>
-                <a href="#" class="button4">Try it free</a>
+                <router-link to="/home" class="button4">
+                  Try it free
+                </router-link>
+                <!-- <a href="#" class="button4">Try it free</a> -->
                 <br>
                 <br>
                 <br>

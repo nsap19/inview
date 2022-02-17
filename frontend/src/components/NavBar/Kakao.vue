@@ -21,8 +21,7 @@ export default {
   props: {
     modelValue: Boolean,
   },
-  emits: ['update:modelValue'],
-  setup() {
+  setup(props, { emit }) {
     onMounted(()=>{
        window.Kakao.init(kakakoKey); //처음에 카카오 로그인 세션을 없애준다.
     })
@@ -64,6 +63,7 @@ export default {
                     message: "로그인 되었습니다.",
                     type: "success",
                   });
+                  emit('closeDialog')
                 })
                 .catch((e) => {
                   console.log(e);
@@ -71,6 +71,7 @@ export default {
                     message: '오류가 발생했습니다. 다시 시도해주세요.',
                   type: 'warning',
                   });
+                  // emit('closeDialog')
                 });
             },
             fail: function (error) {

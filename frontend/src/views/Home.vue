@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import SearchBar from '@/components/SearchBar.vue';
 import MeetingCard from '@/components/MeetingCard.vue'
 import { useStore } from 'vuex'
@@ -36,7 +36,9 @@ export default defineComponent({
     const store = useStore()
     store.dispatch('search', {title: '', industry: '', company: ''})
     const meetings = computed(() => store.state.searchResult)
-
+    onMounted(() => {
+      window.scrollTo(0, 0)
+    })
     return { meetings }
   }
 });
