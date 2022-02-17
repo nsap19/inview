@@ -76,6 +76,8 @@ import type { ElForm } from 'element-plus'
 import axios from 'axios'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import dayjs from 'dayjs'
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 export default defineComponent({
   name: 'CreateMeeting',
@@ -104,14 +106,9 @@ export default defineComponent({
 
     // eslint-disable-next-line
     const validateStartTime = (rule: any, value: any, callback: any) => {
-      const datetime_object = new Date()
-      const current_datetime = datetime_object.getFullYear() + "-"
-                              + ("0" + (1 + datetime_object.getMonth())).slice(-2) + "-" 
-                              + ("0" + datetime_object.getDate()).slice(-2) + " " 
-                              + datetime_object.getHours() + ":" + datetime_object.getMinutes()
       if (ruleForm.startTime === '') {
         callback()
-      } else if (ruleForm.startTime < current_datetime) {
+      } else if (dayjs().isAfter(ruleForm.startTime, "minute")) {
         callback(new Error('시작 시간은 현재 시간 이후로 설정해주세요'))
       } else {
         callback()
@@ -120,16 +117,11 @@ export default defineComponent({
 
     // eslint-disable-next-line
     const validateEndTime = (rule: any, value: any, callback: any) => {
-      const datetime_object = new Date()
-      const current_datetime = datetime_object.getFullYear() + "-"
-                              + ("0" + (1 + datetime_object.getMonth())).slice(-2) + "-" 
-                              + ("0" + datetime_object.getDate()).slice(-2) + " " 
-                              + datetime_object.getHours() + ":" + datetime_object.getUTCMinutes()
       if (ruleForm.endTime === '') {
         callback()
-      } else if (ruleForm.startTime && ruleForm.endTime.slice(0, 16) <= ruleForm.startTime.slice(0, 16)) {
+      } else if (ruleForm.startTime && dayjs(ruleForm.endTime).isBefore(ruleForm.startTime)) {
         callback(new Error('종료 시간은 시작 시간 이후로 설정해주세요'))
-      } else if (ruleForm.endTime < current_datetime) {
+      } else if (dayjs().isAfter(ruleForm.endTime, "minute")) {
         callback(new Error('종료 시간은 현재 시간 이후로 설정해주세요'))
       } else {
         callback()

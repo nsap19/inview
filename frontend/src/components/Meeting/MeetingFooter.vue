@@ -11,10 +11,10 @@
         <i class="bi bi-camera-video-off" id ="cameraOff" style="display: none"></i>
       </el-button>
       <el-button type="primary" id ="record" size="large" circle v-show="!record" @click="record=true">
-        녹
+        <i class="bi bi-record-fill"></i>
       </el-button>
-      <el-button type="primary" id ="stopRecording" size="large" circle v-show="record" @click="record=false">
-        화
+      <el-button type="primary" id ="stopRecording" size="large" circle v-show="record" @click="record=false" style="background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);">
+        <i class="bi bi-record-fill blink"></i>
       </el-button>
       <el-button type="primary" id ="debug" size="large" circle >
         비디오
@@ -100,5 +100,16 @@ export default defineComponent({
 </script>
 
 <style>
-
+.blink {
+  animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+  /* background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(255, 120, 120, 1) 0%), url(https://grainy-gradients.vercel.app/noise.svg);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent; */
+  color: #FF7878;
+}
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 </style>

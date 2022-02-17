@@ -85,8 +85,11 @@ export default defineComponent({
         }
       )
         .then(() => {
-          console.log(closeSignal.value)
-          if (closeSignal.value) {
+          console.log(startSignal.value)
+          // if (closeSignal.value) {
+          //   closeMeeting()
+          // }
+          if (startSignal.value && store.state.participants.length === 1) {
             console.log("마지막 남은 사람도 나왔습니다")
             closeMeeting()
           }

@@ -218,11 +218,9 @@ export default {
               this.$store.dispatch('setParticipants', participants)
 
               // RUNNING 상태에서 참가자가 1명 남은 경우 이 참가자가 나갈 때 미팅 STATUS 변경
-              if (command === "PARTICIPANT") {
-                if (this.startSignal && participants.length === 1) {
-                  console.log("마지막 한명")
-                  this.$emit('close')
-                }
+              if (this.startSignal && participants.length === 1) {
+                console.log("마지막 한명")
+                this.$emit('close')
               }
               if (command === "OUT") {
                 console.log(this.user.id, parseInt(JSON.parse(res.body).sender))
@@ -239,7 +237,7 @@ export default {
             } else if (command === "HOST") {
               console.log('HOST!!!')
               this.$store.dispatch('setNewHost', parseInt(JSON.parse(res.body).sender))
-            } else if (command === null || command === "DISCONNECT") {
+            } else if (command === null) {
               this.recvList.push(JSON.parse(res.body))
             }
             
