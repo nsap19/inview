@@ -117,7 +117,6 @@ export default defineComponent({
 				})
 			} catch(e){
 				console.log(e);
-				getMedia();
 			}
 		}
 		getMedia();

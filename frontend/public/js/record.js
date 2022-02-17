@@ -202,11 +202,11 @@ function playEnd() {
 	// hideSpinner(videoInput, videoOutput);
 }
 
-function sendMessage(message) {
-	var jsonMessage = JSON.stringify(message);
-	console.log('Sending message: ' + jsonMessage);
-	ws.send(jsonMessage);
-}
+// function sendMessage(message) {
+// 	var jsonMessage = JSON.stringify(message);
+// 	console.log('Sending message: ' + jsonMessage);
+// 	ws.send(jsonMessage);
+// }
 
 // /**
 //  * Lightbox utility (to display media pipeline image in a modal dialog)

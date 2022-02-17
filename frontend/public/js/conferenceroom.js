@@ -41,7 +41,9 @@ function handleMuteClick(){
 }
 function handleCameraClick(){
 	var participant = participants[userId];
-	const myStream = participant.getVideoElement().captureStream();
+	console.log(participant.rtcPeer)
+	const myStream = participant.getVideoElement().srcObject;
+	console.log(myStream)
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
 		document.getElementById("cameraOn").style.display = 'block'
@@ -52,9 +54,23 @@ function handleCameraClick(){
 		document.getElementById("cameraOn").style.display = 'none'
 		document.getElementById("cameraOff").style.display = 'block'
 		cameraOff = true;
-		participant.rtcPeer.videoEnabled = false;
+		participant.rtcPeer.videoEnabled = false;		
 	}
 }
+
+async function getMedia(video) {
+	console.log(video)
+    try {
+      myStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+	console.log(myStream)
+	video.srcObject = myStream
+    }
 
 
 const serverURL = "https://i6a201.p.ssafy.io/api/groupcall";
@@ -213,17 +229,6 @@ function onExistingParticipants(msg) {
 		receiveVideo(userId, userNickname)
 	}
 }
-
-async function getMedia() {
-    try {
-      myStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    }
 
 function leaveRoom() {
 	sendMessage({
