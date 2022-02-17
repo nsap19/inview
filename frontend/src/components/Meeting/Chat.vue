@@ -64,6 +64,7 @@
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import { mapState } from 'vuex'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'Chat',
@@ -202,7 +203,7 @@ export default {
             console.log('구독으로 받은 메시지 입니다.', res.body)
             console.log(JSON.parse(res.body))
             const command = JSON.parse(res.body).command
-            if (command === "UNREADY" || command === "READY" || command === "PARTICIPANT") {
+            if (command === "UNREADY" || command === "READY" || command === "PARTICIPANT" || command === "OUT") {
               const commandMessage = JSON.parse(res.body).message.trim().split("  ")
               let participants = []
               commandMessage.forEach(element => {
@@ -223,12 +224,22 @@ export default {
                   this.$emit('close')
                 }
               }
+              if (command === "OUT") {
+                console.log(this.user.id, parseInt(JSON.parse(res.body).sender))
+                if (this.user.id === parseInt(JSON.parse(res.body).sender)) {
+                  console.log("강퇴당함")
+                  this.$emit('leave')
+                  this.disconnect()
+                  this.$router.push({ name: 'Home'})
+                  ElMessage.error('강퇴 당하셨습니다.')
+                }
+              }
             } else if (command === "START") {
               this.$emit('start')
             } else if (command === "HOST") {
               console.log('HOST!!!')
               this.$store.dispatch('setNewHost', parseInt(JSON.parse(res.body).sender))
-            } else if (command === null) {
+            } else if (command === null || command === "DISCONNECT") {
               this.recvList.push(JSON.parse(res.body))
             }
             

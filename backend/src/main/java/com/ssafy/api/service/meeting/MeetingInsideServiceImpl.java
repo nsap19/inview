@@ -62,7 +62,6 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 	@Transactional
 	@Override
 	public void closeMeeting(int meetingId, int hostId) {
-
 		// 미팅 종료 시간 삽입 및 상태 변경
 		Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new NotExistsMeetingException());
 
@@ -109,7 +108,7 @@ public class MeetingInsideServiceImpl implements MeetingInsideService {
 		Participant participant = this.checkParticipant(meetingId, userId);
 		participant.setForcedExit(1);
 		participantRepository.updateForcedExit(meetingId, userId);
-
+		
 		String strMeetingId = String.valueOf(meetingId);
 		String strUserId = String.valueOf(userId);
 		List<ChattingParticipant> deleteParticipant = meetingParticipant

@@ -35,7 +35,7 @@ export default defineComponent({
 
     const closeMeeting = function () {
       console.log("여기 들어오나요??")
-      axios.post(`meeting/${meetingId.value}/close`,  null ,
+      axios.post(`meeting/${meetingId.value}/close`,  {} ,
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         console.log(res)
@@ -85,7 +85,8 @@ export default defineComponent({
         }
       )
         .then(() => {
-          if (closeSignal) {
+          console.log(closeSignal.value)
+          if (closeSignal.value) {
             console.log("마지막 남은 사람도 나왔습니다")
             closeMeeting()
           }
