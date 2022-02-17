@@ -103,8 +103,6 @@ export default defineComponent({
             email: email,
             password: password
           }).then(res => {
-            console.log(res)
-            
             ruleForm.email = ''
             ruleForm.password = ''
 
@@ -116,11 +114,9 @@ export default defineComponent({
               type: 'success',
             })
           }).catch(err => {
-            console.log(err.response)
             errorMessage.value = "이메일과 비밀번호를 확인해주세요"
           })
         } else {
-          // console.log('error submit!')
           return false
         }
       })

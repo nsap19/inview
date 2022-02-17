@@ -81,7 +81,7 @@ export default {
     })
     const change = function () {
       const participantDiv = document.getElementsByClassName('participant')
-      console.log(participantDiv)
+      // console.log(participantDiv)
       let i = 0
       for(i = 0; i < participantDiv.length; i++) {
         participantDiv[i].style.backgroundColor = 'blue';

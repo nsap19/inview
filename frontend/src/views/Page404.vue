@@ -42,7 +42,6 @@ export default {
     const handleResize = function (event) {
       width.value = window.innerWidth / 4;
       height.value = window.innerHeight / 4;
-      console.log(width.value);
     };
     return { NoResultsJSON, handleResize, width, height };
   },

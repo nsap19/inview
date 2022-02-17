@@ -36,7 +36,6 @@ export default createStore({
     },
     SET_PARTICIPANTS(state, data) {
       state.participants = data
-      console.log(data)
     },
     SET_NEW_HOST(state, data) {
       state.meeting.hostId = data
@@ -66,8 +65,6 @@ export default createStore({
             commit('SAVE_SEARCH_RESULT', res.data.data.content)
           }
         }).catch(err => {
-          console.log(err)
-          console.log(err.response)
         })
     },
     setMeeting ( { commit }, meetingId ) {

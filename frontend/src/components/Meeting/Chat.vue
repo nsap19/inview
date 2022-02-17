@@ -83,22 +83,18 @@ export default {
     }
   },
   watch: {
-    endSignal: function() {
-      console.log("채팅에서 종료신호 받음")
-      // this.disconnect()
-    },
+    // endSignal: function() {
+    //   console.log("채팅에서 종료신호 받음")
+    //   this.disconnect()
+    // },
     readySignal: function(newValue, oldValue) {
-      console.log("ㄹㄷㄹㄷ", newValue, oldValue)
       this.ready(newValue)
     },
     startSignal: function(newValue, oldValue) {
-      console.log("start!!!!!! in chat.vue", newValue, oldValue)
       this.start()
     },
     leaveSignal: function(newValue, oldValue) {
-      console.log("나감", newValue, oldValue)
       if (this.socketConnected) {
-        console.log("소켓좀끝")
         this.disconnect()
       }
     },
@@ -106,21 +102,17 @@ export default {
       this.scrollToEnd()
     },
     meeting: function(newValue, oldValue) {
-      console.log("연결안할꺼냐", newValue, oldValue)
       if (newValue.id) {
         this.connect()
       }
     },
     $route: function(to, form) {
-      console.log(to, form)
       if (to.name !== "Meeting") {
         this.disconnect()
       }
     },
   },
   mounted() {
-    console.log("소켓아", this.$store.state.meeting)
-    console.log("소켓아", this.$store.state.meeting.id)
     if (this.$store.state.meeting.id !== undefined) {
       this.connect()
     }
@@ -144,7 +136,7 @@ export default {
     },    
     send() {
       let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`};
-      console.log("Send message:" + this.message)
+      // console.log("Send message:" + this.message)
       if (this.stompClient && this.stompClient.connected) {
         const current_datetime = new Date()
         
@@ -160,7 +152,7 @@ export default {
           time: ("0" + current_datetime.getHours()).slice(-2) + ":" + ("0" + current_datetime.getMinutes()).slice(-2)
         };
 
-        console.log(msg)
+        // console.log(msg)
         // send(path, message, header)로 메시지를 보낼 수 있다.
         this.stompClient.send("/publish/chat/message", JSON.stringify(msg), headers);
       }
@@ -171,14 +163,14 @@ export default {
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()}
       this.stompClient = Stomp.over(socket, options);
       let headers = {Authorization: `Bearer ${localStorage.getItem("token")}`, meetingId : this.meeting.id};
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      // console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       this.stompClient.connect(
         headers,
         frame => {
           // 소켓 연결 성공
           this.connected = true;
           this.socketConnected = true
-          console.log('소켓 연결 성공', frame);
+          // console.log('소켓 연결 성공', frame);
 
           const current_datetime = new Date()
           const message = { 
@@ -191,7 +183,7 @@ export default {
                   + " " + ['일','월','화','수','목','금','토','일'][current_datetime.getDay()]+"요일",
             time: ("0" + current_datetime.getHours()).slice(-2) + ":" + ("0" + current_datetime.getMinutes()).slice(-2)
           };
-          console.log('데이터', message);
+          // console.log('데이터', message);
           // send(path, message, header)로 메시지를 보낼 수 있습니다.
           this.stompClient.send('/publish/chat/join', JSON.stringify(message), headers); 
 
@@ -200,8 +192,8 @@ export default {
           // subscribe(path, callback)로 메시지를 받을 수 있습니다. 
           // callback 첫번째 파라미터의 body로 메시지의 내용이 들어옵니다.
           this.subscribeId = this.stompClient.subscribe('/subscribe/chat/room/' + this.meeting.id, res => {
-            console.log('구독으로 받은 메시지 입니다.', res.body)
-            console.log(JSON.parse(res.body))
+            // console.log('구독으로 받은 메시지 입니다.', res.body)
+            // console.log(JSON.parse(res.body))
             const command = JSON.parse(res.body).command
             if (command === "UNREADY" || command === "READY" || command === "PARTICIPANT" || command === "OUT") {
               const commandMessage = JSON.parse(res.body).message.trim().split("  ")
@@ -219,13 +211,10 @@ export default {
 
               // RUNNING 상태에서 참가자가 1명 남은 경우 이 참가자가 나갈 때 미팅 STATUS 변경
               if (this.startSignal && participants.length === 1) {
-                console.log("마지막 한명")
                 this.$emit('close')
               }
               if (command === "OUT") {
-                console.log(this.user.id, parseInt(JSON.parse(res.body).sender))
                 if (this.user.id === parseInt(JSON.parse(res.body).sender)) {
-                  console.log("강퇴당함")
                   this.$emit('leave')
                   this.disconnect()
                   this.$router.push({ name: 'Home'})
@@ -235,7 +224,6 @@ export default {
             } else if (command === "START") {
               this.$emit('start')
             } else if (command === "HOST") {
-              console.log('HOST!!!')
               this.$store.dispatch('setNewHost', parseInt(JSON.parse(res.body).sender))
             } else if (command === null) {
               this.recvList.push(JSON.parse(res.body))
@@ -245,7 +233,7 @@ export default {
         },
         error => {
           // 소켓 연결 실패
-          console.log('소켓 연결 실패', error);
+          // console.log('소켓 연결 실패', error);
           this.connected = false;
           this.socketConnected = false
         }
@@ -266,7 +254,7 @@ export default {
                 + " " + ['일','월','화','수','목','금','토','일'][current_datetime.getDay()]+"요일",
           time: ("0" + current_datetime.getHours()).slice(-2) + ":" + ("0" + current_datetime.getMinutes()).slice(-2)
         };
-        console.log("데이터", message);
+        // console.log("데이터", message);
         this.stompClient.send(
           "/publish/chat/leave",
           JSON.stringify(message),
@@ -275,7 +263,7 @@ export default {
         this.subscribeId.unsubscribe();
         this.subscribeId = "";
         this.stompClient.connected = false;
-        console.log("구독 해지 완료");
+        // console.log("구독 해지 완료");
         this.$store.dispatch('deleteMeeting')
       }
     },
@@ -294,9 +282,9 @@ export default {
           time: ("0" + current_datetime.getHours()).slice(-2) + ":" + ("0" + current_datetime.getMinutes()).slice(-2),
           command: "START"
         };
-        console.log("데이터", message);
+        // console.log("데이터", message);
         this.stompClient.send("/publish/chat/command", JSON.stringify(message),headers);
-        console.log("미팅 시작!!");
+        // console.log("미팅 시작!!");
       }
     },
     ready(flag){
@@ -314,9 +302,9 @@ export default {
           time: ("0" + current_datetime.getHours()).slice(-2) + ":" + ("0" + current_datetime.getMinutes()).slice(-2),
           command: flag ? "READY" : "UNREADY"
         };
-        console.log("데이터", message);
+        // console.log("데이터", message);
         this.stompClient.send("/publish/chat/command", JSON.stringify(message),headers);
-        console.log("준비 완료");
+        // console.log("준비 완료");
       }
     },
   }

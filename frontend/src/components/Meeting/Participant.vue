@@ -51,17 +51,15 @@ export default defineComponent({
       axios.delete(`/meeting/${store.state.meeting.id}/users/${userId}/forcedExit`,
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
-        console.log(res)
-        axios.get(`/meeting/${store.state.meeting.id}`).then(res => {
-          console.log("강퇴 이후 새 미팅 정보")
-          console.log(res)
-        })
+        // axios.get(`/meeting/${store.state.meeting.id}`).then(res => {
+        //   console.log("강퇴 이후 새 미팅 정보")
+        //   console.log(res)
+        // })
         ElMessage({
           type: 'success',
           message: '강퇴되었습니다.',
         })
       }).catch(err => {
-        console.log(err.response)
       }) 
     }
 

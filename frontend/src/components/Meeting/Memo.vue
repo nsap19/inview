@@ -49,9 +49,9 @@ export default defineComponent({
       htmlCode = window.URL.createObjectURL(data);  
       let formData = new FormData();
       formData.append('file', data, 'memo.html');
-      for (let value of formData.values()) {
-        console.log(value);
-      }
+      // for (let value of formData.values()) {
+      //   console.log(value);
+      // }
       axios.post( `/meeting/${urlMeetingId}/upload?archive-type=memo&user-id=${userId}`,
         formData,
         {
@@ -63,12 +63,8 @@ export default defineComponent({
         }
       )
       .then(res => {
-        console.log('SUCCESS!!');
-        console.log(res)
       })
       .catch(err => {
-        console.log('FAILURE!!');
-        console.log(err.response)
       });
       
       // 디버그용 파일 다운로드
@@ -80,7 +76,6 @@ export default defineComponent({
 
     watch(()=>props.endSignal, () => {
       if (props.endSignal == true) {
-        console.log('메모에서 종료신호 받음')
         createHtmlFile(meetingId)
       }
     })

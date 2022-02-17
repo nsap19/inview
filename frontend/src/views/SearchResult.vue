@@ -76,7 +76,6 @@ export default defineComponent({
 
     const loading = ref(false)
     watch(meetings, (newValue, oldValue) => {
-      console.log('old', oldValue, 'new', newValue)
       if (!oldValue.length || oldValue.length === newValue.length) {
         loading.value = false
       } else {
@@ -101,7 +100,6 @@ export default defineComponent({
             company: route.query.company,
             page: page
           })
-          console.log(meetings)
           page += 1
         }
       })

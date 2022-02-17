@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: auto 0">
+  <div class="d-flex flex-column justify-content-between h-100 m-3">
     <div class="row custom-row-cols g-2">
       <div class="col">
         <div class="row timer-wrapper" v-show="counting[0]">
@@ -74,7 +74,14 @@
         </div>
       </div>
     </div>
-    <div
+    <div class="d-flex flex-row justify-content-center">
+      <div class="waiting-participant w-50">
+        <el-button round style="margin: 0 auto;" type="text" @click="startCountdown">
+          <span class="fs-5 fw-bold">START</span>
+        </el-button>
+      </div>
+    </div>
+    <!-- <div
       class="d-flex flex-row justify-content-center"
       style="transform: translateY(-30%)"
     >
@@ -84,8 +91,7 @@
         :animationData="StartImg"
         :height="200"
       />
-      <!-- :width="200" -->
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -203,17 +209,22 @@ export default {
 }
 
 .timer-wrapper {
-  background: linear-gradient(
+  /* background: linear-gradient(
       140deg,
       rgba(243, 240, 215, 1) -10%,
       rgba(78, 115, 81, 0.522) 50%
     ),
-    url(https://grainy-gradients.vercel.app/noise.svg);
+    url(https://grainy-gradients.vercel.app/noise.svg); */
   margin: 10px;
   border-radius: 20px;
   width: 50%;
   margin: 0 auto;
   height: 135px;
+  box-shadow: inset 3px 3px 8px 0 rgba(0, 0, 0, 0.2),
+              inset -6px -6px 10px 0 rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .custom-row-cols > * {

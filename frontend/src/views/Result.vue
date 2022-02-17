@@ -76,7 +76,7 @@ export default defineComponent({
     const download = function (type){
       axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.id}`).then(res=>{
         for ( let v of res.data.data.archives){
-          console.log(v.archiveType, type)
+          // console.log(v.archiveType, type)
           if(v.archiveType == type){
             if( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
               alert("다운로드 유효 기간이 지났습니다.")

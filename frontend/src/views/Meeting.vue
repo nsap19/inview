@@ -273,10 +273,7 @@ export default defineComponent({
 				}
 				)
 				.then(() => {
-					console.log('면접 질문 선택 완료')
-					console.log('what')
 					dialogVisible.value = false
-					console.log(dialogVisible)
 				})
 				// .catch(() => {
 				// 	// catch error
@@ -296,20 +293,16 @@ export default defineComponent({
 			axios.post(`meeting/${store.state.meeting.id}/start`, {} ,
 				{ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
 			).then(res => {
-				console.log(res)
 			}).catch(err => {
-				console.log(err.response)
 			})
 
 		})
 		watch(leaveSignal, (oldVal) => {
-			console.log('leave신호받고 비디오 나가야')
 			if (startSignal) {
 				leaveRoom()
 			}
 		})
 		watch(endSignal, (oldVal) => {
-			console.log('종료신호받고 비디오 나가야하는데 안함?')
 			if (readySignal) {
 				leaveRoom()
 			}
@@ -323,10 +316,8 @@ export default defineComponent({
 		const participants = computed(() => store.state.participants)
 		const router = useRouter()
 		router.beforeEach((to, from) => {
-			console.log("라우터", to, from)
 			if (to.name !== "Meeting") {
 				store.dispatch('deleteMeeting')
-				console.log("뒤로간다")
 				// leaveSignal.value = true
 			}
 		})
@@ -338,13 +329,11 @@ export default defineComponent({
 				headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 			})
 				.then((res) => {
-					console.log(res);
 					if (res.data.data.status === "RUNNING") {
 						startSignal.value = true
 					} 
 				})
 				.catch((err) => {
-					console.log(err.response);
 				});
 		}
 
