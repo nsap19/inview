@@ -24,7 +24,7 @@
 		</el-dialog>
 
 		<!-- 미팅 네비바 -->
-		<MeetingNavBar :startSignal="startSignal" :closeSignal="closeSignal" @leaveMeeting="endSignal=true" />
+		<MeetingNavBar :startSignal="startSignal" :closeSignal="closeSignal" @leaveMeeting="leaveSignal=true" />
 
 		<!-- 미팅 메인 -->
 		<div class="meeting-content">
@@ -135,6 +135,7 @@ export default defineComponent({
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
 			document.getElementById('record').onclick=function(){start(); return false;};
 			document.getElementById('stopRecording').onclick=function(){stop(); return false;};
+			getMeeting()
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
 			// document.head.appendChild(script); 
@@ -214,7 +215,6 @@ export default defineComponent({
 
 		// 비디오의 너비 계산
 		const resize = function (width, height) {
-			// console.log('resize한다', width, height)
 			let max = 0
 			let i = 1
 			while (i < 5000) {
@@ -227,18 +227,14 @@ export default defineComponent({
 			}
 			max = max - (setMargin * 2)  // remove margins
 			maxWidth.value = max
-			// console.log("max", max)
 			resizer(max)
 		}
 
 		function resizer(width) {
-			// console.log('resizer한다', width)
 			const participant = document.getElementsByClassName('participant')
 			for (var s = 0; s < participant.length; s++) {
 					let element = participant[s];
-					// custom margin
 					element.style.margin = setMargin + "px"
-					// calculate dimensions
 					element.style.width = width + "px"
 					element.style.height = (width * ratio) + "px"
 			}
@@ -293,6 +289,7 @@ export default defineComponent({
 		const readySignal = ref(false)  // 미팅 준비
 		const leaveSignal = ref(false)  // 미팅 나가기
 		const closeSignal = ref(false)  // 미팅 CLOSE
+
 		watch(startSignal, (oldVal) => {
 			register()
 			axios.post(`meeting/${store.state.meeting.id}/start`, {} ,
@@ -316,8 +313,12 @@ export default defineComponent({
 				leaveRoom()
 			}
 		})
-
 		const store = useStore()
+    // watch(() => store.state.meeting, (newValue, oldValue) => {
+		// 	if (store.state.meeting.id) {
+		// 		getMeeting()
+		// 	}
+    // })
 		const participants = computed(() => store.state.participants)
 		const router = useRouter()
 		router.beforeEach((to, from) => {
@@ -328,6 +329,24 @@ export default defineComponent({
 				// leaveSignal.value = true
 			}
 		})
+
+		const getMeeting = function () {
+			axios({
+				url: `/meeting/${store.state.meeting.id}`,
+				method: "GET",
+				headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+			})
+				.then((res) => {
+					console.log(res);
+					if (res.data.data.status === "RUNNING") {
+						startSignal.value = true
+					} 
+				})
+				.catch((err) => {
+					console.log(err.response);
+				});
+		}
+
 		return { 
 			CloseBold, readySignal, leaveSignal, closeSignal,
 			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
