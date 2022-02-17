@@ -80,7 +80,6 @@ export default defineComponent({
       // const today = new Date(+new Date() + 3240 * 10000).toISOString().split("T")[0]
       // const tomorrow = new Date(+new Date() + 11880 * 10000).toISOString().replace("T", " ").replace(/\..*/, '').slice(0, 10)
       // const twoDaysAfter = new Date(+new Date() + 20520 * 10000).toISOString().replace("T", " ").replace(/\..*/, '').slice(0, 10)
-      // console.log(today, tomorrow, twoDaysAfter)
       // if (time.slice(0, 10) === today) {
       //   prettyTime += '오늘'
       // } else if (time.slice(0, 10) === tomorrow) {
@@ -171,12 +170,9 @@ export default defineComponent({
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         params: { password: passwordForm.password },
       }).then(res => {
-        console.log(res, 'joinMeeting')
         store.dispatch('setMeeting', meetingId)
         router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
       }).catch(err => {
-        console.log(err)
-        console.log(err.response)
         if (err.data.message == "비밀번호가 일치하지 않습니다.") {
           passwordError.value = "비밀번호가 일치하지 않습니다"
         }
@@ -187,10 +183,8 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          console.log('submit!')
           joinMeeting(props.meeting.id)
         } else {
-          console.log('error submit!')
           return false
         }
       })

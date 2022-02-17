@@ -17,9 +17,9 @@
           :headers="headers"
           :on-success="onSuccess"
           drag
+          :auto-upload="false"
           class="d-flex flex-column justify-content-center mt-2 align-items-center w-100"
         >
-          <!-- :auto-upload="false" -->
           <!-- <template #trigger>
             <el-button type="primary">select file</el-button>
           </template> -->
@@ -71,14 +71,11 @@ export default defineComponent({
     })
 
     const getFiles = function () {      
-      console.log('get Files')
       axios({
         url: `/download/meeting/${meetingId.value}/users/${userId.value}`,
         method: 'GET',
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       }).then(res => {
-        console.log(meetingId.value, userId.value)
-        console.log(res)
         files.value = res.data.data.filter(function (file: {archiveName: string, archiveType: string, id: number, path: string}) {
           if (file.archiveType === "FILE") {
             return true
@@ -87,7 +84,6 @@ export default defineComponent({
           }
         })
       }).catch(err => {
-        console.log(err)
       })
     }
 
@@ -108,8 +104,6 @@ export default defineComponent({
         document.body.appendChild(fileUrl);
         fileUrl.click();
       }).catch(err => {
-        console.log(err)
-        console.log(err.response)
       })
     }
     const handleExceed = (files: FileList) => {
@@ -127,16 +121,16 @@ export default defineComponent({
     const file = ref()
     const handleFileUpload = async() => {
         // debugger;
-        console.log("selected file",file.value.files[0])
+        // console.log("selected file",file.value.files[0])
         //Upload to server
     }
 
     const submitFile = function (){
       let formData = new FormData();
       formData.append('file', file.value.files[0]);
-      for (let value of formData.values()) {
-        console.log(value);
-      }
+      // for (let value of formData.values()) {
+      //   console.log(value);
+      // }
       axios.post( `/meeting/${meetingId.value}/upload?archive-type=file`,
         formData,
         {
@@ -148,13 +142,9 @@ export default defineComponent({
         }
       )
       .then(res => {
-        console.log('SUCCESS!!');
-        console.log(res)
         getFiles()
       })
       .catch(err => {
-        console.log('FAILURE!!');
-        console.log(err.response)
       });
     }
 

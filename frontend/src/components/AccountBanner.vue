@@ -84,7 +84,6 @@ export default {
     }
 
     const meetingTime = computed(() => makePrettyTime(props.meeting.startTime))
-    // console.log(props.meeting.startTime)
     return {
       LaptopJSON, openCreateMeetingDialog, meeting, SearchJSON, meetingTime, JoinJSON, 
       clickEnter, goToSearchResult,

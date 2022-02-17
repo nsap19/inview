@@ -179,8 +179,6 @@ export default defineComponent({
             { nickname: nickname, password: password },
             { headers: {Authorization: `Bearer ${localStorage.getItem("token")}`} }
           ).then((res: any) => {
-              console.log('SUCCESS!!');
-              console.log(res)
               ElMessage({
                 message: '회원 정보가 수정되었습니다.',
                 type: 'success',
@@ -189,8 +187,6 @@ export default defineComponent({
               store.dispatch('setUser', { nickname: nickname, id: store.state.user.id });
               openDialog.value = false
           }).catch((err: any) => {
-              console.log('FAILURE!!');
-              console.log(err.response)
               if (err.response.data.message === "이미 등록된 닉네임입니다.") {
                 nicknameError.value = "이미 등록된 닉네임입니다"
               } else {
@@ -201,25 +197,18 @@ export default defineComponent({
               }
           })
         } else {
-          // console.log('error submit!')
           return false
         }
       })
     } 
 
     const outUser = () => {
-      console.log(ruleForm.password)
       axios.delete(`/users/${store.state.user.id}?password=${ruleForm.password}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       }).then((res: any) => {
-        console.log('SUCCESS!!');
-        console.log(res)
-
         localStorage.removeItem("token");
         router.push("/")
-
       }).catch((err: any) => {
-        console.log(err.response)
       });
     }
 
