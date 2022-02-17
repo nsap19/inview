@@ -58,7 +58,7 @@ export default createStore({
         method: 'GET',
         params: query
       }).then(res => {
-          console.log(res)
+          // console.log(res)
           if (1 < query.page) {
             commit('ADD_SEARCH_RESULT', res.data.data.content)
           } else {
