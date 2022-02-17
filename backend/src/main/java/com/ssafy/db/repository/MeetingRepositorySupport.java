@@ -40,9 +40,10 @@ public class MeetingRepositorySupport {
 	public MeetingDetailRes findById(int meetingId) {
 		List<Tuple> tuple = jpaQueryFactory
 				.select(qMeeting.meetingId, qMeeting.title, qMeeting.startTime, qMeeting.closeTime, qUser.nickname,
-						qMeeting.user.userId)
+						qMeeting.user.userId, qMeeting.status)
 				.from(qMeeting).leftJoin(qParticipant).on(qMeeting.eq(qParticipant.meeting)).leftJoin(qUser)
-				.on(qParticipant.user.eq(qUser)).where(qMeeting.meetingId.eq(meetingId), qParticipant.forcedExit.eq(0)).fetch();
+				.on(qParticipant.user.eq(qUser)).where(qMeeting.meetingId.eq(meetingId), qParticipant.forcedExit.eq(0))
+				.fetch();
 
 		if (tuple.size() == 0) {
 			throw new NotExistsMeetingException();
@@ -50,12 +51,11 @@ public class MeetingRepositorySupport {
 
 		MeetingDetailRes ret = MeetingDetailRes.builder().id(tuple.get(0).get(qMeeting.meetingId))
 				.title(tuple.get(0).get(qMeeting.title)).startTime(tuple.get(0).get(qMeeting.startTime))
-				.closeTime(tuple.get(0).get(qMeeting.closeTime)).hostId(tuple.get(0).get(qMeeting.user.userId)).build();
-
+				.closeTime(tuple.get(0).get(qMeeting.closeTime)).hostId(tuple.get(0).get(qMeeting.user.userId))
+				.status(tuple.get(0).get(qMeeting.status).name()).build();
 		tuple.stream().forEach(n -> ret.getParticipantNicknameList().add(n.get(qUser.nickname)));
 
 		return ret;
-
 	}
 
 	public Page<MeetingRes> findByTitleOrIndustryOrCompany(String title, List<String> industries,
@@ -74,28 +74,29 @@ public class MeetingRepositorySupport {
 		if (companies != null) {
 			builder.and(qCompany.companyName.in(companies));
 		}
-		
-		builder.and(Expressions.dateTemplate(Date.class,"{0}", qMeeting.startTime)
-				.after(
-					Expressions.dateTemplate(Date.class,"{0}", Expressions.currentTimestamp())));
-		
-		builder.or(qMeeting.startTime.isNull());
-		
+
+		builder.and(Expressions.dateTemplate(Date.class, "{0}", qMeeting.startTime)
+				.after(Expressions.dateTemplate(Date.class, "{0}", Expressions.currentTimestamp()))
+				.or(qMeeting.startTime.isNull()));
+
 		builder.and(qMeeting.status.eq(Status.WAITING));
-		
-		// builder.and(Expressions.dateTemplate(Date.class, "{0}", qMeeting.startTime)
-		// 		.after(Expressions.dateTemplate(Date.class, "{0}", Expressions.currentTimestamp())));
+
+//		builder.and(qMeeting.startTime.isNull());
 
 		List<Meeting> meetingList = jpaQueryFactory.select(qMeeting).from(qMeeting).leftJoin(qMeetingCompany)
 				.on(qMeeting.eq(qMeetingCompany.meeting)).fetchJoin().leftJoin(qParticipant)
 				.on(qParticipant.meeting.eq(qMeeting)).fetchJoin().leftJoin(qUser).on(qUser.eq(qParticipant.user))
 				.fetchJoin().leftJoin(qCompany).on(qCompany.eq(qMeetingCompany.company)).fetchJoin().leftJoin(qIndustry)
 				.on(qIndustry.eq(qMeeting.industry)).fetchJoin().where(builder).groupBy(qMeeting)
-				.offset(pageable.getOffset()).limit(pageable.getPageSize()).orderBy(qMeeting.meetingId.desc()).fetch();
+				.orderBy(qMeeting.meetingId.desc()).fetch();
 
-		List<MeetingRes> ret = meetingList.stream().map(m -> MeetingRes.builder().id(m.getMeetingId())
-				.title(m.getTitle()).startTime(m.getStartTime()).endTime(m.getEndTime()).userLimit(m.getUserLimit())
-				.url(m.getUrl()).industryName(m.getIndustry().getIndustryName()).status(m.getStatus().toString())
+		int start = (int) pageable.getOffset();
+		int end = Math.min((start + pageable.getPageSize()), meetingList.size());
+
+		List<MeetingRes> ret = meetingList.subList(start, end).stream().map(m -> MeetingRes.builder()
+				.id(m.getMeetingId()).title(m.getTitle()).startTime(m.getStartTime()).endTime(m.getEndTime())
+				.userLimit(m.getUserLimit()).url(m.getUrl()).industryName(m.getIndustry().getIndustryName())
+				.status(m.getStatus().name())
 				.participantNicknameList(
 						m.getParticipants().stream().map(p -> p.getUser().getNickname()).collect(Collectors.toList()))
 				.companyNameList(m.getMeetingCompanies().stream().map(mc -> mc.getCompany().getCompanyName())
@@ -103,7 +104,7 @@ public class MeetingRepositorySupport {
 				.isLock(m.getPassword() == null ? false : true).build()).collect(Collectors.toList());
 
 		// 페이징
-		return new PageImpl<>(ret, pageable, ret.size());
+		return new PageImpl<>(ret, pageable, meetingList.size());
 	}
-	
+
 }
