@@ -76,7 +76,7 @@ public class UserSession implements Closeable {
 		this.meetingId = meetingId;
 		this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
 		this.nickname = userNickname;
-
+		this.outgoingMedia.setTurnUrl("myuser:mypassword@172.26.1.220:3478");
 		System.out.println(outgoingMedia.toString());
 		System.out.println(pipeline);
 
