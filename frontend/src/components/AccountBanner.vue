@@ -56,8 +56,8 @@ export default {
     }
 
     const goToSearchResult = () => {
-      router.push({ name: 'Search', query: { title: '', industry: '', company: '' }})
-      store.dispatch('search', { title: '', industry: '', company: '' })
+      router.push({ name: 'Search', query: { page: 1 }})
+      store.dispatch('search', { page: 1 })
     }
 
     const makePrettyTime = function (time) {

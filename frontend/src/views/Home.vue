@@ -34,7 +34,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    store.dispatch('search', {title: '', industry: '', company: ''})
+    store.dispatch('search', {page: 1})
     const meetings = computed(() => store.state.searchResult)
     onMounted(() => {
       window.scrollTo(0, 0)
