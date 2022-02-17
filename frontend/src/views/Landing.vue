@@ -5,8 +5,8 @@
         <div class="slide-container">
           <div class="slide" ref="sl0">
             <div class="overflow-hidden">
-              <LandingHeader></LandingHeader>
-              <div class="row">
+              <!-- <LandingHeader></LandingHeader> -->
+              <div class="row justify-content-center">
                 <div class="col-md-6 mb-4">
                   <div class="slide-big-text">
                     <br />
@@ -42,8 +42,6 @@
                         d-flex
                         flex-column
                         h-100
-                        p-5
-                        pb-3
                         text-white text-shadow-1
                       "
                     >
@@ -60,7 +58,7 @@
           </div>
           <div class="slide" ref="sl1">
             <div class="overflow-hidden">
-              <div class="row">
+              <div class="row justify-content-center">
                 <div class="col-md-6 mb-4">
                   <div class="slide-big-text">
                     <br />
@@ -103,6 +101,7 @@
                         p-5
                         pb-3
                         text-white text-shadow-1
+                        justify-content-center
                       "
                     >
                       <img
@@ -121,7 +120,7 @@
           </div>
           <div class="slide" ref="sl2">
             <div class="overflow-hidden">
-              <div class="row">
+              <div class="row justify-content-center">
                 <div class="col-md-6 mb-4">
                   <div class="slide-big-text">
                     <br />
@@ -162,6 +161,7 @@
                         p-5
                         pb-3
                         text-white text-shadow-1
+                        justify-content-center
                       "
                     >
                       <img
@@ -177,7 +177,7 @@
           </div>
           <div class="slide sl3" ref="sl3">
             <div class="overflow-hidden">
-              <div class="row">
+              <div class="row justify-content-center">
                 <div class="col-md-6 mb-4">
                   <div class="slide-big-text">
                     <br />
@@ -221,6 +221,7 @@
                         p-5
                         pb-3
                         text-white text-shadow-1
+                        justify-content-center
                       "
                     >
                       <img
@@ -255,8 +256,10 @@
             <div class="container md-6 mb-4" style="background-color: #f3f0d7; border-radius: 15px 50px;">
               <div class="slide-big-text">
                 <br><br>
-                <p><I>당신의 꿈을</I></p>
-                <p><I>Inview와 함께 준비하세요.</I></p>
+                <!-- <p><I>당신의 꿈을</I></p>
+                <p><I>Inview와 함께 준비하세요.</I></p> -->
+                <p><i>당신의 꿈을</i></p>
+                <p><i>Inview와 함께 준비하세요.</i></p>
               </div>
               <div class="slide-small-text">
                 <p>Inview가 당신을 응원합니다.</p>
@@ -647,6 +650,7 @@ export default {
   mounted() {
     this.init();
     window.addEventListener("scroll", this.onScroll);
+    window.scrollTo(0, 0)
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.onScroll);
@@ -727,7 +731,8 @@ export default {
     onScroll() {
       // 현재 스크롤 위치 파악
       const scrollTop = window.scrollY || window.pageYOffset;
-      const currentPos = scrollTop + window.innerHeight / 2;
+      // const currentPos = scrollTop + window.innerHeight / 2;
+      const currentPos = scrollTop + 361
       console.log("currentPos : " + currentPos);
       // disabled 순회하며 활성화할 요소 찾기.
       disabled.forEach((obj, refname) => {
@@ -735,6 +740,7 @@ export default {
         if (isAmong(currentPos, obj.top, obj.bottom)) {
           console.log(refname + " " + obj.top + " " + obj.bottom);
           enabled.set(refname, obj);
+          // console.log("classList가뭔데", this.$refs[refname])
           this.$refs[refname].classList.remove("disabled");
           this.$refs[refname].classList.add("enabled");
           disabled.delete(refname);
