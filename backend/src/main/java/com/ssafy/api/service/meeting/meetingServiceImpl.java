@@ -15,7 +15,6 @@ import com.ssafy.common.exception.handler.AlreadyFullParticipantException;
 import com.ssafy.common.exception.handler.AlreadyJoinMeetingException;
 import com.ssafy.common.exception.handler.AlreadyRunningMeetingException;
 import com.ssafy.common.exception.handler.NotEqualPasswordException;
-import com.ssafy.common.exception.handler.NotExistsCompanyException;
 import com.ssafy.common.exception.handler.NotExistsIndustryException;
 import com.ssafy.common.exception.handler.NotExistsMeetingException;
 import com.ssafy.common.exception.handler.NotExistsUserException;
@@ -69,14 +68,11 @@ public class meetingServiceImpl implements MeetingService {
 		Industry industry = industryRepository.findByIndustryName(registerInfo.getIndustryName())
 				.orElseThrow(() -> new NotExistsIndustryException());
 
-		// 회사 찾기
+		// 회사 저장
 		List<Company> companyList = registerInfo.getCompanyNameList().stream()
-				.map(c -> companyRepository.findByCompanyName(c).orElseThrow(() -> new NotExistsCompanyException()))
+				.map(c -> companyRepository.findByCompanyName(c)
+						.orElse(companyRepository.save(Company.builder().companyName(c).build())))
 				.collect(Collectors.toList());
-
-//		List<Company> companyList = registerInfo.getCompanyNameList().stream()
-//				.map(c -> companyRepository.findByCompanyName(c).orElse(new Company()))
-//				.collect(Collectors.toList());
 
 		// 비밀번호가 빈문자열이면 제거
 		if (registerInfo.getPassword().trim().length() == 0)

@@ -38,4 +38,7 @@ public class MeetingDetailRes {
 	@ApiModelProperty(name = "호스트 아이디", example = "1")
 	int hostId;
 
+	@ApiModelProperty(name = "미팅 상태", example = "CLOSING")
+	String status;
+
 }
