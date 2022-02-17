@@ -34,11 +34,11 @@ const routes: Array<RouteRecordRaw> = [
       }
     }
   },
-  {
-    path: '/result/:userName/:meetingId',
-    name: 'Result',
-    component: () => import(/* webpackChunkName: "create" */ '@/views/Result.vue')
-  },
+  // {
+  //   path: '/result/:userName/:meetingId',
+  //   name: 'Result',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/views/Result.vue')
+  // },
   // {
   //   path: "/:pathMatch(.*)*",
   //   name: '404',
@@ -49,16 +49,16 @@ const routes: Array<RouteRecordRaw> = [
     name: '404',
     component: () => import(/* webpackChunkName: "create" */ '@/views/Page404.vue')
   },
-  {
-    path: '/account',
-    name: 'Account',
-    component: () => import(/* webpackChunkName: "create" */ '@/components/NavBar/UpdateUser.vue')
-  },
-  {
-    path: '/video',
-    name: 'Video',
-    component: () => import(/* webpackChunkName: "create" */ '@/components/Meeting/Video.vue')
-  },
+  // {
+  //   path: '/account',
+  //   name: 'Account',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/components/NavBar/UpdateUser.vue')
+  // },
+  // {
+  //   path: '/video',
+  //   name: 'Video',
+  //   component: () => import(/* webpackChunkName: "create" */ '@/components/Meeting/Video.vue')
+  // },
   // {
   //   path: "/mypage",
   //   name: 'mypage',

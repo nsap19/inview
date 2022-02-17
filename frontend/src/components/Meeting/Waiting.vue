@@ -32,7 +32,7 @@
             <span class="fs-5 fw-bold"><i class="bi bi-play-circle-fill pe-1"></i>시작</span>
           </el-button>
           <el-button round style="margin: 0 auto;" type="text" v-else @click="$emit('ready')">
-            <span class="fs-5 fw-bold">준비</span>
+            <span class="fs-5 fw-bold"><i class="bi bi-check-circle-fill pe-1"></i>준비</span>
           </el-button>
         </div>
       </div>
