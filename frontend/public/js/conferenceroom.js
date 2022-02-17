@@ -43,7 +43,7 @@ function handleCameraClick(){
 	var participant = participants[userId];
 	console.log(userId)
 	console.log(participant.rtcPeer)
-	const myStream = participant.getVideoElement().captureStream();
+	const myStream = participant.getVideoElement().srcObject;
 	console.log(myStream)
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
@@ -192,13 +192,15 @@ function onExistingParticipants(msg) {
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
 	video.srcObject = myStream;
-	console.log("VIDEO: "+video.srcObject.id)
+	// console.log("VIDEO: "+video.srcObject.id)
 	var options = {
-	      localVideo: myStream,
+	      localVideo: video,
 	      mediaConstraints: constraints,
 	      onicecandidate: participant.onIceCandidate.bind(participant),
 		  configuration: {
-			iceServers: [{
+			iceServers: [
+				{"urls": 'stun:172.26.1.220:3478'},
+				{
 				"urls": 'turn:172.26.1.220:3478?transport=udp',
 				"username": 'myuser',
 				"credential": 'mypassword'
@@ -223,20 +225,16 @@ function onExistingParticipants(msg) {
 }
 
 async function getMedia() {
-	// console.log()
     try {
       myStream = await navigator.mediaDevices.getUserMedia({
       	audio: true,
       	video: true,
       })
+	//   video.srcObject = myStream;
     } catch (e) {
       console.log(e);
     }
-	// console.log(myStream)
-	// console.log(myFace)
-	// myFace.srcObject = myStream;
 	console.log(myStream)
-	// console.log(myvideo.srcObject)
 }
 
 getMedia();
@@ -263,17 +261,19 @@ function receiveVideo(userId, nickname) {
 	var video = participant.getVideoElement();
 
 	var options = {
-      remoteVideo: video,
+      remoteVideo: myStream,
       onicecandidate: participant.onIceCandidate.bind(participant),
 	  configuration: {
-		iceServers: [{
+		iceServers: [
+			{"urls": 'stun:172.26.1.220:3478'},
+			{
 			"urls": 'turn:172.26.1.220:3478?transport=udp',
 			"username": 'myuser',
 			"credential": 'mypassword'
 		}]
 	}
     }
-
+	
 	participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
 			function (error) {
 			  if(error) {
