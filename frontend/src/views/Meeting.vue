@@ -45,11 +45,12 @@
 				</div>
 				
 				<Participant v-show="asideCategory === 'participant'" />
-				<div v-for="participant in participantsExceptMe" :key="participant">
+				<div v-for="participant in participants" :key="participant">
 					<Evaluation 
 						:participantNickname="participant.nickname" 
 						:endSignal="endSignal" 
 						:startSignal="startSignal" 
+						v-if="participant.nickname !== this.$store.state.user.nickname"
 						v-show="asideCategory === 'evaluation' + participant.nickname" />
 				</div>
 				<Chat 
