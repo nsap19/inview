@@ -45,11 +45,12 @@
 				</div>
 				
 				<Participant v-show="asideCategory === 'participant'" />
-				<div v-for="participant in participantsExceptMe" :key="participant">
+				<div v-for="participant in participants" :key="participant">
 					<Evaluation 
 						:participantNickname="participant.nickname" 
 						:endSignal="endSignal" 
 						:startSignal="startSignal" 
+						v-if="participant.nickname !== this.$store.state.user.nickname"
 						v-show="asideCategory === 'evaluation' + participant.nickname" />
 				</div>
 				<Chat 
@@ -133,8 +134,8 @@ export default defineComponent({
 			// document.getElementById('debug').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
-			document.getElementById('record').onclick=function(){start(); return false;};
-			document.getElementById('stopRecording').onclick=function(){stop(); return false;};
+			// document.getElementById('record').onclick=function(){start(); return false;};
+			// document.getElementById('stopRecording').onclick=function(){stop(); return false;};
 			getMeeting()
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
