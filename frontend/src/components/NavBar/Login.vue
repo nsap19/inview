@@ -25,7 +25,6 @@
         <div class="mt-2">
           <Kakao @closeDialog="openDialog=false" />
         </div>
-        <!-- <el-button @click="openDialog=false">취소</el-button> -->
       </div>
       <div class="d-flex flex-row justify-content-center">
         <el-button type="text" @click="$emit('signup')">회원가입</el-button>
@@ -40,7 +39,6 @@
 
 <script lang="ts">
 import axios from 'axios'
-// import { userAPI } from '@/utils/axios.js'
 import { useStore } from 'vuex'
 import { defineComponent, computed, ref, reactive } from 'vue'
 import type { ElForm } from 'element-plus'

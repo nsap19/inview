@@ -27,7 +27,6 @@
     <p class="text-end mb-1 mt-2" style="font-size: 14px;">유효 기간 | {{ expirationDate }}</p>
     <div>
       <div>
-        <!-- <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('VIDEO')">면접 영상</el-button> -->
         <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('CHAT')">채팅</el-button>
         <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('MEMO')">메모</el-button>
         <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('FILE')">공유 파일</el-button>
@@ -74,14 +73,9 @@ export default defineComponent({
     const expirationDate = getExpirationDate()
 
     const download = function (type){
-      // console.log(type)
       axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.id}`).then(res=>{
         let nonExist = 0
         for ( let v of res.data.data.archives) {
-          // console.log(res.data.data.archives)
-          // console.log(v.archiveType, type)
-          // console.log(typeof(v.archiveType), typeof(type))
-
           if (v.archiveType === type) {
             if ( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
               alert("다운로드 유효 기간이 지났습니다.")
@@ -92,7 +86,6 @@ export default defineComponent({
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                   }
                 }).then(res=>{
-                  // console.log(res)
                   const FILE = window.URL.createObjectURL(new Blob([res.data]));
                   const fileName = res.headers['content-disposition'].slice(22)
                   const fileUrl = document.createElement('a');
@@ -107,17 +100,11 @@ export default defineComponent({
                   });
                 })
             }
-            
-            // var element = document.createElement('a');
-            // element.setAttribute('href',v.path);
-            // document.body.appendChild(element);
-            // element.click();
           } else {
             nonExist++
           }
         } 
         if (nonExist === res.data.data.archives.length) {
-          // console.log(nonExist)
           ElMessage({
             message: '파일이 존재하지 않습니다.',
             type: 'warning',
@@ -135,25 +122,12 @@ export default defineComponent({
         category: '회사',
         content: props.tableDatas.companyNameList.length ? props.tableDatas.companyNameList : "상관 없음!",
       },
-      // {
-      //   category: '시작 시간',
-      //   content: props.tableDatas.startTime,
-      // },
-      // {
-      //   category: '종료 시간',
-      //   content: props.tableDatas.endTime,
-      // },
       {
         category: '참가자',
         content: props.tableDatas.participantNicknameList,
       },
-      // {
-      //   category: '다운로드 유효 기간',
-      //   content: getExpirationDate(),
-      // },
     ]);
 
-    // console.log("test",props.tableDatas, tableData.value)
     const expired = dayjs().isAfter(getExpirationDate())
     return {download,  meetingId, userName, props, tableData, expirationDate, getExpirationDate, expired }
   }

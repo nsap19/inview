@@ -175,13 +175,10 @@ export default defineComponent({
 
 <style scoped>
 .nav-wrapper {
-  /* margin: 20px auto; */
   padding: 0.5rem;
 }
 
 .nav {
-  /* border-radius: 10px; */
-  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
   margin: 0 auto;
   padding: 25px 15px;
 }

@@ -6,10 +6,6 @@
     resize="none"
     class="textarea p-2"
   />
-
-  <!-- 디버그용 서버 업로드 버튼 -->
-  <!-- 이후 div와 함께 삭제할 것 -->
-  <!-- <button @click="createHtmlFile">sda</button> -->
 </template>
 
 <script lang="ts">
@@ -49,9 +45,6 @@ export default defineComponent({
       htmlCode = window.URL.createObjectURL(data);  
       let formData = new FormData();
       formData.append('file', data, 'memo.html');
-      // for (let value of formData.values()) {
-      //   console.log(value);
-      // }
       axios.post( `/meeting/${urlMeetingId}/upload?archive-type=memo&user-id=${userId}`,
         formData,
         {
@@ -66,12 +59,6 @@ export default defineComponent({
       })
       .catch(err => {
       });
-      
-      // 디버그용 파일 다운로드
-      // var a = document.createElement('a');
-      // a.download = 'fileName';
-      // a.href = htmlCode;
-      // a.click();
     }
 
     watch(()=>props.endSignal, () => {

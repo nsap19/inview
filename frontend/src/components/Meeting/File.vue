@@ -5,9 +5,7 @@
       <div class="d-flex flex-row justify-content-between align-items-center">
         <span>공유할 파일을 올리고 전송을 눌러주세요</span>
         <el-button v-on:click="submitUpload">전송</el-button>
-        <!-- <el-button v-on:click="submitFile()">전송</el-button> -->
       </div>
-      <!-- <input type="file" ref="file" multiple="multiple" v-on:change="handleFileUpload()" class="file-input"/> -->
       <div class="d-flex flex-row justify-content-center">
         <el-upload
           ref="upload"
@@ -20,21 +18,10 @@
           :auto-upload="false"
           class="d-flex flex-column justify-content-center mt-2 align-items-center w-100"
         >
-          <!-- <template #trigger>
-            <el-button type="primary">select file</el-button>
-          </template> -->
           <el-icon class="el-icon--upload"><i class="bi bi-cloud-arrow-up-fill"></i></el-icon>
           <div class="el-upload__text">
             파일을 드래그 하거나 <em>클릭하세요</em>
           </div>
-          <!-- <template #tip>
-            <el-button class="mt-3" type="primary" plain round @click="submitUpload"
-              >업로드</el-button
-            >
-          </template> -->
-            <!-- <div class="el-upload__tip" style="color: red">
-              limit 1 file, new file will cover the old file
-            </div> -->
         </el-upload>
       </div>
     </div>
@@ -112,25 +99,15 @@ export default defineComponent({
     }
     const submitUpload = () => {
       upload.value.submit()
-
-      // 파일 전송 후 파일 목록이 사라지지 않아서 작성한 코드
-      // 오류가 발생하는데 이후 해결하기로...
-      // upload.value.uploadFiles = []
     }
 
     const file = ref()
     const handleFileUpload = async() => {
-        // debugger;
-        // console.log("selected file",file.value.files[0])
-        //Upload to server
     }
 
     const submitFile = function (){
       let formData = new FormData();
       formData.append('file', file.value.files[0]);
-      // for (let value of formData.values()) {
-      //   console.log(value);
-      // }
       axios.post( `/meeting/${meetingId.value}/upload?archive-type=file`,
         formData,
         {

@@ -38,7 +38,6 @@ export default defineComponent({
       const results = queryString
         ? companies.value.filter(createFilter(queryString))
         : companies.value
-      // call callback function to return suggestions
       cb(results)
     }
 
@@ -68,15 +67,7 @@ export default defineComponent({
 
     const handleSelect = (item: CompanyItem) => {
       company.value = item.value
-      // console.log(company.value, item.value)
-      // handleInput()
     }
-
-    // const handleInput = () => {
-    //   if (company.value.trim()) {
-    //     emit('update:modelValue', company.value)
-    //   }
-    // }
 
     onMounted(() => {
       loadAll()

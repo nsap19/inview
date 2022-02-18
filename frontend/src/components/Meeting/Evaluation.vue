@@ -1,9 +1,6 @@
 <template>
   <div class="h-100">
     <!-- pagination -->
-
-    <!-- 디버그용 다운버튼 -->
-    <!-- <button @click="createHtmlFile">다운</button>   -->
     <div class="p-2 d-flex justify-content-center">
       <el-pagination 
         background 
@@ -154,7 +151,6 @@ export default defineComponent({
     const store = useStore()
     let userNickname = store.state.user.nickname
     let meetingId = store.state.meeting.id
-    const startSignal = computed(() => props.startSignal)
     watch(() => store.state.meeting, (newValue, oldValue) => {
       userNickname = userNickname || store.state.user.nickname
       meetingId = newValue.id || oldValue.id
@@ -198,22 +194,7 @@ export default defineComponent({
       })
       .catch(err => {
       });
-      
-      // 디버그용 파일 다운로드
-      // var a = document.createElement('a');
-      // a.download = 'fileName';
-      // a.href = htmlCode;
-      // a.click();
     }
-
-    // watch(()=>props.endSignal, () => {
-    //   console.log("평가에서 신호 안받음?", props.endSignal)
-    //   if (props.endSignal == true) {
-    //     // createHtmlFile()
-    //     console.log('평가에서 종료신호 받음')
-    //     createHtmlFile(meetingId)
-    //   }
-    // })
     return { questions, evaluations, currentPage, paginate, createHtmlFile }
   }
 })

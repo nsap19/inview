@@ -14,7 +14,6 @@
         :hide-required-asterisk="true"
         v-loading="loading"
       >
-        <!-- <img alt="INVIEW logo" src="@/assets/logo.png" class="w-100 p-2 mb-3" /> -->
         <el-form-item prop="nickname" :error="nicknameError" v-if="updateWhat === 'nickname'">
           <el-input
             v-model="ruleForm.nickname"

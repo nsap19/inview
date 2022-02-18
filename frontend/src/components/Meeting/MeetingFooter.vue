@@ -5,21 +5,10 @@
         <i class="bi bi-mic" id="micOn"></i>
         <i class="bi bi-mic-mute" id="micOff" style="display: none"></i>
       </el-button>
-      <!-- <el-button type="primary" size="large" circle ></el-button> -->
       <el-button type="primary" id ="camera" size="large" circle>
         <i class="bi bi-camera-video" id ="cameraOn"></i>
         <i class="bi bi-camera-video-off" id ="cameraOff" style="display: none"></i>
       </el-button>
-      <!-- <el-button type="primary" id ="record" size="large" circle v-show="!record" @click="record=true">
-        <i class="bi bi-record-fill"></i>
-      </el-button>
-      <el-button type="primary" id ="stopRecording" size="large" circle v-show="record" @click="record=false" style="background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);">
-        <i class="bi bi-record-fill blink"></i>
-      </el-button> -->
-      <!-- <el-button type="primary" id ="debug" size="large" circle >
-        비디오
-      </el-button> -->
-      <!-- <el-button type="primary" id ="cameraOff" size="large" circle style="display: none"></el-button> -->
       <input type="button" name="commit" value="비디오 참가" id="joinButton" style="display: none" />
       <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" />
       <input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" />
@@ -102,10 +91,6 @@ export default defineComponent({
 <style>
 .blink {
   animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
-  /* background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(255, 120, 120, 1) 0%), url(https://grainy-gradients.vercel.app/noise.svg);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent; */
   color: #FF7878;
 }
 @keyframes blinker {  

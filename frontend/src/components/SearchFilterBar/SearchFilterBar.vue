@@ -20,12 +20,6 @@
               </el-form-item>
             </div>
           </div>
-          <!-- <div class="col-12 col-lg-2">
-            <div class="text-center">
-              <div class="d-none d-lg-block" style="height: 22px; margin-bottom: 12px;"></div>
-              <el-button round @click="getSearchResult">상세 검색</el-button>
-            </div>
-          </div> -->
         </div>
       </div>
     </el-form>
@@ -53,11 +47,6 @@ export default defineComponent({
     const title = ref(route.query.title)
     const industry = ref(route.query.industry)
     const company = ref(route.query.company)
-
-    // watch(() => store.state.meeting, (newValue, oldValue) => {
-    //   userNickname = userNickname || store.state.user.nickname
-    //   meetingId = newValue.id || oldValue.id
-    // })
 
     watch([title, industry, company], ([newTitle, newIndustry, newCompany], [preTitle, preIndustry, preCompany]) => {
       getSearchResult()
@@ -91,6 +80,5 @@ export default defineComponent({
 <style>
 .search-filter-bar {
   border-radius: 10px;
-	/* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important; */
 }
 </style>

@@ -24,8 +24,6 @@
         </div>
         <p>검색 결과가 존재하지 않습니다.</p>
       </div>
-      <!-- <div v-loading="loading" class="loading" element-loading-background="#F9F9F9">
-      </div> -->
       <div ref="createButton" class="create-button" v-if="this.$store.state.user.id">
         <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" size="large"
         >방 만들기</el-button>   
@@ -85,7 +83,6 @@ export default defineComponent({
 
     const makeQuery = function (page) {
       let query = {page: page}
-      // console.log(route.query.title.trim())
       if (route.query.title && route.query.title.trim()) {
         query['title'] = route.query.title.trim()
       }
@@ -108,10 +105,6 @@ export default defineComponent({
           page += 1
         }
       })
-
-      // const footer = document.getElementById("footer")
-      // console.log(footer.getBoundingClientRect())
-      // console.log(createButton.value.getBoundingClientRect())
     })
     const openCreateMeetingDialog = ref(false)
     const createButton = ref(null)

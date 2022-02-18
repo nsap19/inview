@@ -34,7 +34,6 @@ export default defineComponent({
     const store = useStore()
 
     const goToSearchResult = () => {
-      // 검색어에 글자가 있는 경우 검색 결과 페이지로 이동
       if (searchQuery.value.trim()) {
         let query = {}
         if (selectedCategory.value === 'title') {

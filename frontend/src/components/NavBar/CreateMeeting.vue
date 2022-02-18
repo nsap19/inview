@@ -39,8 +39,6 @@
           value-format="YYYY-MM-DD HH:mm:ss"
           placeholder="날짜"
         ></el-date-picker>
-        <!-- <el-col :span="11">
-        </el-col> -->
       </el-form-item>
       <el-form-item label="종료 시간" prop="endTime">
         <el-date-picker
@@ -50,8 +48,6 @@
           value-format="YYYY-MM-DD HH:mm:ss"
           placeholder="날짜"
         ></el-date-picker>
-        <!-- <el-col :span="11">
-        </el-col> -->
       </el-form-item>
       <el-form-item label="비밀번호">
         <el-input 
@@ -77,7 +73,6 @@ import axios from 'axios'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 export default defineComponent({
   name: 'CreateMeeting',
@@ -164,16 +159,6 @@ export default defineComponent({
     })
     const store = useStore()
     const router = useRouter()
-    const joinMeeting = function (meetingId: number) {
-      axios.post(
-        `/meeting/${meetingId}/join`,
-        {},
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
-      ).then(res => {
-        router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
-      }).catch(err => {
-      })
-    }
 
     interface createMeetingBody {
       title: string
@@ -194,7 +179,6 @@ export default defineComponent({
           openDialog.value = false
           store.dispatch('setMeeting', res.data.data.id)
           store.dispatch('setParticipants', [{id: store.state.user.id, nickname: store.state.user.nickname, ready: true}])
-          // joinMeeting(res.data.data.id)
           router.push({ name: 'Meeting', params: { meetingUrl: res.data.data.url } })
         }).catch(err => {
         })

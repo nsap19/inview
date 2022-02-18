@@ -52,7 +52,6 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="passwordFormVisible = false">취소</el-button>
-        <!-- <el-button type="primary" @click="submitForm(ruleFormRef)" -->
         <el-button type="primary" @click="joinMeeting(props.meeting.id)"
           >입장</el-button
         >
@@ -77,20 +76,6 @@ export default defineComponent({
   setup (props) {
     const makePrettyTime = function (time: string) {
       let prettyTime = ''
-      // const today = new Date(+new Date() + 3240 * 10000).toISOString().split("T")[0]
-      // const tomorrow = new Date(+new Date() + 11880 * 10000).toISOString().replace("T", " ").replace(/\..*/, '').slice(0, 10)
-      // const twoDaysAfter = new Date(+new Date() + 20520 * 10000).toISOString().replace("T", " ").replace(/\..*/, '').slice(0, 10)
-      // if (time.slice(0, 10) === today) {
-      //   prettyTime += '오늘'
-      // } else if (time.slice(0, 10) === tomorrow) {
-      //   prettyTime += '내일'
-      // } else if (time.slice(0, 10) === twoDaysAfter) {
-      //   prettyTime += '모레'
-      // } else {
-      //   if (time.slice(0, 4) !== new Date().getFullYear().toString()) {
-      //     prettyTime += time.slice(2, 4) + "년 "
-      //   }
-      // }
       prettyTime += time.slice(5, 6) === "0" ? time.slice(6, 7) + "월 " : time.slice(5, 7) + "월 "
       prettyTime += time.slice(8, 9) === "0" ? time.slice(9, 10) + "일 " : time.slice(8, 10) + "일 "
       prettyTime += time.slice(11, 12) === "0" ? time.slice(12, 13) + "시 " : time.slice(11, 13) + "시 "
