@@ -49,13 +49,13 @@ export default createStore({
       commit('SET_LOGOUT')
     },
     search( { commit }, query ) {
-      console.log(query)
+      // console.log(query)
       axios({
         url: "/meeting",
         method: 'GET',
         params: query
       }).then(res => {
-          console.log(res, query)
+          // console.log(res, query)
           if (1 < query.page) {
             commit('ADD_SEARCH_RESULT', res.data.data.content)
           } else {
