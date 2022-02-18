@@ -265,7 +265,6 @@
 <script>
 import bezierEasing from "bezier-easing";
 import Footer from "../components/Footer.vue";
-import LandingHeader from "../components/LandingHeader.vue";
 
 const ease = bezierEasing(0.25, 0.1, 0.25, 1.0);
 const easeIn = bezierEasing(0.38, 0.01, 0.78, 0.13);
@@ -621,7 +620,6 @@ const applyStyle = (element, styleName, value, unit = "px") => {
 export default {
   el: "#app",
   components: {
-    LandingHeader,
     Footer,
   },
   data() {
