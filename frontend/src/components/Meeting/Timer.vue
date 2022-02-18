@@ -81,17 +81,6 @@
         </el-button>
       </div>
     </div>
-    <!-- <div
-      class="d-flex flex-row justify-content-center"
-      style="transform: translateY(-30%)"
-    >
-      <Vue3Lottie
-        @click="startCountdown"
-        :disabled="counting[0]"
-        :animationData="StartImg"
-        :height="200"
-      />
-    </div> -->
   </div>
 </template>
 
@@ -143,7 +132,6 @@ export default {
   },
   methods: {
     startCountdown: function () {
-    //   this.stop_auto_reload();
       for (var i = 0; i < this.time.length; i++) {
         console.log(this.time.length);
         this.counting[i] = false;
@@ -170,28 +158,7 @@ export default {
         this.$refs["timer2"].play();
         this.$refs["timer1"].play();
       }
-    //   this.start_auto_reload();
     },
-    // start_auto_reload() {
-    //   console.log("start!!");
-    //   this.auto_reload = true;
-    //   this.auto_reload_func = setInterval(() => {
-    //     if (this.counting[0] || this.counting[1] || this.counting[2]) {
-    //       for (var i = 0; i < this.time.length; i++) {
-    //         this.time[i]--;
-    //         if (this.time[i] < 0) {
-    //           this.counting[i] = false;
-    //           this.time[i] = 0;
-    //         }
-    //       }
-    //     }
-    //   }, 1000);
-    // },
-    // stop_auto_reload() {
-    //   console.log("stop!!");
-    //   this.auto_reload = false;
-    //   clearInterval(this.auto_reload_func);
-    // },
   },
 };
 </script>
@@ -205,17 +172,10 @@ export default {
   justify-content: center;
   font-size: calc(1.275rem + 0.3vw);
   font-weight: 700;
-  /* transform: translateY(-50%); */
   transform: translateX(-80%);
 }
 
 .timer-wrapper {
-  /* background: linear-gradient(
-      140deg,
-      rgba(243, 240, 215, 1) -10%,
-      rgba(78, 115, 81, 0.522) 50%
-    ),
-    url(https://grainy-gradients.vercel.app/noise.svg); */
   margin: 10px;
   border-radius: 20px;
   width: 50%;
@@ -244,7 +204,6 @@ export default {
   .timer-wrapper {
     width: 80%;
     margin-top: 50px;
-    /* height: 135px; */
   }
   .custom-row-cols > * {
     flex: 0 0 auto;

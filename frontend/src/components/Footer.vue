@@ -140,7 +140,6 @@ export default {
 }
 ul {
   list-style-type: none;
-  /* float: left; */
   display: inline;
   margin-left: 20px;
 }

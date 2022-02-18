@@ -15,7 +15,6 @@
  *
  */
 
-// var ws = new WebSocket('ws://' + location.host + '/groupcall');
 var participants = {};
 var userId;
 
@@ -58,7 +57,6 @@ function handleCameraClick(){
 
 
 const serverURL = "https://i6a201.p.ssafy.io/api/groupcall";
-// const serverURL = "http://localhost:8080/api/groupcall";
 let ws = new SockJS(serverURL);
 
 window.onbeforeunload = function() {
@@ -130,9 +128,6 @@ function register() {
 	let token = localStorage.getItem("token");
 	let userNickname = document.getElementById('userNickname').value
 
-	// document.getElementById('join').style.display = 'none';
-	// document.getElementById('room').style.display = 'block';
-
 	var message = {
 		id : 'joinRoom',
 		accessToken : token,
@@ -177,11 +172,9 @@ function onExistingParticipants(msg) {
 		}
 	};
 	
-	console.log("onExistingParticipants에서 받은 메세지", msg)
 	userId = msg.userId;
 	meetingId = msg.meetingId;
 	userNickname = msg.userNickname;
-	// console.log(userId + " registered in room " + meetingId);
 	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
@@ -205,9 +198,6 @@ function onExistingParticipants(msg) {
 		  }
 		  this.generateOffer (participant.offerToReceiveVideo.bind(participant));
 	});
-	// console.log(msg.data)
-	// console.log(msg.infos)
-	// msg.infos.forEach(receiveVideo);
 	for (let [userNickname, userId] of Object.entries(msg.infos)) {
     console.log(userNickname, userId);
 		receiveVideo(userId, userNickname)
@@ -234,8 +224,6 @@ function leaveRoom() {
 		participants[key].dispose();
 	}
 
-	// document.getElementById('join').style.display = 'block';
-	// document.getElementById('room').style.display = 'none';
 	cameraOff = true
 	ws.close();
 }

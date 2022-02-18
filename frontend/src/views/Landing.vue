@@ -5,7 +5,6 @@
         <div class="slide-container">
           <div class="slide" ref="sl0">
             <div class="overflow-hidden">
-              <!-- <LandingHeader></LandingHeader> -->
               <div class="row justify-content-center">
                 <div class="col-md-6 mb-4">
                   <div class="slide-big-text">
@@ -21,7 +20,6 @@
                     <router-link to="/home" class="button1">
                       Try it free
                     </router-link>
-                    <!-- <a href="#" class="button1">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -77,7 +75,6 @@
                     <router-link to="/home" class="button2">
                       Try it free
                     </router-link>
-                    <!-- <a href="#" class="button2">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -137,7 +134,6 @@
                     <router-link to="/home" class="button1">
                       Try it free
                     </router-link>
-                    <!-- <a href="#" class="button1">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -197,7 +193,6 @@
                     <router-link to="/home" class="button4">
                       Try it free
                     </router-link>
-                    <!-- <a href="#" class="button4">Try it free</a> -->
                     <br />
                   </div>
                 </div>
@@ -237,16 +232,6 @@
           </div>
           <div class="slide slide-left sl4" ref="sl4">
             <div class="sl4-content">
-              <!-- <div class="slide-big-text" ref="sl4-big">
-                <p ref="sl4-big-1">자세한</p>
-                <p ref="sl4-big-2">설명이</p>
-                <p ref="sl4-big-3">있을 수도 있어요</p>
-              </div>
-              <div class="slide-small-text">
-                <p>실제 동작 사진을 넣는건</p>
-                <p>어떠신가요??</p>
-                <p>ㅜㅜ</p>
-              </div> -->
             </div>
           </div>
           <div class="wave" ref="wave">
@@ -256,8 +241,6 @@
             <div class="container md-6 mb-4" style="background-color: #f3f0d7; border-radius: 15px 50px;">
               <div class="slide-big-text">
                 <br><br>
-                <!-- <p><I>당신의 꿈을</I></p>
-                <p><I>Inview와 함께 준비하세요.</I></p> -->
                 <p><i>당신의 꿈을</i></p>
                 <p><i>Inview와 함께 준비하세요.</i></p>
               </div>
@@ -267,7 +250,6 @@
                 <router-link to="/home" class="button4">
                   Try it free
                 </router-link>
-                <!-- <a href="#" class="button4">Try it free</a> -->
                 <br>
                 <br>
                 <br>
@@ -697,7 +679,6 @@ export default {
       for (const style of Object.keys(styles)) {
         const { topValue, bottomValue } = styles[style];
         const calc = (bottomValue - topValue) * r + topValue;
-        // console.log("calc : " + calc);
         applyStyle(this.$refs[refname], style, calc, unit);
       }
     },
@@ -731,16 +712,12 @@ export default {
     onScroll() {
       // 현재 스크롤 위치 파악
       const scrollTop = window.scrollY || window.pageYOffset;
-      // const currentPos = scrollTop + window.innerHeight / 2;
       const currentPos = scrollTop + 361
-      // console.log("currentPos : " + currentPos);
       // disabled 순회하며 활성화할 요소 찾기.
       disabled.forEach((obj, refname) => {
         // 만약 칸에 있다면 해당 요소 활성화
         if (isAmong(currentPos, obj.top, obj.bottom)) {
-          // console.log(refname + " " + obj.top + " " + obj.bottom);
           enabled.set(refname, obj);
-          // console.log("classList가뭔데", this.$refs[refname])
           this.$refs[refname].classList.remove("disabled");
           this.$refs[refname].classList.add("enabled");
           disabled.delete(refname);
@@ -750,10 +727,8 @@ export default {
       // enabled 순회하면서 해제할 요소를 체크
       enabled.forEach((obj, refname) => {
         const { top, bottom, topStyle, bottomStyle } = obj;
-        // console.log(`${top}, ${bottom}, ${topStyle}, ${bottomStyle}`);
         // 범위 밖에 있다면
         if (!isAmong(currentPos, top, bottom)) {
-          // console.log(currentPos + " " + top + " " + bottom);
           // 위로 나갔다면 시작하는 스타일 적용
           if (currentPos <= top) {
             Object.keys(topStyle).forEach((styleName) => {
@@ -768,7 +743,6 @@ export default {
                 styleName,
                 bottomStyle[styleName]
               );
-              // this.$refs[refname].style[styleName] = bottomStyle[styleName];
             });
           }
 
@@ -781,7 +755,6 @@ export default {
         // enable 순회중, 범위 내부에 제대로 있다면 각 애니메이션 적용시키기.
         else {
           this.applyAllAnimation(currentPos, refname);
-          // console.log(currentPos + " " + refname + " 애니메이션 적용중");
         }
       });
     },

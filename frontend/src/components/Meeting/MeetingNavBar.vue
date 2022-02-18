@@ -4,7 +4,6 @@
       <span class="fw-bold fs-4 ps-2">{{ this.$store.state.meeting.title }}</span>
     </div>
     <div v-if="startSignal" class="close-button">
-      <!-- <el-button type="danger" v-if="this.$store.state.user.id === this.$store.state.meeting.hostId" @click="clickCloseMeeting">종료</el-button> -->
       <el-button type="danger" round @click="clickLeaveMeeting">종료</el-button>
     </div>
   </div>
@@ -81,9 +80,6 @@ export default defineComponent({
         }
       )
         .then(() => {
-          // if (closeSignal.value) {
-          //   closeMeeting()
-          // }
           if (startSignal.value && store.state.participants.length === 1) {
             closeMeeting()
           }
@@ -111,11 +107,6 @@ export default defineComponent({
 .meeting-nav {
   flex: 0 1 auto;
 	flex: 0 1 66px;
-  /* The above is shorthand for:
-  flex-grow: 0,
-  flex-shrink: 1,
-  flex-basis: auto
-  */
 	border-radius: 10px;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	margin: 5px;

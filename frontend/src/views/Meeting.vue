@@ -1,28 +1,5 @@
 <template>
 	<div class="meeting-container">
-		<!-- 면접 질문 선택 모달 -->
-		<el-dialog
-			v-model="dialogVisible"
-			title="면접 질문 선택"
-			width="80%"
-			:close-on-click-modal="false"
-			:close-on-press-escape="false"
-			:show-close="false"
-		>
-			<div style="max-height: 500px; overflow-y: auto">
-				<el-scrollbar height="480px">
-					<ChooseQuestion />
-				</el-scrollbar>
-			</div>
-			<template #footer>
-				<span class="dialog-footer">
-					<el-button type="primary" @click="handleClose"
-						>선택</el-button
-					>
-				</span>
-			</template>
-		</el-dialog>
-
 		<!-- 미팅 네비바 -->
 		<MeetingNavBar :startSignal="startSignal" :closeSignal="closeSignal" @leaveMeeting="leaveSignal=true" />
 
@@ -88,7 +65,6 @@ import Video from '@/components/Meeting/Video.vue'
 import Waiting from '@/components/Meeting/Waiting.vue'
 import MeetingFooter from '@/components/Meeting/MeetingFooter.vue'
 import { CloseBold, } from '@element-plus/icons-vue'
-import { ElMessageBox } from 'element-plus'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import axios from "axios"
@@ -132,66 +108,29 @@ export default defineComponent({
 
 		onMounted(() => {
 			document.getElementById('joinButton').onclick=function(){register(); return false;};
-			// document.getElementById('debug').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
-			// document.getElementById('record').onclick=function(){start(); return false;};
-			// document.getElementById('stopRecording').onclick=function(){stop(); return false;};
 			getMeeting()
-			// var script = document.createElement('script');
-			// script.src = "../js/kurento-util.js";
-			// document.head.appendChild(script); 
-			// var script2 = document.createElement('script');
-			// script2.src = "../js/conferenceroom.js";
-			// document.head.appendChild(script2); 
-			// var script3 = document.createElement('script');
-			// script3.src = "../js/participant.js";
-			// document.head.appendChild(script3); 
-
-			// 초기 비디오 크기 설정
-			// if (wholeVideosWrapper.value) {
-			// 	width.value = wholeVideosWrapper.value.offsetWidth
-			// 	height.value = wholeVideosWrapper.value.offsetHeight
-			// 	resize(width.value, height.value)
-			// }
 
 			// 반응형 비디오 크기 설정
 			window.addEventListener('resize', function () {
-				// console.log('window 크기 변경 resize좀 제발')
-				// const width = document.getElementById('container').offsetWidth
 				let width =  openAside.value ? window.innerWidth - 420 : document.getElementById('container').offsetWidth
-				// let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
 				if (window.innerWidth < 600) {
 					width = window.innerWidth
 				}
 				const height = document.getElementById('container').offsetHeight
 				resize(width, height)
-				// if (wholeVideosWrapper.value) {
-				// 	width.value = wholeVideosWrapper.value.offsetWidth
-				// 	height.value = wholeVideosWrapper.value.offsetHeight
-				// 	resize(width.value, height.value)
-				// 	windowWidth.value = window.innerWidth
-				// }
 				windowWidth.value = window.innerWidth
 			})
 		})
     onUnmounted(() => {
       window.removeEventListener('resize', function () {
-				// console.log('window 크기 변경 resize좀 제발')
-				// const width = document.getElementById('container').offsetWidth
 				let width =  openAside.value ? window.innerWidth - 420 : document.getElementById('container').offsetWidth
-				// let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
 				if (window.innerWidth < 600) {
 					width = window.innerWidth
 				}
 				const height = document.getElementById('container').offsetHeight
 				resize(width, height)
-				// if (wholeVideosWrapper.value) {
-				// 	width.value = wholeVideosWrapper.value.offsetWidth
-				// 	height.value = wholeVideosWrapper.value.offsetHeight
-				// 	resize(width.value, height.value)
-				// 	windowWidth.value = window.innerWidth
-				// }
 				windowWidth.value = window.innerWidth
 			})
     })
@@ -251,7 +190,6 @@ export default defineComponent({
 			'file': '파일 전송',
 			'timer': '타이머'
 		}
-		const dialogVisible = ref(false)
 
 		watch(openAside, (oldVal) => {
 			let width = oldVal ? document.getElementById('container').offsetWidth - 420 : document.getElementById('container').offsetWidth + 420
@@ -262,26 +200,6 @@ export default defineComponent({
 			}
 			resize(width, height)
 		})
-
-		// 이후 ChooseQuestion 컴포넌트로 옮길 것
-		const handleClose = () => {
-			ElMessageBox.confirm(
-				'선택하신 면접 질문으로 모의 면접을 구성합니다.',
-				'면접 질문 확정',
-				{
-					confirmButtonText: '확정',
-					cancelButtonText: '다시 고르기',
-				}
-				)
-				.then(() => {
-					dialogVisible.value = false
-				})
-				// .catch(() => {
-				// 	// catch error
-				// 	console.log('다시 면접 질문 고르기')
-				// 	console.log(dialogVisible)
-				// })	
-		}
 
 		const endSignal = ref(false)  
 		const startSignal = ref(false)  // 미팅 시작
@@ -309,20 +227,11 @@ export default defineComponent({
 			}
 		})
 		const store = useStore()
-    // watch(() => store.state.meeting, (newValue, oldValue) => {
-		// 	if (store.state.meeting.id) {
-		// 		getMeeting()
-		// 	}
-    // })
 		const participants = computed(() => store.state.participants)
-		const participantsExceptMe = computed(() => store.state.participants.filter((participant) => {
-      return parseInt(participant.id) !== store.state.user.id
-    }))
 		const router = useRouter()
 		router.beforeEach((to, from) => {
 			if (to.name !== "Meeting") {
 				store.dispatch('deleteMeeting')
-				// leaveSignal.value = true
 			}
 		})
 
@@ -344,7 +253,7 @@ export default defineComponent({
 
 		return { 
 			CloseBold, readySignal, leaveSignal, closeSignal,
-			openAside, asideCategory, dialogVisible, endSignal, startSignal, participants, categoryKorName,
+			openAside, asideCategory, endSignal, startSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
 			handleClose,
 		}
@@ -357,13 +266,11 @@ export default defineComponent({
 	display: flex;
   flex-flow: column;
   height: 100vh;
-	/* background-color: #EAE9E0; */
 	background-color: #F4F4F5;
 }
 
 .meeting-content {
 	flex: 1 1 auto;
-	/* width: 100vw; */
 	height: 500px;
 	display: flex;
 	flex-direction: row;
@@ -384,12 +291,6 @@ export default defineComponent({
 }
 
 .meeting-content-main {
-	/* flex-grow: 1;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center; */
-
-	/* overflow: scroll; */
 	display: flex;
 	align-content: center;
 	flex-wrap: wrap;
@@ -398,8 +299,6 @@ export default defineComponent({
 	vertical-align: middle;
 	flex: 1;
 	border-radius: 10px;
-	/* background: rgba(0, 0, 0, 0.3); */
-
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	margin: 5px;
 }
@@ -423,16 +322,6 @@ export default defineComponent({
 }
 
 .video-wrapper {
-	/* background-color: lightslategray; */
-	/* background-clip: content-box; */
-
-  /* width: 33%;
-	margin: 1px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	position: relative; */
-
 	position: relative;
 	vertical-align: middle;
 	align-self: center;
@@ -443,11 +332,4 @@ export default defineComponent({
 	background: #fff;
 	animation: show 0.4s ease;
 }
-
-/* @media (max-width: 1024px) {
-	.video-wrapper {
-		width: 49%;
-		height: 33%;
-  }
-} */
 </style>

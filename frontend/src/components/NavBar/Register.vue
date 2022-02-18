@@ -145,7 +145,6 @@ export default defineComponent({
     const signup = function (body: {nickname: string, email: string, password: string}) {
       axios.post("/users/signup/", body).then(res => {
         loading.value = false
-        // console.log(res)
         emailCertificationCode.value = res.data.code
         showEmailCertification.value = true
       }).catch(err => {

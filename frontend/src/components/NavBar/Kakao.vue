@@ -45,7 +45,6 @@ export default {
         success: function (response) {
           window.Kakao.API.request({
             url: "/v2/user/me",
-            // data: { property_keys: ["kakao_account.email"] },
             success: async function (response) {
               await axios
                 .post("oauth/login/kakao", response)
@@ -64,21 +63,17 @@ export default {
                   emit('closeDialog')
                 })
                 .catch((e) => {
-                  // console.log(e);
                   ElMessage({
                     message: '오류가 발생했습니다. 다시 시도해주세요.',
                   type: 'warning',
                   });
-                  // emit('closeDialog')
                 });
             },
             fail: function (error) {
-              // console.log(error);
             },
           });
         },
         fail: function (error) {
-          // console.log(error);
         },
       });
     };

@@ -50,7 +50,6 @@ function Participant(userId, userNickname) {
 
     const width = document.getElementById("container").offsetWidth;
     const height = document.getElementById("container").offsetHeight;
-    // console.log('getArea', width, height)
 
     while (i < document.getElementsByClassName("participant").length) {
       if (w + increment > width) {
@@ -101,7 +100,6 @@ function Participant(userId, userNickname) {
 	nicknameWrapper.appendChild(nickname)
 	container.appendChild(nicknameWrapper)
 
-	// container.appendChild(span);
 	container.onclick = switchContainerClass;
 	document.getElementById('participants').appendChild(container);
 

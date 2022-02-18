@@ -95,7 +95,6 @@ export default defineComponent({
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
       ).then(res => {
         router.push({ name: 'Home'})
-        // store.dispatch('deleteMeeting')
         ElMessage({
           type: 'success',
           message: '참가를 취소하셨습니다.',
@@ -115,9 +114,7 @@ export default defineComponent({
         }
       )
         .then(() => {
-          // router.push({ name: 'Home'})
           leaveMeeting()
-          // store.dispatch('deleteMeeting')
           emit('leave')
         })
         .catch(() => {
@@ -161,7 +158,6 @@ export default defineComponent({
     const startMeeting = function () {
       const numOfParticipants = participants.value.length
       const numOfReady = participants.value.filter((participant: { ready: boolean }) => participant.ready).length
-      // console.log(numOfParticipants, numOfReady)
       if (numOfParticipants === numOfReady) {
         emit('start')
       } else {
@@ -196,13 +192,9 @@ export default defineComponent({
 .waiting-participant {
   box-shadow: inset 3px 3px 8px 0 rgba(0, 0, 0, 0.2),
               inset -6px -6px 10px 0 rgba(255, 255, 255, 0.5);
-
-  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
   border-radius: 10px;
   margin: 10px;
   padding: 18px;
-  /* width: 100%; */
-  /* height: 100%; */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
