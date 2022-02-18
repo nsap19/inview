@@ -135,8 +135,8 @@ export default defineComponent({
 			// document.getElementById('debug').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
-			document.getElementById('record').onclick=function(){start(); return false;};
-			document.getElementById('stopRecording').onclick=function(){stop(); return false;};
+			// document.getElementById('record').onclick=function(){start(); return false;};
+			// document.getElementById('stopRecording').onclick=function(){stop(); return false;};
 			getMeeting()
 			// var script = document.createElement('script');
 			// script.src = "../js/kurento-util.js";
