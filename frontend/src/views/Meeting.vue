@@ -53,7 +53,6 @@
 
 <script>
 import { defineComponent, ref, onMounted, watch, computed, onUnmounted } from 'vue'
-import ChooseQuestion from '@/components/Meeting/ChooseQuestion.vue';
 import Participant from '@/components/Meeting/Participant.vue';
 import Evaluation from '@/components/Meeting/Evaluation.vue';
 import Chat from '@/components/Meeting/Chat.vue';
@@ -73,7 +72,6 @@ export default defineComponent({
 	name: 'Meeting',
 	components: {
 		MeetingNavBar,
-		ChooseQuestion,
 		Participant,
 		Evaluation,
 		Chat,
