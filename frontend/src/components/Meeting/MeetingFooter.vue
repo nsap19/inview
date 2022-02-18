@@ -30,7 +30,7 @@
       <el-dropdown size='large' class="mx-3">
         <el-button type="primary" size="large" circle :icon="List"></el-button>
         <template #dropdown>
-          <el-dropdown-menu>
+          <el-dropdown-menu v-if="participantsExceptMe.length">
             <el-dropdown-item 
               v-for="(participant, index) in participantsExceptMe"
               :key="index"

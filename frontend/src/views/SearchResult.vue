@@ -24,8 +24,8 @@
         </div>
         <p>검색 결과가 존재하지 않습니다.</p>
       </div>
-      <div v-loading="loading" class="loading" element-loading-background="#F9F9F9">
-      </div>
+      <!-- <div v-loading="loading" class="loading" element-loading-background="#F9F9F9">
+      </div> -->
       <div ref="createButton" class="create-button" v-if="this.$store.state.user.id">
         <el-button class="m-1" :icon="Plus" round plain @click="openCreateMeetingDialog = true" size="large"
         >방 만들기</el-button>   

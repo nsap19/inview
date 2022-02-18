@@ -78,6 +78,7 @@ export default defineComponent({
     }
 
     const getSearchResult = () => {
+      console.log(makeQuery(1))
       router.push({ name: 'Search', query: makeQuery(1)})
       store.dispatch('search', makeQuery(1))
     }

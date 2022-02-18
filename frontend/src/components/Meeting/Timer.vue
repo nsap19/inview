@@ -4,7 +4,7 @@
       <div class="col">
         <div class="row timer-wrapper" v-show="counting[0]">
           <div
-            class="col d-flex flex-column justify-content-center align-items-center"
+            class="col d-flex timer-pic-wrapper justify-content-center align-items-center"
           >
             <Vue3Lottie
               ref="timer1"
@@ -28,7 +28,7 @@
       <div class="col">
         <div class="row timer-wrapper" v-show="counting[1]">
           <div
-            class="col d-flex flex-column justify-content-center align-items-center"
+            class="col d-flex timer-pic-wrapper flex-row justify-content-center align-items-center"
           >
             <Vue3Lottie
               ref="timer2"
@@ -52,7 +52,7 @@
       <div class="col">
         <div class="row timer-wrapper" v-show="counting[2]">
           <div
-            class="col d-flex flex-column justify-content-center align-items-center"
+            class="timer-pic-wrapper col d-flex justify-content-center align-items-center"
           >
             <Vue3Lottie
               ref="timer3"
@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="d-flex flex-row justify-content-center">
-      <div class="waiting-participant w-50">
+      <div class="waiting-participant start-button w-50">
         <el-button round style="margin: 0 auto;" type="text" @click="startCountdown">
           <span class="fs-5 fw-bold">START</span>
         </el-button>
@@ -205,7 +205,8 @@ export default {
   justify-content: center;
   font-size: calc(1.275rem + 0.3vw);
   font-weight: 700;
-  transform: translateY(-50%);
+  /* transform: translateY(-50%); */
+  transform: translateX(-80%);
 }
 
 .timer-wrapper {
@@ -219,7 +220,7 @@ export default {
   border-radius: 20px;
   width: 50%;
   margin: 0 auto;
-  height: 135px;
+  height: 100px;
   box-shadow: inset 3px 3px 8px 0 rgba(0, 0, 0, 0.2),
               inset -6px -6px 10px 0 rgba(255, 255, 255, 0.5);
   display: flex;
@@ -232,14 +233,28 @@ export default {
   width: 100%;
 }
 
+.timer-pic-wrapper {
+  flex-direction: row;
+}
+
 @media screen and (max-width: 600px) {
+  .timer {
+    transform: translateX(0%);
+  }
   .timer-wrapper {
     width: 80%;
     margin-top: 50px;
+    /* height: 135px; */
   }
   .custom-row-cols > * {
     flex: 0 0 auto;
     width: 33.3333333333%;
+  }
+  .timer-pic-wrapper {
+    flex-direction: row;
+  }
+  .start-button {
+    padding: 5px;
   }
 }
 </style>
