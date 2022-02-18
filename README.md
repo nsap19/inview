@@ -61,13 +61,6 @@
 ### :ship: 배포 환경
     URL : [https://i6a201.p.ssafy.io/]
 
-    테스트 계정 (ID/PW): 
-        - 컨설턴트용 접속 계정
-            - 사용자1 - [ssafy1@ssafy.com] / password1234
-            - 사용자2 - [ssafy2@ssafy.com] / password5678
-        - 실습코치용 접속 계정 :
-            - 사용자3 - [ssafy3@ssafy.com] / password9876
-            - 사용자4 - [ssafy4@ssafy.com] / password5432
 
 <!-- 자유 양식 -->
 
