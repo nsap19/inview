@@ -45,7 +45,7 @@
 				</div>
 				
 				<Participant v-show="asideCategory === 'participant'" />
-				<div v-for="participant in participants" :key="participant">
+				<div v-for="participant in participantsExceptMe" :key="participant">
 					<Evaluation 
 						:participantNickname="participant.nickname" 
 						:endSignal="endSignal" 
@@ -313,6 +313,9 @@ export default defineComponent({
 		// 	}
     // })
 		const participants = computed(() => store.state.participants)
+		const participantsExceptMe = computed(() => store.state.participants.filter((participant) => {
+      return parseInt(participant.id) !== store.state.user.id
+    }))
 		const router = useRouter()
 		router.beforeEach((to, from) => {
 			if (to.name !== "Meeting") {
