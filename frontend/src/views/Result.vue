@@ -27,7 +27,7 @@
     <p class="text-end mb-1 mt-2" style="font-size: 14px;">유효 기간 | {{ expirationDate }}</p>
     <div>
       <div>
-        <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('VIDEO')">면접 영상</el-button>
+        <!-- <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('VIDEO')">면접 영상</el-button> -->
         <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('CHAT')">채팅</el-button>
         <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('MEMO')">메모</el-button>
         <el-button plain round type="primary" class="m-1" :disabled="expired" @click="download('FILE')">공유 파일</el-button>

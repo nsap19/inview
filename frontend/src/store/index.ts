@@ -62,7 +62,7 @@ export default createStore({
             commit('SAVE_SEARCH_RESULT', res.data.data.content)
           }
         }).catch(err => {
-          commit('SAVE_SEARCH_RESULT', {})
+          // commit('SAVE_SEARCH_RESULT', {})
         })
     },
     setMeeting ( { commit }, meetingId ) {
