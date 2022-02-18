@@ -22,6 +22,7 @@ var userId;
 // 음소거, 카메라 on/off 기능
 let muted = false;
 let cameraOff = false;
+let myStream;
 
 function handleMuteClick(){
 	var participant = participants[userId];
@@ -43,7 +44,7 @@ function handleCameraClick(){
 	var participant = participants[userId];
 	console.log(userId)
 	console.log(participant.rtcPeer)
-	const myStream = participant.getVideoElement().srcObject;
+	const myStream = participant.getVideoElement().captureStream();
 	console.log(myStream)
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
@@ -58,9 +59,6 @@ function handleCameraClick(){
 		participant.rtcPeer.videoEnabled = false;		
 	}
 }
-
-let myStream;
-
 
 const serverURL = "https://i6a201.p.ssafy.io/api/groupcall";
 // const serverURL = "http://localhost:8080/api/groupcall";
@@ -157,7 +155,8 @@ function receiveVideoResponse(result) {
 	console.log("receive:"+result.userId)
 	participants[result.userId].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
 		if (error) return console.error (error);
-	});
+	})
+
 }
 
 function callResponse(message) {
@@ -191,17 +190,17 @@ function onExistingParticipants(msg) {
 	var participant = new Participant(userId, userNickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
+
 	video.srcObject = myStream;
-	// console.log("VIDEO: "+video.srcObject.id)
+
 	var options = {
 	      localVideo: video,
 	      mediaConstraints: constraints,
 	      onicecandidate: participant.onIceCandidate.bind(participant),
 		  configuration: {
 			iceServers: [
-				{"urls": 'stun:172.26.1.220:3478'},
 				{
-				"urls": 'turn:172.26.1.220:3478?transport=udp',
+				"urls": 'turn:3.35.231.64:3478?transport=udp',
 				"username": 'myuser',
 				"credential": 'mypassword'
 			}]
@@ -259,15 +258,14 @@ function receiveVideo(userId, nickname) {
 	var participant = new Participant(userId, nickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
-
+	
 	var options = {
-      remoteVideo: myStream,
+      remoteVideo: video,
       onicecandidate: participant.onIceCandidate.bind(participant),
 	  configuration: {
 		iceServers: [
-			{"urls": 'stun:172.26.1.220:3478'},
 			{
-			"urls": 'turn:172.26.1.220:3478?transport=udp',
+			"urls": 'turn:3.35.231.64:3478?transport=udp',
 			"username": 'myuser',
 			"credential": 'mypassword'
 		}]

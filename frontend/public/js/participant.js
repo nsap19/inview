@@ -27,6 +27,9 @@ const PARTICIPANT_CLASS = "participant";
  * @return
  */
 function Participant(userId, userNickname) {
+  
+
+
   console.log('participant에서 받은', userId, userNickname)
   this.userId = userId;
   var container = document.createElement("div");
@@ -37,7 +40,8 @@ function Participant(userId, userNickname) {
   var span = document.createElement("span");
   let video = document.createElement("video");
   var rtcPeer;
-  video.srcObject = myStream;
+  
+  // video.srcObject = myStream;
 	video.setAttribute('style', 'width: 100%; height: 100%;')
 	container.setAttribute('style', 'position: relative; vertical-align: middle; align-self: center; border-radius: 10px; overflow: hidden; display: inline-block; box-shadow: var(--shadow-dark); background: #fff; animation: show 0.4s ease; background: linear-gradient(140deg, rgba(243, 240, 215, 1) -100%, rgba(78, 115, 81, 0.5) 50%), url(https://grainy-gradients.vercel.app/noise.svg);')
 	const setMargin = 10
@@ -163,4 +167,9 @@ function Participant(userId, userNickname) {
     this.rtcPeer.dispose();
     container.parentNode.removeChild(container);
   };
+}
+
+function makeConnection(){
+  rtcPeer = new RTCPeerConnection();
+  myStream.getTracks().forEach(track => rtcPeer.addTrack(track, myStream));
 }

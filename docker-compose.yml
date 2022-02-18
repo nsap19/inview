@@ -57,9 +57,9 @@ services:
       #  - "5000-5050:5000-5050/udp"
     environment: 
         TZ: "Asia/Seoul"
-        KMS_STUN_IP: "172.26.1.220"
+        KMS_STUN_IP: "3.35.231.61"
         KMS_STUN_PORT: "3478"
-        KMS_TURN_URL: "myuser:mypassword@172.26.1.220:3478?transport=udp"
+        KMS_TURN_URL: "myuser:mypassword@3.35.231.61:3478?transport=udp"
     networks: 
       - backend
     working_dir: /tmp # RUN, CMD, ADD, COPY등이 이루어질 기본 디렉토리를 설정합니다.
