@@ -49,22 +49,20 @@ export default createStore({
       commit('SET_LOGOUT')
     },
     search( { commit }, query ) {
-      const industryList: string[] = []
-      const companyList: string[] = []
-      industryList.push(query.industry)
-      companyList.push(query.company)
+      console.log(query)
       axios({
         url: "/meeting",
         method: 'GET',
         params: query
       }).then(res => {
-          // console.log(res)
+          console.log(res, query)
           if (1 < query.page) {
             commit('ADD_SEARCH_RESULT', res.data.data.content)
           } else {
             commit('SAVE_SEARCH_RESULT', res.data.data.content)
           }
         }).catch(err => {
+          commit('SAVE_SEARCH_RESULT', {})
         })
     },
     setMeeting ( { commit }, meetingId ) {
