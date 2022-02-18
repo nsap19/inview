@@ -42,7 +42,7 @@ import { defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import dayjs from 'dayjs'
-
+import { ElMessage } from 'element-plus'
 import axios from "axios"
 
 export default defineComponent({
@@ -74,11 +74,16 @@ export default defineComponent({
     const expirationDate = getExpirationDate()
 
     const download = function (type){
+      // console.log(type)
       axios.get(`/users/${store.state.user.id}/meeting/${props.tableDatas.id}`).then(res=>{
-        for ( let v of res.data.data.archives){
+        let nonExist = 0
+        for ( let v of res.data.data.archives) {
+          // console.log(res.data.data.archives)
           // console.log(v.archiveType, type)
-          if(v.archiveType == type){
-            if( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
+          // console.log(typeof(v.archiveType), typeof(type))
+
+          if (v.archiveType === type) {
+            if ( props.tableDatas.endTime != null && dayjs().isAfter(getExpirationDate())){
               alert("다운로드 유효 기간이 지났습니다.")
             } else {
               axios.get(`/download/meeting/${props.tableDatas.id}/users/${store.state.user.id}/${v.archiveId}?archive-type=${v.archiveType}`, {
@@ -87,6 +92,7 @@ export default defineComponent({
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                   }
                 }).then(res=>{
+                  // console.log(res)
                   const FILE = window.URL.createObjectURL(new Blob([res.data]));
                   const fileName = res.headers['content-disposition'].slice(22)
                   const fileUrl = document.createElement('a');
@@ -94,6 +100,11 @@ export default defineComponent({
                   fileUrl.setAttribute('download', fileName.slice(0, fileName.length - 1));
                   document.body.appendChild(fileUrl);
                   fileUrl.click();
+                }).catch(err => {
+                  ElMessage({
+                    message: '파일이 존재하지 않습니다.',
+                    type: 'warning',
+                  });
                 })
             }
             
@@ -101,7 +112,16 @@ export default defineComponent({
             // element.setAttribute('href',v.path);
             // document.body.appendChild(element);
             // element.click();
+          } else {
+            nonExist++
           }
+        } 
+        if (nonExist === res.data.data.archives.length) {
+          // console.log(nonExist)
+          ElMessage({
+            message: '파일이 존재하지 않습니다.',
+            type: 'warning',
+          });
         }
       })
     }
