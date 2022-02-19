@@ -252,7 +252,6 @@ export default defineComponent({
 			CloseBold, readySignal, leaveSignal, closeSignal,
 			openAside, asideCategory, endSignal, startSignal, participants, categoryKorName,
 			wholeVideosWrapper, maxWidth, ratio, setMargin, width, height, windowWidth,
-			handleClose,
 		}
 	},
 })
