@@ -57,16 +57,6 @@ public class MyPageController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원 정보 수정 성공"));
 	}
 
-//	@GetMapping("/{userId}/futureMeeting")
-//	@ApiImplicitParam(name = "userId", value = "userId")
-//	@ApiOperation(value = "참가할 미팅 내역 전체 조회", response = FutureMeetingResClass.class)
-//	@ApiResponses({ @ApiResponse(code = 200, message = "참가할 미팅 내역 전체 조회 성공"),
-//			@ApiResponse(code = 400, message = "존재하지 않는 유저입니다."), @ApiResponse(code = 500, message = "서버 오류") })
-//	public ResponseEntity<? extends BaseResponseBody> searchFutureAll(@PathVariable("userId") int userId) {
-//		return ResponseEntity.status(200)
-//				.body(AdvancedResponseBody.of(200, "참가할 미팅 내역 전체 조회 성공", myPageService.searchFutureMeeting(userId)));
-//	}
-
 	@GetMapping("/{userId}/futureMeeting")
 	@ApiImplicitParam(name = "userId", value = "userId")
 	@ApiOperation(value = "참가할 미팅 내역 전체 조회", response = MeetingRes.class)
