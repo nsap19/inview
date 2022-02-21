@@ -41,10 +41,7 @@ function handleMuteClick(){
 }
 function handleCameraClick(){
 	var participant = participants[userId];
-	console.log(userId)
-	console.log(participant.rtcPeer)
 	const myStream = participant.getVideoElement().captureStream();
-	console.log(myStream)
 	myStream.getVideoTracks().forEach((track)=>(track.enabled = !track.enabled));
 	if(cameraOff){//카메라 켜기
 		document.getElementById("cameraOn").style.display = 'block'
@@ -67,9 +64,8 @@ window.onbeforeunload = function() {
 };
 
 ws.onmessage = function(message) {
-	console.log("onmessage에서 받은 매개변수", message)
 	var parsedMessage = JSON.parse(message.data);
-	console.info('Received message: ' + message.data);
+	// console.info('Received message: ' + message.data);
 
 	switch (parsedMessage.id) {
 	case 'existingParticipants':
@@ -142,12 +138,12 @@ function register() {
 }
 
 function onNewParticipant(request) {
-	console.log("onNewParticipant에서", request)
+	// console.log("onNewParticipant에서", request)
 	receiveVideo(request.userId, request.userNickname);
 }
 
 function receiveVideoResponse(result) {
-	console.log("receive:"+result.userId)
+	// console.log("receive:"+result.userId)
 	participants[result.userId].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
 		if (error) return console.error (error);
 	})
@@ -208,7 +204,6 @@ function onExistingParticipants(msg) {
 		  this.generateOffer (participant.offerToReceiveVideo.bind(participant));
 	});
 	for (let [userNickname, userId] of Object.entries(msg.infos)) {
-    console.log(userNickname, userId);
 		receiveVideo(userId, userNickname)
 	}
 }
@@ -219,11 +214,9 @@ async function getMedia() {
       	audio: true,
       	video: true,
       })
-	//   video.srcObject = myStream;
     } catch (e) {
       console.log(e);
     }
-	console.log(myStream)
 }
 
 getMedia();
@@ -242,7 +235,7 @@ function leaveRoom() {
 }
 
 function receiveVideo(userId, nickname) {
-	console.log("receiveVideo에서", userId, nickname)
+	// console.log("receiveVideo에서", userId, nickname)
 	var participant = new Participant(userId, nickname);
 	participants[userId] = participant;
 	var video = participant.getVideoElement();
@@ -270,7 +263,7 @@ function receiveVideo(userId, nickname) {
 }
 
 function onParticipantLeft(request) {
-	console.log('Participant ' + request.userId + ' left');
+	// console.log('Participant ' + request.userId + ' left');
 	var participant = participants[request.userId];
 	participant.dispose();
 	delete participants[request.userId];
@@ -278,6 +271,6 @@ function onParticipantLeft(request) {
 
 function sendMessage(message) {
 	var jsonMessage = JSON.stringify(message);
-	console.log('Sending message: ' + jsonMessage);
+	// console.log('Sending message: ' + jsonMessage);
 	ws.send(jsonMessage);
 }

@@ -30,7 +30,6 @@ function Participant(userId, userNickname) {
   
 
 
-  console.log('participant에서 받은', userId, userNickname)
   this.userId = userId;
   var container = document.createElement("div");
   container.className = isPresentMainParticipant()
@@ -142,14 +141,13 @@ function Participant(userId, userNickname) {
 
   this.offerToReceiveVideo = function (error, offerSdp, wp) {
     if (error) return console.error("sdp offer error");
-    console.log("Invoking SDP offer callback function");
+    // console.log("Invoking SDP offer callback function");
     var msg = { id: "receiveVideoFrom", sender: userId, sdpOffer: offerSdp };
     sendMessage(msg);
   };
 
   this.onIceCandidate = function (candidate, wp) {
-    console.log("Local candidate" + JSON.stringify(candidate));
-    console.log(userId)
+    // console.log("Local candidate" + JSON.stringify(candidate));
     var message = {
       id: "onIceCandidate",
       candidate: candidate,
@@ -161,7 +159,7 @@ function Participant(userId, userNickname) {
   Object.defineProperty(this, "rtcPeer", { writable: true });
 
   this.dispose = function () {
-    console.log("Disposing participant " + this.userId);
+    // console.log("Disposing participant " + this.userId);
     this.rtcPeer.dispose();
     container.parentNode.removeChild(container);
   };

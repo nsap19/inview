@@ -42,16 +42,7 @@ public class Room implements Closeable {
   private void shutdown() {
     this.close();
   }
-//
-//  public UserSession join(int userId, WebSocketSession session) throws IOException {
-//    log.info("ROOM {}: adding participant {}", this.meetingId, userId);
-//    final UserSession participant = new UserSession(userId, this.meetingId, session, this.pipeline);
-//    joinRoom(participant);
-//    participants.put(participant.getUserId(), participant);
-//    sendParticipantNames(participant);
-//    return participant;
-//  }
-  
+
   public UserSession join(int userId, String userNickname, WebSocketSession session) throws IOException {
 	    log.info("ROOM {}: adding participant {}", this.meetingId, userId);
 	    final UserSession participant = new UserSession(userId, userNickname, this.meetingId, session, this.pipeline);
@@ -66,27 +57,6 @@ public class Room implements Closeable {
     this.removeParticipant(user.getUserId());
     user.close();
   }
-//
-//  private Collection<Integer> joinRoom(UserSession newParticipant) throws IOException {
-//    final JsonObject newParticipantMsg = new JsonObject();
-//    newParticipantMsg.addProperty("id", "newParticipantArrived");
-//    newParticipantMsg.addProperty("userId", newParticipant.getUserId());
-//
-//    final List<Integer> participantsList = new ArrayList<>(participants.values().size());
-//    log.debug("ROOM {}: notifying other participants of new participant {}", meetingId,
-//        newParticipant.getUserId());
-//
-//    for (final UserSession participant : participants.values()) {
-//      try {
-//        participant.sendMessage(newParticipantMsg);
-//      } catch (final IOException e) {
-//        log.debug("ROOM {}: participant {} could not be notified", meetingId, participant.getUserId(), e);
-//      }
-//      participantsList.add(participant.getUserId());
-//    }
-//
-//    return participantsList;
-//  }
   
   private Collection<Integer> joinRoom(UserSession newParticipant, String nickname) throws IOException {
 	    final JsonObject newParticipantMsg = new JsonObject();

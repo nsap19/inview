@@ -1,8 +1,6 @@
 package com.ssafy.groupcall.service;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalTime;
 
 import org.kurento.client.EndOfStreamEvent;
 import org.kurento.client.ErrorEvent;
@@ -26,20 +24,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.ssafy.api.request.ArchiveRegisterPostReq;
 import com.ssafy.api.service.ArchiveService;
 import com.ssafy.api.service.meeting.MeetingInsideService;
 import com.ssafy.common.util.ArchiveUtil;
 import com.ssafy.db.entity.ArchiveType;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.meeting.Meeting;
 import com.ssafy.db.repository.UserRepositorySupport;
 import com.ssafy.groupcall.CallHandler;
-import com.ssafy.groupcall.RoomManager;
-import com.ssafy.groupcall.UserRegistry;
 import com.ssafy.groupcall.UserSession;
 
 @Service
@@ -102,7 +94,6 @@ public class GroupCallServiceImpl implements GroupCallService {
 				public void onEvent(StoppedEvent event) {
 					JsonObject response = new JsonObject();
 					response.addProperty("id", "stopped");
-					System.out.println(recorder.getUri());
 					try {
 						synchronized (session) {
 							session.sendMessage(new TextMessage(response.toString()));
@@ -173,7 +164,6 @@ public class GroupCallServiceImpl implements GroupCallService {
 			String filePath = userSession.getFilePath();
 			PlayerEndpoint player = new PlayerEndpoint.Builder(pipeline, filePath).build();
 			player.connect(webRtcEndpoint);
-			System.out.println(player.getVideoInfo().toString());
 
 			// Player listeners
 			player.addErrorListener(new EventListener<ErrorEvent>() {

@@ -39,35 +39,6 @@ public class UserSession implements Closeable {
 
 	private final ConcurrentMap<Integer, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
 
-//	public UserSession(final int userId, final int meetingId, final WebSocketSession session, MediaPipeline pipeline) {
-//		this.pipeline = pipeline;
-//		this.userId = userId;
-//		this.session = session;
-//		this.meetingId = meetingId;
-//		this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
-//
-//		System.out.println(outgoingMedia.toString());
-//		System.out.println(pipeline);
-//
-//		this.outgoingMedia.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
-//
-//			@Override
-//			public void onEvent(IceCandidateFoundEvent event) {
-//				JsonObject response = new JsonObject();
-//				response.addProperty("id", "iceCandidate");
-//				response.addProperty("userId", userId);
-//				response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
-//				try {
-//					synchronized (session) {
-//						session.sendMessage(new TextMessage(response.toString()));
-//					}
-//				} catch (IOException e) {
-//					log.debug(e.getMessage());
-//				}
-//			}
-//		});
-//	}
-
 	public UserSession(int userId, String userNickname, int meetingId, WebSocketSession session,
 			MediaPipeline pipeline) {
 		this.pipeline = pipeline;
@@ -77,8 +48,6 @@ public class UserSession implements Closeable {
 		this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
 		this.nickname = userNickname;
 		this.outgoingMedia.setTurnUrl("myuser:mypassword@172.26.1.220:3478");
-		System.out.println(outgoingMedia.toString());
-		System.out.println(pipeline);
 
 		this.outgoingMedia.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
 
@@ -141,10 +110,6 @@ public class UserSession implements Closeable {
 
 
 	public void receiveVideoFrom(UserSession sender, String sdpOffer) throws IOException {
-		System.out.println(this.userId);
-		System.out.println(sender);
-		System.out.println(sender.getUserId());
-		System.out.println(this.meetingId);
 		log.info("USER {}: connecting with {} in room {}", this.userId, sender.getUserId(), this.meetingId);
 
 		log.trace("USER {}: SdpOffer for {} is {}", this.userId, sender.getUserId(), sdpOffer);
