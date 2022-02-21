@@ -108,6 +108,9 @@ export default defineComponent({
 			document.getElementById('joinButton').onclick=function(){register(); return false;};
 			document.getElementById('mute').onclick = function(){handleMuteClick(); return false};
 			document.getElementById('camera').onclick = function(){handleCameraClick(); return false};
+			document.getElementById('record').onclick=function(){start(); return false;};
+			document.getElementById('stopRecording').onclick=function(){stop(); return false;};
+
 			getMeeting()
 
 			// 반응형 비디오 크기 설정

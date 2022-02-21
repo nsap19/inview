@@ -9,6 +9,12 @@
         <i class="bi bi-camera-video" id ="cameraOn"></i>
         <i class="bi bi-camera-video-off" id ="cameraOff" style="display: none"></i>
       </el-button>
+      <el-button type="primary" id ="record" size="large" circle v-show="!record" @click="record=true">
+        <i class="bi bi-record-fill"></i>
+      </el-button>
+      <el-button type="primary" id ="stopRecording" size="large" circle v-show="record" @click="record=false" style="background: linear-gradient(140deg, rgba(243, 240, 215, 1) -10%, rgba(78, 115, 81, 0.8) 50%), url(https://grainy-gradients.vercel.app/noise.svg);">
+        <i class="bi bi-record-fill blink"></i>
+      </el-button>
       <input type="button" name="commit" value="비디오 참가" id="joinButton" style="display: none" />
       <input type="text" style="display: none;" name="userId" :value="this.$store.state.user.id" id="userId" />
       <input type="text" style="display: none;" name="meetingId" :value="this.$store.state.meeting.id" id="meetingId" />
