@@ -54,7 +54,6 @@ public class MeetingParticipant {
 	}
 
 	public boolean checkParticipant(String meetingId, String email) {
-		System.out.println("checkParticipant / chattingUser : " + chattingUser);
 		Map<String, ChattingParticipant> hashMap = chattingUser.getParticipantByMeetingId().get(meetingId);
 		if (hashMap == null)
 			return false;

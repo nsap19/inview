@@ -54,10 +54,8 @@ public class OAuthController {
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> oauthKakao(
 			@RequestParam(value = "code", required = false) String code, @RequestParam(value = "error", required = false) String error) throws Exception {
-		System.out.println("카카오 인증 완료/ 인가 코드 : " + code);
 		
 		if (error != null) {
-			System.out.println("카카오 인증 에러 : "+error);
 	        if (error.equals("access_denied")) {
 	        	return ResponseEntity.status(400).body(BaseResponseBody.of(400, "카카오 인증 실패"));
 	        }
@@ -88,8 +86,6 @@ public class OAuthController {
 			@ApiResponse(code = 400, message = "회원가입/ 로그인 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> registerAndLogin(@RequestBody KakaoProfile kakaoProfile) throws Exception {
-		System.out.println(kakaoProfile.toString());
-
 		ResponseEntity<? extends BaseResponseBody> response = oauthService.registerAndLogin(kakaoProfile);
 		
 		return response;
@@ -101,7 +97,7 @@ public class OAuthController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "회원가입/ 로그인 성공"), @ApiResponse(code = 400, message = "로그인 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> googleCallback(@RequestBody VerifyCodePostReq verifyCodeInfo) {
-		//미구현
+		//to do write
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, ""));
 	}
 
@@ -110,7 +106,7 @@ public class OAuthController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "로그아웃 성공"), @ApiResponse(code = 400, message = "로그아웃 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> kakaoLogout(@RequestBody UserLogoutGetReq logoutInfo) throws Exception {
-		//미구현
+		//to do write
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, ""));
 	}
 
@@ -119,7 +115,7 @@ public class OAuthController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "로그아웃 성공"), @ApiResponse(code = 400, message = "로그아웃 실패"),
 			@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> googlelogout(@RequestBody UserLogoutGetReq logoutInfo) {
-		//미구현
+		//to do write
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, ""));
 	}
 }

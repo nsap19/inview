@@ -47,7 +47,5 @@ public class MeetingVerify {
 	public void checkParticipant(int meetingId, String email) {
 		User user = userService.getUserByEmail(email);
 		Participant p = meetingInsideService.checkParticipant(meetingId, user.getUserId()); //해당 회의실 participant가 아닌경우 'NotExistsUserException' 발생
-		
-		System.out.println("participant : "+p.toString());
 	}
 }

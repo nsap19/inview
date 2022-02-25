@@ -70,7 +70,6 @@ public class JwtTokenUtil {
 		JWTVerifier verifier = JWT.require(Algorithm.HMAC512(secretKey.getBytes())).withIssuer(ISSUER).build();
 
 		try {
-			System.out.println(token.replace(TOKEN_PREFIX, ""));
 			verifier.verify(token.replace(TOKEN_PREFIX, ""));
 		} catch (AlgorithmMismatchException ex) {
 			throw ex;

@@ -50,7 +50,7 @@ public class DownloadController {
 
 	@Autowired
 	ArchiveUtil archiveUtil;
-	
+
 	@Autowired
 	MeetingService meetingService;
 
@@ -100,18 +100,15 @@ public class DownloadController {
 		String originalName = archive.getArchiveName();
 		switch (archive.getArchiveType()) {
 		case VIDEO:
-			// video
 			break;
+			
 		case MEMO:
-			// memo
 			break;
 
 		case EVALUATION:
-			// evaluation
 			break;
 
 		case FILE:
-			// file
 			StringTokenizer st = new StringTokenizer(archive.getArchiveName(), "_");
 			String hash = st.nextToken();
 			String salt = st.nextToken();
@@ -132,7 +129,6 @@ public class DownloadController {
 			}
 			break;
 		case CHAT:
-			// chat
 			break;
 		}
 		Resource resource = new InputStreamResource(Files.newInputStream(path));

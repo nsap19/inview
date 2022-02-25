@@ -89,7 +89,6 @@ public class ChatMessageServiceImple implements ChatMessageService {
 			}
 		}
 
-		System.out.println(filepath);
 		if (subscribe && !isReadableFile(filepath)) {
 			archiveUtil.InsertToArchive(archiveType, meetingId, filepath, filename, user);
 		}
@@ -114,7 +113,6 @@ public class ChatMessageServiceImple implements ChatMessageService {
 
 	@Override
 	public void sendCommandMessage(ChatMessage message, String sessionId) {
-		System.out.println(message.toString());
 		CommandType command = message.getCommand();
 		String meetingId = message.getMeetingId();
 		switch (command) {

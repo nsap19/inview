@@ -73,7 +73,6 @@ public class MeetingInsideCotroller {
 		try {
 			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
 			ArchiveType saveArchiveType = ArchiveType.valueOf(archiveType.toUpperCase());
-			System.out.println(saveArchiveType);
 			String origFilename = files.getOriginalFilename();
 			String filename = archiveUtil.getFilename(saveArchiveType, null, origFilename, null);
 			/* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */

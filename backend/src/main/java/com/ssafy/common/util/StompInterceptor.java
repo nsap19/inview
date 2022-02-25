@@ -66,7 +66,7 @@ public class StompInterceptor implements ChannelInterceptor {
 
 			User user = userService.getUserByEmail(email);
 			if (!meetingParticipant.checkParticipant(meetingId, email)) {
-				System.out.println("중복입장 에러 발생!!!");
+				// to do write
 			}
 			meetingParticipant.addParticipantBySessionId(sessionId, meetingId, user);
 			break;
@@ -86,8 +86,6 @@ public class StompInterceptor implements ChannelInterceptor {
 		ChattingParticipant participant;
 		ChattingParticipant host;
 		String meetingId;
-		System.out.println(headerAccessor.getCommand() + " seesiongId : " + headerAccessor.getSessionId());
-		System.out.println(headerAccessor.getDetailedLogMessage(message.getPayload()));
 
 		switch (headerAccessor.getCommand()) {
 		case CONNECT:
@@ -137,7 +135,6 @@ public class StompInterceptor implements ChannelInterceptor {
 				Meeting meeting = meetingService.getMeetingById(Integer.parseInt(meetingId));
 				if (!meeting.getStatus().equals(Status.CLOSING)) {
 					host = meetingParticipant.setHost(meetingId, host);
-					System.out.println("새 호스트!! : " + host.toString());
 					chatMessageService.sendCommandMessage(ChatMessage.builder().command(CommandType.HOST)
 							.meetingId(host.getMeetingId()).sessionId(host.getSessionId())
 							.sender(String.valueOf(host.getUser().getUserId())).message(host.getUser().getNickname()).build(), host.getSessionId());

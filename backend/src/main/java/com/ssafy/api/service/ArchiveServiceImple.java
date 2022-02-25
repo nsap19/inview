@@ -50,7 +50,6 @@ public class ArchiveServiceImple implements ArchiveService {
 	public String createAllArchive(ArchiveRegisterPostReq archiveRegisterPostReq) {
 		String path = archiveRegisterPostReq.getPath();
 		String meetingId = String.valueOf(archiveRegisterPostReq.getMeeting().getMeetingId());
-		System.out.println("meetingParticipant : " + meetingParticipant);
 		List<User> participantList = meetingParticipant.getParticipantByMeetingId(meetingId);
 		for (User user : participantList) {
 			if (this.findByPathAndUser(path, user) == null) {
@@ -70,7 +69,6 @@ public class ArchiveServiceImple implements ArchiveService {
 	public String createAllEvaluation(ArchiveRegisterPostReq archiveRegisterPostReq) {
 		String path = archiveRegisterPostReq.getPath();
 		Meeting meeting = archiveRegisterPostReq.getMeeting();
-		System.out.println("meetingParticipant : " + meetingParticipant);
 		List<Participant> participantList = participantRepository.findByMeeting(meeting);
 		for (Participant participant : participantList) {
 			User user = participant.getUser();

@@ -37,11 +37,11 @@ public class ArchiveUtil {
 
 		if (archiveType.equals(ArchiveType.VIDEO)) {
 			// docker path
-			return "file:///tmp" + videoFileSeperator + "files" + videoFileSeperator + meetingId + videoFileSeperator
+			return "file:///tmp" + fileSeparator + "files" + fileSeparator + meetingId + fileSeparator
 					+ String.valueOf(archiveType).toLowerCase();
 		}
 
-		return src + meetingId + File.separator + String.valueOf(archiveType).toLowerCase();
+		return src + meetingId + fileSeparator + String.valueOf(archiveType).toLowerCase();
 	}
 
 	public String getFilename(ArchiveType archiveType, User user, String option, String extension) {
@@ -52,8 +52,8 @@ public class ArchiveUtil {
 			return String.valueOf(localTime.getHour()) + "시 " + String.valueOf(localTime.getMinute()) + "분 "
 					+ String.valueOf(localTime.getSecond()) + "초 " + user.getNickname() + extension;
 		case MEMO:
-			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
 			try {
+				// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
 				return new MD5Generator(salt + option).toString() + "_" + salt + "_" + option;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -62,8 +62,8 @@ public class ArchiveUtil {
 		case EVALUATION:
 			return option;
 		case FILE:
-			// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
 			try {
+				// 현재 시간, 같은 파일명 업로드시 구분을 위한 salt로 사용
 				return new MD5Generator(salt + option).toString() + "_" + salt + "_" + option;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -80,7 +80,6 @@ public class ArchiveUtil {
 
 	public String getFilepath(ArchiveType archiveType, String savepath, String filename) {
 		if (archiveType.equals(ArchiveType.VIDEO)) {
-			// docker 내 저장으로 경로명 상이
 			return savepath + videoFileSeperator + filename;
 		}
 		return savepath + fileSeparator + filename;
@@ -88,10 +87,7 @@ public class ArchiveUtil {
 
 	public String getOsFilepath(ArchiveType archiveType, String path) {
 		if (archiveType.equals(ArchiveType.VIDEO)) {
-			// docker 내 저장으로 경로명 상이
-			System.out.println(path.substring(12));
-			String OsFilePath = path.substring(11).replaceAll("/", Matcher.quoteReplacement(File.separator));
-			System.out.println(dir + OsFilePath);
+			String OsFilePath = path.substring(11).replaceAll("/", Matcher.quoteReplacement(fileSeparator));
 			return dir + OsFilePath;
 		}
 
@@ -99,9 +95,8 @@ public class ArchiveUtil {
 	}
 
 	public String getReverseSlashpath(String path) {
-		String fileSeparator = File.separator;
-		String OsFilePath = path.replaceAll("/", Matcher.quoteReplacement(File.separator));
-		String reverseSlashPath = OsFilePath.replaceAll(Matcher.quoteReplacement(File.separator), "/");
+		String OsFilePath = path.replaceAll("/", Matcher.quoteReplacement(fileSeparator));
+		String reverseSlashPath = OsFilePath.replaceAll(Matcher.quoteReplacement(fileSeparator), "/");
 
 		return reverseSlashPath;
 	}
