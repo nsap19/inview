@@ -91,9 +91,9 @@
 - Node.js, Vue3
 - Typescript4 (with Javascript(ECMA6))
 - HTML5, CSS3
-- java (Open JDK 1.8.0)
+- JAVA (Open JDK 1.8.0)
 - Spring Boot
-- MySQL 5.7
+- MySQL 5.7, JPA
 - Serverless Cloud(AWS)
 - CI/CD (Dokcer, Jenkins)
 - Eclipse IDE 2020-06 R (Spring Tools 3, Lombok)
